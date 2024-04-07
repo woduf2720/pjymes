@@ -1,12 +1,10 @@
 package com.example.pjymes.service;
 
-import com.example.pjymes.domain.Menu;
 import com.example.pjymes.dto.MenuDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cache.CacheManager;
 
 import java.util.List;
 
@@ -20,9 +18,9 @@ public class MenuServiceTests {
     @Test
     public void testRegister() {
         log.info(menuService.getClass().getName());
-        MenuDTO parentMenu = menuService.readOne(1L);
         MenuDTO menuDTO = MenuDTO.builder()
-                .menuName("new menu7")
+                .menuName("new menu8")
+                .parentId(1L)
                 .build();
         log.info("menuDTO : " + menuDTO);
 

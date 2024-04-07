@@ -2,10 +2,11 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout.html}">
+      layout:decorate="~{layout/layout.html}"
+      layout:fragment="Content">
 
-<div layout:fragment="content">
-    <h1>메인</h1>
+<div style="height: 90%; display: flex; justify-content: center; align-items: center;">
+    <img src="/image/mes_main_img.png">
 </div>
 <script layout:fragment="script" th:inline="javascript">
 
