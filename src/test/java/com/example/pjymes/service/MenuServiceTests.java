@@ -20,7 +20,6 @@ public class MenuServiceTests {
         log.info(menuService.getClass().getName());
         MenuDTO menuDTO = MenuDTO.builder()
                 .menuName("new menu8")
-                .parentId(1L)
                 .build();
         log.info("menuDTO : " + menuDTO);
 

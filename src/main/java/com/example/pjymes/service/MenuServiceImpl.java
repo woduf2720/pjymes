@@ -31,9 +31,11 @@ public class MenuServiceImpl implements MenuService{
     @Override
     public Long register(MenuDTO menuDTO) {
         log.info("menu register...");
+        Long count = menuRepository.orderSearch(menuDTO);
+        menuDTO.setDisplayOrder(count.intValue());
         Menu menu = modelMapper.map(menuDTO, Menu.class);
-        Long menuCode = menuRepository.save(menu).getMenuId();
-        return menuCode;
+        Long menuId = menuRepository.save(menu).getMenuId();
+        return menuId;
     }
 
     @Override
@@ -75,7 +77,7 @@ public class MenuServiceImpl implements MenuService{
 
         // 부모가 없는 최상위 메뉴들을 찾아서 계층 구조 생성
         for (Menu menu : result) {
-            if (menu.getParentId() == null) {
+            if (menu.getParentMenu() == null) {
                 dtoList.add(convertToDTO(menu, result));
             }
         }
@@ -91,7 +93,7 @@ public class MenuServiceImpl implements MenuService{
 
         // 자식 메뉴가 있는 경우 재귀적으로 처리
         for (Menu childMenu : menuList) {
-            if (childMenu.getParentId() != null && childMenu.getParentId().equals(menu.getMenuId())) {
+            if (childMenu.getParentMenu() != null && childMenu.getParentMenu().getMenuId().equals(menu.getMenuId())) {
                 menudto.getChildren().add(convertToDTO(childMenu, menuList));
             }
         }
