@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<div layout:fragment="Content">
+    <div style="height: 5rem; background-color: lightgray; border-bottom: solid 0.5px;">
+        <span>메뉴 관리</span>
+        <button type="button" id="addBtn" class="btn btn-primary">추가</button>
+        <button type="button" id="deleteBtn" class="btn btn-primary">삭제</button>
+    </div>
+    <div id="menuTable"></div>
+</div>
+<script layout:fragment="script" th:inline="javascript">
+
+    var menuTable = new Tabulator("#menuTable", {
+        height: "45rem",
+        ajaxURL:"/menu",
+        layout:"fitData",
+        selectableRows: "1",
+        dataTree:true,
+        dataTreeStartExpanded:true,
+        dataTreeChildField:"children",
+        editTriggerEvent:"dblclick",
+        columns:[
+            {title:"id", field:"menuId"},
+            {title:"순서", field:"displayOrder", editor:"input"},
+            {title:"메뉴명", field:"menuName", editor:"input"},
+            {title:"url", field:"url", editor:"input"},
+            {title:"상위메뉴id", field:"parentId", editor:"input"}
+        ],
+    });
+
+    menuTable.on("cellEdited", function(cell){
+        const rowData = cell.getRow().getData();
+
+        axios.put("/menu/"+rowData.menuId, rowData)
+            .then(function (response) {
+                console.log(response)
+            }).catch(function (error) {
+                console.log(error)
+            })
+    });
+
+    document.getElementById("deleteBtn").addEventListener("click", function () {
+        const row = menuTable.getSelectedRows()[0];
+        if(row){
+            axios.delete("/menu/"+row.getData().menuId)
+                .then(function (response) {
+                    console.log(response)
+                    menuTable.deleteRow(row)
+                }).catch(function (error) {
+                console.log(error)
+            })
+        }else{
+            alert("삭제할 행을 선택해주세요.")
+        }
+    })
+
+    document.getElementById("addBtn").addEventListener("click", function () {
+        console.log("추가")
+    })
+</script>
+</html>

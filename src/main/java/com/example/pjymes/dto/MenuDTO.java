@@ -18,7 +18,7 @@ public class MenuDTO {
     private Long menuId;
     private String menuName;
     private String url;
-    private int displayOrder;
+    private Integer displayOrder;
     private Long parentId;
 
     @Builder.Default

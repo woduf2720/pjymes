@@ -41,13 +41,13 @@ public class MenuRepositoryTests {
 
     @Test
     public void testUpdate() {
-        Long menuId = 1L;
+        Long menuId = 4L;
 
         Optional<Menu> result = menuRepository.findById(menuId);
 
         Menu menu = result.orElseThrow();
 
-        menu.change("menu1 change");
+        menu.change("시스템 관리2", "systemManage", 2L);
 
         menuRepository.save(menu);
     }

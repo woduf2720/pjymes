@@ -18,17 +18,21 @@ public class Menu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long menuId;
 
+    private Integer displayOrder;
+
     @Column(length = 20, nullable = false)
     private String menuName;
 
+    @Column(length = 20, nullable = false)
     private String url;
 
-    private int displayOrder;
 
     private Long parentId;
 
     //수정할때 db내용을 조회 후 그걸 바꿔서 저장하기 때문에 change기능이 필요하다
-    public void change(String menuName) {
+    public void change(Integer displayOrder, String menuName, String url) {
+        this.displayOrder = displayOrder;
         this.menuName = menuName;
+        this.url = url;
     }
 }
