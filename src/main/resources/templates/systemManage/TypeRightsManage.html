@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<div layout:fragment="Content">
+    <div style="display: flex; justify-content: space-between;">
+        <div style="width: calc(50% - 10px)">
+            <div style="height: 5rem; background-color: lightgray;">
+                <span>권한 관리</span>
+                <button type="button" id="authorityAddBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#commonCodeModal">코드 추가</button>
+            </div>
+            <div id="typeRightsTable"></div>
+        </div>
+        <div style="width: 50%">
+            <div style="height: 5rem; background-color: lightgray;">
+            </div>
+            <div id="menuTable"></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="typeRightsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">코드 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label>
+                        권한
+                        <input id="authority">
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" id="addBtn" class="btn btn-primary">추가</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script layout:fragment="script" th:inline="javascript">
+
+    var typeRightsTable = new Tabulator("#typeRightsTable", {
+        height: "45rem",
+        ajaxURL:"/commonCode/sub",
+        ajaxParams: {"majorCode" : "01"},
+        layout:"fitData",
+        selectableRows: "1",
+        columns:[
+            {title:"하위코드", field:"subCode"},
+            {title:"코드명", field:"commonCodeName"}
+        ],
+    });
+
+    typeRightsTable.on("rowSelected", function(row){
+        menuTable.setData("/typeRights/"+row.getData().subCode);
+    });
+
+    typeRightsTable.on("cellEdited", function(cell){
+        const rowData = cell.getRow().getData();
+
+        axios.put("/authority/"+rowData.menuId, rowData)
+            .then(function (response) {
+                console.log(response)
+            }).catch(function (error) {
+                console.log(error)
+            })
+    });
+
+    const typeRightsModal = document.getElementById('typeRightsModal')
+
+    document.getElementById("addBtn").addEventListener("click", function () {
+        const data = {
+            "parentId" : document.getElementById('parentId').value,
+            "menuName" : document.getElementById('menuName').value,
+            "url" : document.getElementById('url').value
+        }
+        axios.post("/authority", data)
+            .then(function (response) {
+                console.log(response)
+                bootstrap.Modal.getInstance(typeRightsModal).hide();
+                typeRightsTable.replaceData("/menu")
+            }).catch(function (error) {
+            console.log(error)
+        })
+    })
+
+
+    typeRightsModal.addEventListener('hidden.bs.modal', event => {
+        document.getElementById('parentId').value = null;
+        document.getElementById('menuName').value = null;
+        document.getElementById('url').value = null;
+    })
+
+    var menuTable = new Tabulator("#menuTable", {
+        height: "45rem",
+        layout:"fitData",
+        columns:[
+            {title:"하위코드", field:"menuId"},
+            {title:"코드명", field:"menuName"},
+        ],
+    });
+</script>
+</html>

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @Log4j2
 @RequestMapping("/adminMenu")
-public class AdminMenuContoller {
+public class AdminMenuController {
 
     @GetMapping("/menuManage")
     public void menuManage(){

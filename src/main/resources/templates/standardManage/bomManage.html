@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<div layout:fragment="Content">
+    <div style="height: 5rem; background-color: lightgray;">
+        <span>메뉴 관리</span>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMenuModal">추가</button>
+        <button type="button" id="deleteBtn" class="btn btn-primary">삭제</button>
+    </div>
+    <div id="menuTable"></div>
+
+    <div class="modal fade" id="addMenuModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">메뉴 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label>
+                        상위메뉴 id
+                        <input id="parentId">
+                    </label>
+                    <label>
+                        메뉴명
+                        <input id="menuName">
+                    </label>
+                    <label>
+                        url
+                        <input id="url">
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" id="addBtn" class="btn btn-primary">추가</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script layout:fragment="script" th:inline="javascript">
+
+    var menuTable = new Tabulator("#menuTable", {
+        height: "45rem",
+        ajaxURL:"/menu",
+        layout:"fitData",
+        selectableRows: "1",
+        dataTree:true,
+        dataTreeStartExpanded:true,
+        dataTreeChildField:"children",
+        editTriggerEvent:"dblclick",
+        columns:[
+            {title:"id", field:"menuId"},
+            {title:"순서", field:"displayOrder", editor:"input"},
+            {title:"메뉴명", field:"menuName", editor:"input"},
+            {title:"url", field:"url", editor:"input"}
+        ],
+    });
+
+    menuTable.on("cellEdited", function(cell){
+        const rowData = cell.getRow().getData();
+
+        axios.put("/menu/"+rowData.menuId, rowData)
+            .then(function (response) {
+                console.log(response)
+            }).catch(function (error) {
+                console.log(error)
+            })
+    });
+
+    document.getElementById("deleteBtn").addEventListener("click", function () {
+        const row = menuTable.getSelectedRows()[0];
+        if(row){
+            axios.delete("/menu/"+row.getData().menuId)
+                .then(function (response) {
+                    console.log(response)
+                    menuTable.deleteRow(row)
+                }).catch(function (error) {
+                console.log(error)
+            })
+        }else{
+            alert("삭제할 행을 선택해주세요.")
+        }
+    })
+
+    const addMenuModal = document.getElementById('addMenuModal')
+
+    document.getElementById("addBtn").addEventListener("click", function () {
+        const data = {
+            "parentId" : document.getElementById('parentId').value,
+            "menuName" : document.getElementById('menuName').value,
+            "url" : document.getElementById('url').value
+        }
+        axios.post("/menu", data)
+            .then(function (response) {
+                console.log(response)
+                bootstrap.Modal.getInstance(addMenuModal).hide();
+                menuTable.replaceData("/menu")
+            }).catch(function (error) {
+            console.log(error)
+        })
+    })
+
+
+    addMenuModal.addEventListener('hidden.bs.modal', event => {
+        document.getElementById('parentId').value = null;
+        document.getElementById('menuName').value = null;
+        document.getElementById('url').value = null;
+    })
+</script>
+</html>

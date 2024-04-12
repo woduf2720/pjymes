@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<div layout:fragment="Content">
+    <div style="height: 5rem; background-color: lightgray;">
+        <span>메뉴 관리</span>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">추가</button>
+        <button type="button" id="deleteBtn" class="btn btn-primary">삭제</button>
+    </div>
+    <div id="itemManageTable"></div>
+
+    <div class="modal fade" id="addItemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">메뉴 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label>
+                        품목 코드
+                        <input id="itemCode">
+                    </label>
+                    <label>
+                        품목명
+                        <input id="itemName">
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" id="addBtn" class="btn btn-primary">추가</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script layout:fragment="script" th:inline="javascript">
+
+    var itemManageTable = new Tabulator("#itemManageTable", {
+        height: "45rem",
+        ajaxURL:"/itemManage",
+        layout:"fitData",
+        selectableRows: "1",
+        editTriggerEvent:"dblclick",
+        columns:[
+            {title:"품목코드", field:"itemCode"},
+            {title:"품목명", field:"itemName", editor:"input"},
+        ],
+    });
+
+    itemManageTable.on("cellEdited", function(cell){
+        const rowData = cell.getRow().getData();
+
+        axios.put("/itemManage/"+rowData.menuId, rowData)
+            .then(function (response) {
+                console.log(response)
+            }).catch(function (error) {
+                console.log(error)
+            })
+    });
+
+    document.getElementById("deleteBtn").addEventListener("click", function () {
+        const row = itemManageTable.getSelectedRows()[0];
+        if(row){
+            axios.delete("/itemManage/"+row.getData().menuId)
+                .then(function (response) {
+                    console.log(response)
+                    itemManageTable.deleteRow(row)
+                }).catch(function (error) {
+                console.log(error)
+            })
+        }else{
+            alert("삭제할 행을 선택해주세요.")
+        }
+    })
+
+    const addItemModal = document.getElementById('addItemModal')
+
+    document.getElementById("addBtn").addEventListener("click", function () {
+        const data = {
+            "itemCode" : document.getElementById('itemCode').value,
+            "itemName" : document.getElementById('itemName').value
+        }
+        axios.post("/itemManage", data)
+            .then(function (response) {
+                console.log(response)
+                bootstrap.Modal.getInstance(addItemModal).hide();
+                itemManageTable.replaceData("/itemManage")
+            }).catch(function (error) {
+            console.log(error)
+        })
+    })
+
+
+    addItemModal.addEventListener('hidden.bs.modal', event => {
+        document.getElementById('itemCode').value = null;
+        document.getElementById('itemName').value = null;
+    })
+</script>
+</html>

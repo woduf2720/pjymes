@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @Log4j2
-public class MainContoller {
+public class MainController {
 
     @GetMapping("/main")
     public void hello(Model model){

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<div layout:fragment="Content">
+    <div style="height: 5rem; background-color: lightgray;">
+        <span>메뉴 관리</span>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">추가</button>
+        <button type="button" id="deleteBtn" class="btn btn-primary">삭제</button>
+    </div>
+    <div id="customerManageTable"></div>
+
+    <div class="modal fade" id="addCustomerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">메뉴 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label>
+                        거래처 코드
+                        <input id="customerCode">
+                    </label>
+                    <label>
+                        거래처명
+                        <input id="customerName">
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" id="addBtn" class="btn btn-primary">추가</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script layout:fragment="script" th:inline="javascript">
+
+    var customerManageTable = new Tabulator("#customerManageTable", {
+        height: "45rem",
+        ajaxURL:"/customerManage",
+        layout:"fitData",
+        selectableRows: "1",
+        dataTree:true,
+        dataTreeStartExpanded:true,
+        dataTreeChildField:"children",
+        editTriggerEvent:"dblclick",
+        columns:[
+            {title:"거래처코드", field:"customerCode"},
+            {title:"거래처명", field:"customerName", editor:"input"}
+        ],
+    });
+
+    customerManageTable.on("cellEdited", function(cell){
+        const rowData = cell.getRow().getData();
+
+        axios.put("/customerManage/"+rowData.menuId, rowData)
+            .then(function (response) {
+                console.log(response)
+            }).catch(function (error) {
+                console.log(error)
+            })
+    });
+
+    document.getElementById("deleteBtn").addEventListener("click", function () {
+        const row = customerManageTable.getSelectedRows()[0];
+        if(row){
+            axios.delete("/customerManage/"+row.getData().menuId)
+                .then(function (response) {
+                    console.log(response)
+                    customerManageTable.deleteRow(row)
+                }).catch(function (error) {
+                console.log(error)
+            })
+        }else{
+            alert("삭제할 행을 선택해주세요.")
+        }
+    })
+
+    const addCustomerModal = document.getElementById('addCustomerModal')
+
+    document.getElementById("addBtn").addEventListener("click", function () {
+        const data = {
+            "customerCode" : document.getElementById('customerCode').value,
+            "customerName" : document.getElementById('customerName').value
+        }
+        axios.post("/customerManage", data)
+            .then(function (response) {
+                console.log(response)
+                bootstrap.Modal.getInstance(addCustomerModal).hide();
+                customerManageTable.replaceData("/menu")
+            }).catch(function (error) {
+            console.log(error)
+        })
+    })
+
+
+    addCustomerModal.addEventListener('hidden.bs.modal', event => {
+        document.getElementById('customerCode').value = null;
+        document.getElementById('customerName').value = null;
+    })
+</script>
+</html>
