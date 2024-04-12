@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<div layout:fragment="Content">
+
+    <div style="display: flex; justify-content: space-between;">
+        <div style="width: calc(50% - 10px)">
+            <div style="height: 5rem; background-color: lightgray;">
+                <span>공통 코드 관리</span>
+                <button type="button" id="majorCodeAddBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#commonCodeModal">상위 코드 추가</button>
+            </div>
+            <div id="majorCodeTable"></div>
+        </div>
+        <div style="width: 50%">
+            <div style="height: 5rem; background-color: lightgray;">
+                <button type="button" id="subCodeAddBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#commonCodeModal">하위 코드 추가</button>
+            </div>
+            <div id="subCodeTable" ></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="commonCodeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">코드 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="majorCode">
+                    <input type="hidden" id="subCode">
+                    <label>
+                        코드명
+                        <input id="commonCodeName">
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" id="addBtn" class="btn btn-primary">추가</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script layout:fragment="script" th:inline="javascript">
+
+    var majorCodeTable = new Tabulator("#majorCodeTable", {
+        height: "45rem",
+        ajaxURL:"/commonCode/major",
+        layout:"fitData",
+        selectableRows: "1",
+        editTriggerEvent:"dblclick",
+        columns:[
+            {title:"상위코드", field:"majorCode"},
+            {title:"코드명", field:"commonCodeName", editor:"input"},
+        ],
+    });
+
+    majorCodeTable.on("rowSelected", function(row){
+        subCodeTable.setData("/commonCode/sub", row.getData());
+    });
+
+    majorCodeTable.on("cellEdited", function(cell){
+        const rowData = cell.getRow().getData();
+
+        axios.put("/commonCode/"+rowData.commonCodeId, rowData)
+            .then(function (response) {
+                console.log(response)
+            }).catch(function (error) {
+                console.log(error)
+            })
+    });
+
+    document.getElementById("majorCodeAddBtn").addEventListener("click", function () {
+        document.getElementById('subCode').value = "00";
+    })
+    document.getElementById("subCodeAddBtn").addEventListener("click", function () {
+        document.getElementById('majorCode').value = majorCodeTable.getData("select")[0].majorCode;
+    })
+
+    const commonCodeModal = document.getElementById('commonCodeModal')
+
+    document.getElementById("addBtn").addEventListener("click", function () {
+        const subCode = document.getElementById('subCode').value
+        const data = {
+            "majorCode" : document.getElementById('majorCode').value,
+            "subCode" : subCode,
+            "commonCodeName" : document.getElementById('commonCodeName').value
+        }
+        axios.post("/commonCode", data)
+            .then(function (response) {
+                console.log(response)
+                bootstrap.Modal.getInstance(commonCodeModal).hide();
+                if(subCode == "00"){
+                    majorCodeTable.replaceData("/commonCode/major")
+                }else{
+                    subCodeTable.replaceData("/commonCode/sub", majorCodeTable.getData("select")[0])
+                }
+
+            }).catch(function (error) {
+            console.log(error)
+        })
+    })
+
+
+    commonCodeModal.addEventListener('hidden.bs.modal', event => {
+        document.getElementById('subCode').value = null;
+        document.getElementById('commonCodeName').value = null;
+    })
+
+    var subCodeTable = new Tabulator("#subCodeTable", {
+        height: "45rem",
+        layout:"fitData",
+        editTriggerEvent:"dblclick",
+        columns:[
+            {title:"하위코드", field:"subCode"},
+            {title:"코드명", field:"commonCodeName", editor:"input"},
+        ],
+    });
+
+    subCodeTable.on("cellEdited", function(cell){
+        const rowData = cell.getRow().getData();
+
+        axios.put("/commonCode/"+rowData.commonCodeId, rowData)
+            .then(function (response) {
+                console.log(response)
+            }).catch(function (error) {
+            console.log(error)
+        })
+    });
+</script>
+</html>

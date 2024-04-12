@@ -14,17 +14,17 @@ import lombok.*;
 public class CommonCode {
 
     @Id
+    @Column(length = 4, nullable = false)
+    private String commonCodeId;
     @Column(length = 2, nullable = false)
-    private String menuCode;
-    @Column(length = 4, nullable = false)
     private String majorCode;
-    @Column(length = 4, nullable = false)
+    @Column(length = 2, nullable = false)
     private String subCode;
     @Column(length = 20, nullable = false)
-    private String menuName;
+    private String commonCodeName;
 
     //수정시 이용
-    public void change(String menuName) {
-        this.menuName = menuName;
+    public void change(String commonCodeName) {
+        this.commonCodeName = commonCodeName;
     }
 }

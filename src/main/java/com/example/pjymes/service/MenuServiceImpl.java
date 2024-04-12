@@ -6,9 +6,7 @@ import com.example.pjymes.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -42,11 +39,8 @@ public class MenuServiceImpl implements MenuService{
     public MenuDTO readOne(Long menuId) {
         log.info("menu readOne...");
         Optional<Menu> result = menuRepository.findById(menuId);
-
         Menu menu = result.orElseThrow();
-
         MenuDTO menuDTO = modelMapper.map(menu, MenuDTO.class);
-
         return menuDTO;
     }
 
@@ -55,7 +49,6 @@ public class MenuServiceImpl implements MenuService{
     public void modify(MenuDTO menuDTO) {
         log.info("menu modify...");
         Optional<Menu> result = menuRepository.findById(menuDTO.getMenuId());
-        System.out.println(result);
         Menu menu = result.orElseThrow();
         menu.change(menuDTO.getDisplayOrder(), menuDTO.getMenuName(), menuDTO.getUrl());
         menuRepository.save(menu);
@@ -88,7 +81,6 @@ public class MenuServiceImpl implements MenuService{
 
     // 재귀적으로 메뉴를 순회하면서 DTO로 변환
     private MenuDTO convertToDTO(Menu menu, List<Menu> menuList) {
-        log.info("menu convertToDTO...");
         MenuDTO menudto = modelMapper.map(menu, MenuDTO.class);
 
         // 자식 메뉴가 있는 경우 재귀적으로 처리

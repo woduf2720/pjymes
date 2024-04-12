@@ -47,7 +47,7 @@ public class MenuRepositoryTests {
 
         Menu menu = result.orElseThrow();
 
-        menu.change(2,"시스템 관리2", "systemManage");
+        menu.change(1,"관리자 메뉴", "systemManage");
 
         menuRepository.save(menu);
     }

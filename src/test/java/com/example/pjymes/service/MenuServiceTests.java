@@ -19,7 +19,8 @@ public class MenuServiceTests {
     public void testRegister() {
         log.info(menuService.getClass().getName());
         MenuDTO menuDTO = MenuDTO.builder()
-                .menuName("new menu8")
+                .menuName("관리자 메뉴")
+                .url("adminMenu")
                 .build();
         log.info("menuDTO : " + menuDTO);
 
