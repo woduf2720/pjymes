@@ -2,7 +2,7 @@ package com.example.pjymes.service;
 
 import com.example.pjymes.domain.Customer;
 import com.example.pjymes.dto.CustomerDTO;
-import com.example.pjymes.repository.CustomerManageRepository;
+import com.example.pjymes.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 @Log4j2
 @RequiredArgsConstructor
 @Transactional
-public class CustomerManageServiceImpl implements CustomerManageService{
+public class CustomerServiceImpl implements CustomerService {
 
     private final ModelMapper modelMapper;
-    private final CustomerManageRepository customerManageRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public String register(CustomerDTO customerDTO) {
@@ -39,7 +39,7 @@ public class CustomerManageServiceImpl implements CustomerManageService{
     @Override
     public List<CustomerDTO> list() {
         log.info("itemlist...");
-        List<Customer> result = customerManageRepository.findAll();
+        List<Customer> result = customerRepository.findAll();
         List<CustomerDTO> dtoList = result.stream()
                 .map(customer -> modelMapper.map(customer, CustomerDTO.class)).collect(Collectors.toList());
         return dtoList;

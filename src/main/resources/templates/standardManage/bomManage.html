@@ -44,7 +44,7 @@
 
     var menuTable = new Tabulator("#menuTable", {
         height: "45rem",
-        ajaxURL:"/menu",
+        ajaxURL:"/bomManage",
         layout:"fitData",
         selectableRows: "1",
         dataTree:true,
@@ -52,10 +52,9 @@
         dataTreeChildField:"children",
         editTriggerEvent:"dblclick",
         columns:[
-            {title:"id", field:"menuId"},
-            {title:"순서", field:"displayOrder", editor:"input"},
-            {title:"메뉴명", field:"menuName", editor:"input"},
-            {title:"url", field:"url", editor:"input"}
+            {title:"bomId", field:"bomId"},
+            {title:"부모품목코드", field:"parentItem"},
+            {title:"품목코드", field:"childItem", editor:"input"},
         ],
     });
 

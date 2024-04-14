@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
-public class TypeRightsId implements Serializable {
+public class MenuRightsId implements Serializable {
     private String typeId;
     private Long menuId;
 }

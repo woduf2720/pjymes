@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/systemManage")
 public class SystemManageContoller {
 
-    @GetMapping("/typeRightsManage")
-    public void typeRightsManage(){
-        log.info(" typeRightsManage.....");
+    @GetMapping("/menuRightsManage")
+    public void menuRightsManage(){
+        log.info(" menuRightsManage.....");
     }
 
     @GetMapping("/commonCodeManage")

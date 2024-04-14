@@ -11,16 +11,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class TypeRights {
+public class MenuRights {
 
     @EmbeddedId
-    private TypeRightsId typeRightsId;
-
-    @Column(length = 20)
-    private String typeName;
-
-    public void change(String typeName) {
-        this.typeName = typeName;
-    }
+    private MenuRightsId menuRightsId;
 }
 

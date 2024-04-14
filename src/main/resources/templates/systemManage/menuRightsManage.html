@@ -10,7 +10,7 @@
                 <span>권한 관리</span>
                 <button type="button" id="authorityAddBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#commonCodeModal">코드 추가</button>
             </div>
-            <div id="typeRightsTable"></div>
+            <div id="menuRightsTable"></div>
         </div>
         <div style="width: 50%">
             <div style="height: 5rem; background-color: lightgray;">
@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="typeRightsModal" tabindex="-1">
+    <div class="modal fade" id="menuRightsModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -42,7 +42,7 @@
 </div>
 <script layout:fragment="script" th:inline="javascript">
 
-    var typeRightsTable = new Tabulator("#typeRightsTable", {
+    var menuRightsTable = new Tabulator("#menuRightsTable", {
         height: "45rem",
         ajaxURL:"/commonCode/sub",
         ajaxParams: {"majorCode" : "01"},
@@ -54,11 +54,11 @@
         ],
     });
 
-    typeRightsTable.on("rowSelected", function(row){
-        menuTable.setData("/typeRights/"+row.getData().subCode);
+    menuRightsTable.on("rowSelected", function(row){
+        menuTable.setData("/menuRights/"+row.getData().subCode);
     });
 
-    typeRightsTable.on("cellEdited", function(cell){
+    menuRightsTable.on("cellEdited", function(cell){
         const rowData = cell.getRow().getData();
 
         axios.put("/authority/"+rowData.menuId, rowData)
@@ -69,7 +69,7 @@
             })
     });
 
-    const typeRightsModal = document.getElementById('typeRightsModal')
+    const menuRightsModal = document.getElementById('menuRightsModal')
 
     document.getElementById("addBtn").addEventListener("click", function () {
         const data = {
@@ -80,15 +80,15 @@
         axios.post("/authority", data)
             .then(function (response) {
                 console.log(response)
-                bootstrap.Modal.getInstance(typeRightsModal).hide();
-                typeRightsTable.replaceData("/menu")
+                bootstrap.Modal.getInstance(menuRightsModal).hide();
+                menuRightsTable.replaceData("/menu")
             }).catch(function (error) {
             console.log(error)
         })
     })
 
 
-    typeRightsModal.addEventListener('hidden.bs.modal', event => {
+    menuRightsModal.addEventListener('hidden.bs.modal', event => {
         document.getElementById('parentId').value = null;
         document.getElementById('menuName').value = null;
         document.getElementById('url').value = null;

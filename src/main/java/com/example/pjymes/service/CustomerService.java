@@ -4,7 +4,7 @@ import com.example.pjymes.dto.CustomerDTO;
 
 import java.util.List;
 
-public interface CustomerManageService {
+public interface CustomerService {
     String register(CustomerDTO customerDTO);
 
     CustomerDTO readOne(String customerCode);

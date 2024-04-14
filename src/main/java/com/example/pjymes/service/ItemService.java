@@ -1,11 +1,10 @@
 package com.example.pjymes.service;
 
 import com.example.pjymes.dto.ItemDTO;
-import com.example.pjymes.dto.MemberDTO;
 
 import java.util.List;
 
-public interface ItemManageService {
+public interface ItemService {
     String register(ItemDTO itemDTO);
 
     ItemDTO readOne(Long itemCode);
