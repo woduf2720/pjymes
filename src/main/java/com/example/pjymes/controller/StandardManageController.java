@@ -1,18 +1,33 @@
 package com.example.pjymes.controller;
 
+import com.example.pjymes.dto.CommonCodeDTO;
+import com.example.pjymes.service.CommonCodeService;
+import com.example.pjymes.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @Log4j2
 @RequestMapping("/standardManage")
+@RequiredArgsConstructor
 public class StandardManageController {
 
+    private final CommonCodeService commonCodeService;
+
     @GetMapping("/memberManage")
-    public void memberManage(){
+    public void memberManage(Model model) {
         log.info("memberManage.....");
+        List<CommonCodeDTO> subCodeList = commonCodeService.subCodeList("01");
+        model.addAttribute("subCodeList", subCodeList);
+        log.info("memberManage.....");
+        System.out.println(subCodeList);
     }
 
     @GetMapping("/itemManage")

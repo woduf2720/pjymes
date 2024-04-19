@@ -37,7 +37,7 @@ public class MenuRightsRepositoryTests {
 
     @Test
     public void testSelect() {
-        MenuRightsId menuRightsId = new MenuRightsId("1", 1L);
+        MenuRightsId menuRightsId = new MenuRightsId("0101", 1L);
 
         Optional<MenuRights> result = menuRightsRepository.findById(menuRightsId);
 
@@ -55,5 +55,11 @@ public class MenuRightsRepositoryTests {
         MenuRights menuRights = result.orElseThrow();
 
         menuRightsRepository.save(menuRights);
+    }
+
+    @Test
+    public void testList() {
+        List<MenuRights> result = menuRightsRepository.listByCommonCodeId("0101");
+        log.info(result.stream().toList());
     }
 }

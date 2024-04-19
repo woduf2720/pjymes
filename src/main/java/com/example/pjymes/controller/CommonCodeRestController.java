@@ -4,6 +4,7 @@ import com.example.pjymes.dto.CommonCodeDTO;
 import com.example.pjymes.dto.MenuDTO;
 import com.example.pjymes.service.CommonCodeService;
 import com.example.pjymes.service.MenuService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +16,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/commonCode")
 @Log4j2
+@RequiredArgsConstructor
 public class CommonCodeRestController {
 
-    @Autowired
-    private CommonCodeService commonCodeService;
+    private final CommonCodeService commonCodeService;
 
     @GetMapping
     public List<CommonCodeDTO> getCommonCode() {
@@ -56,12 +57,12 @@ public class CommonCodeRestController {
     @GetMapping("/major")
     public List<CommonCodeDTO> getMajorCode() {
         log.info("getMajorCode...");
-        return commonCodeService.majorCodelist();
+        return commonCodeService.majorCodeList();
     }
 
     @GetMapping("/sub")
     public List<CommonCodeDTO> getSubCode(CommonCodeDTO commonCodeDTO) {
         log.info("getSubCode...");
-        return commonCodeService.subCodelist(commonCodeDTO);
+        return commonCodeService.subCodeList(commonCodeDTO.getMajorCode());
     }
 }

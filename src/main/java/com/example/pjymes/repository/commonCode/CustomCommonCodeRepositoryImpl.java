@@ -27,13 +27,13 @@ public class CustomCommonCodeRepositoryImpl implements CustomCommonCodeRepositor
     }
 
     @Override
-    public List<CommonCode> subCodeSearch(CommonCodeDTO commonCodeDTO) {
+    public List<CommonCode> subCodeSearch(String majorCode) {
         QCommonCode qCommonCode = QCommonCode.commonCode;
 
         return jpaQueryFactory
                 .select(qCommonCode)
                 .from(qCommonCode)
-                .where(qCommonCode.majorCode.eq(commonCodeDTO.getMajorCode())
+                .where(qCommonCode.majorCode.eq(majorCode)
                         .and(qCommonCode.subCode.ne("00")))
                 .fetch();
     }

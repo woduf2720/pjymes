@@ -7,7 +7,7 @@ import java.util.List;
 public interface MemberService {
     String register(MemberDTO memberDTO);
 
-    MemberDTO readOne(Long menuId);
+    MemberDTO readOne(String mid);
 
     void modify(MemberDTO memberDTO);
 

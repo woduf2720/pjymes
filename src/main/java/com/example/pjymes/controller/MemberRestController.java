@@ -1,9 +1,8 @@
 package com.example.pjymes.controller;
 
 import com.example.pjymes.dto.MemberDTO;
-import com.example.pjymes.dto.MenuDTO;
 import com.example.pjymes.service.MemberService;
-import com.example.pjymes.service.MenuService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,15 +14,34 @@ import java.util.Map;
 @RestController
 @RequestMapping("/member")
 @Log4j2
+@RequiredArgsConstructor
 public class MemberRestController {
 
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
 
     @GetMapping
     public List<MemberDTO> getMember() {
         log.info("getMember...");
-        return memberService.list();
+        List<MemberDTO> dtoList = memberService.list();
+        log.info(dtoList);
+        return dtoList;
     }
 
+    @PostMapping
+    public Map<String, String> postMember(@RequestBody MemberDTO memberDTO) {
+        log.info("postMember..." + memberDTO);
+        String memberId = memberService.register(memberDTO);
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("memberId", memberId);
+        return resultMap;
+    }
+
+    @PutMapping
+    public Map<String, String> putMember(@RequestBody MemberDTO memberDTO) {
+        log.info("put..." + memberDTO);
+        memberService.modify(memberDTO);
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("memberId", memberDTO.getMid());
+        return resultMap;
+    }
 }

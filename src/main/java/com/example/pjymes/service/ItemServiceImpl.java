@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,26 +24,34 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public String register(ItemDTO itemDTO) {
-        return null;
+        log.info("item register...");
+        Item item = modelMapper.map(itemDTO, Item.class);
+        return itemRepository.save(item).getItemCode();
     }
 
     @Override
-    public ItemDTO readOne(Long itemCode) {
-        return null;
+    public ItemDTO readOne(String itemCode) {
+        log.info("item readOne...");
+        Optional<Item> result = itemRepository.findById(itemCode);
+        Item item = result.orElseThrow();
+        return modelMapper.map(item, ItemDTO.class);
     }
 
     @Override
     public void modify(ItemDTO itemDTO) {
-
+        log.info("item modify...");
+        Optional<Item> result = itemRepository.findById(itemDTO.getItemCode());
+        Item item = result.orElseThrow();
+        item.change(itemDTO);
+        itemRepository.save(item);
     }
 
     @Override
     public List<ItemDTO> list() {
-        log.info("itemlist...");
+        log.info("item list...");
         List<Item> result = itemRepository.findAll();
-        List<ItemDTO> dtoList = result.stream()
+        return result.stream()
                 .map(item -> modelMapper.map(item, ItemDTO.class)).collect(Collectors.toList());
-        return dtoList;
     }
 
 }

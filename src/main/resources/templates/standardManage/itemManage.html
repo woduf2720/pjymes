@@ -4,14 +4,14 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout.html}">
 <div layout:fragment="Content">
-    <div style="height: 5rem; background-color: lightgray;">
-        <span>메뉴 관리</span>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">추가</button>
-        <button type="button" id="deleteBtn" class="btn btn-primary">삭제</button>
+    <div class="top-bar">
+        <span class="page-title">품목 정보 관리</span>
+        <button type="button" id="addedModalBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#itemModal">추가</button>
+        <button type="button" id="modifiedModalBtn" class="btn btn-primary">수정</button>
     </div>
     <div id="itemManageTable"></div>
 
-    <div class="modal fade" id="addItemModal" tabindex="-1">
+    <div class="modal fade" id="itemModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -27,10 +27,27 @@
                         품목명
                         <input id="itemName">
                     </label>
+                    <label>
+                        규격
+                        <input id="standard">
+                    </label>
+                    <label>
+                        분류
+                        <input id="category">
+                    </label>
+                    <label>
+                        단가
+                        <input id="unitPrice">
+                    </label>
+                    <label>
+                        사용유무
+                        <input type="checkbox" id="useStatus" checked>
+                    </label>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" id="addBtn" class="btn btn-primary addedModal none">추가</button>
+                    <button type="button" id="modifyBtn" class="btn btn-primary modifiedModal none">수정</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="button" id="addBtn" class="btn btn-primary">추가</button>
                 </div>
             </div>
         </div>
@@ -43,60 +60,103 @@
         ajaxURL:"/itemManage",
         layout:"fitData",
         selectableRows: "1",
-        editTriggerEvent:"dblclick",
         columns:[
+            {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
             {title:"품목코드", field:"itemCode"},
-            {title:"품목명", field:"itemName", editor:"input"},
+            {title:"품목명", field:"itemName"},
+            {title:"규격", field:"standard"},
+            {title:"분류", field:"category"},
+            {title:"단가", field:"unitPrice"},
+            {title:"수정일자", field:"modDate"},
+            {title:"사용유무", field:"useStatus", hozAlign: "center", formatter:"tickCross"},
         ],
     });
 
-    itemManageTable.on("cellEdited", function(cell){
-        const rowData = cell.getRow().getData();
+    let modalTitle = document.querySelector("#itemModal .modal-title");
+    let itemCode = document.querySelector("#itemCode");
 
-        axios.put("/itemManage/"+rowData.menuId, rowData)
-            .then(function (response) {
-                console.log(response)
-            }).catch(function (error) {
-                console.log(error)
-            })
-    });
+    document.getElementById("addedModalBtn").addEventListener("click", function () {
+        modalTitle.textContent = "품목 추가"
+        itemCode.readOnly = false
+        document.querySelectorAll('.addedModal').forEach(function(element) {
+            element.classList.remove('none');
+        });
+        document.querySelectorAll('.modifiedModal').forEach(function(element) {
+            element.classList.add('none');
+        });
+    })
 
-    document.getElementById("deleteBtn").addEventListener("click", function () {
-        const row = itemManageTable.getSelectedRows()[0];
-        if(row){
-            axios.delete("/itemManage/"+row.getData().menuId)
-                .then(function (response) {
-                    console.log(response)
-                    itemManageTable.deleteRow(row)
-                }).catch(function (error) {
-                console.log(error)
-            })
+    document.getElementById("modifiedModalBtn").addEventListener("click", function (e) {
+        const rows = itemManageTable.getRows("selected");
+        if(rows.length === 0){
+            return alert("수정할 품목을 선택해주세요");
         }else{
-            alert("삭제할 행을 선택해주세요.")
+            modalTitle.textContent = "품목 수정"
+            itemCode.readOnly = true
+            new bootstrap.Modal(document.getElementById('itemModal')).show()
+            document.getElementById('itemCode').value = rows[0].getData().itemCode;
+            document.getElementById('itemName').value = rows[0].getData().itemName;
+            document.getElementById('standard').value = rows[0].getData().standard;
+            document.getElementById('category').value = rows[0].getData().category;
+            document.getElementById('unitPrice').value = rows[0].getData().unitPrice;
+            document.getElementById('useStatus').checked = rows[0].getData().useStatus;
+
+            document.querySelectorAll('.addedModal').forEach(function(element) {
+                element.classList.add('none');
+            });
+            document.querySelectorAll('.modifiedModal').forEach(function(element) {
+                element.classList.remove('none');
+            });
         }
     })
 
-    const addItemModal = document.getElementById('addItemModal')
+    const itemModal = document.getElementById('itemModal')
 
     document.getElementById("addBtn").addEventListener("click", function () {
         const data = {
             "itemCode" : document.getElementById('itemCode').value,
-            "itemName" : document.getElementById('itemName').value
+            "itemName" : document.getElementById('itemName').value,
+            "standard" : document.getElementById('standard').value,
+            "category" : document.getElementById('category').value,
+            "unitPrice" : document.getElementById('unitPrice').value,
+            "useStatus" : document.getElementById('useStatus').checked
         }
         axios.post("/itemManage", data)
             .then(function (response) {
                 console.log(response)
-                bootstrap.Modal.getInstance(addItemModal).hide();
+                bootstrap.Modal.getInstance(itemModal).hide();
                 itemManageTable.replaceData("/itemManage")
             }).catch(function (error) {
             console.log(error)
         })
     })
 
+    document.getElementById("modifyBtn").addEventListener("click", function () {
+        const data = {
+            "itemCode" : document.getElementById('itemCode').value,
+            "itemName" : document.getElementById('itemName').value,
+            "standard" : document.getElementById('standard').value,
+            "category" : document.getElementById('category').value,
+            "unitPrice" : document.getElementById('unitPrice').value,
+            "useStatus" : document.getElementById('useStatus').checked
+        }
+        axios.put("/itemManage", data)
+            .then(function (response) {
+                console.log(response)
+                bootstrap.Modal.getInstance(itemModal).hide();
+                itemManageTable.replaceData("/itemManage")
+            }).catch(function (error) {
+            console.log(error)
+        })
+    })
 
-    addItemModal.addEventListener('hidden.bs.modal', event => {
+    itemModal.addEventListener('hidden.bs.modal', event => {
         document.getElementById('itemCode').value = null;
         document.getElementById('itemName').value = null;
+        document.getElementById('standard').value = null;
+        document.getElementById('category').value = null;
+        document.getElementById('unitPrice').value = null;
+        document.getElementById('useStatus').checked = false;
     })
 </script>
 </html>

@@ -7,7 +7,7 @@ import java.util.List;
 public interface ItemService {
     String register(ItemDTO itemDTO);
 
-    ItemDTO readOne(Long itemCode);
+    ItemDTO readOne(String itemCode);
 
     void modify(ItemDTO itemDTO);
 

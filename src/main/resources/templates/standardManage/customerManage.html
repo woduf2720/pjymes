@@ -4,8 +4,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout.html}">
 <div layout:fragment="Content">
-    <div style="height: 5rem; background-color: lightgray;">
-        <span>메뉴 관리</span>
+    <div class="top-bar">
+        <span class="page-title">거래처 관리</span>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">추가</button>
         <button type="button" id="deleteBtn" class="btn btn-primary">삭제</button>
     </div>
@@ -43,25 +43,16 @@
         ajaxURL:"/customerManage",
         layout:"fitData",
         selectableRows: "1",
-        dataTree:true,
-        dataTreeStartExpanded:true,
-        dataTreeChildField:"children",
-        editTriggerEvent:"dblclick",
         columns:[
             {title:"거래처코드", field:"customerCode"},
-            {title:"거래처명", field:"customerName", editor:"input"}
+            {title:"거래처명", field:"customerName"},
+            {title:"분류", field:"category"},
+            {title:"사업자 등록번호", field:"customerNumber"},
+            {title:"주소", field:"address"},
+            {title:"담당자", field:"manager"},
+            {title:"담당자 전화번호", field:"managerPhone"},
+            {title:"담당자 이메일", field:"managerEmail"},
         ],
-    });
-
-    customerManageTable.on("cellEdited", function(cell){
-        const rowData = cell.getRow().getData();
-
-        axios.put("/customerManage/"+rowData.menuId, rowData)
-            .then(function (response) {
-                console.log(response)
-            }).catch(function (error) {
-                console.log(error)
-            })
     });
 
     document.getElementById("deleteBtn").addEventListener("click", function () {

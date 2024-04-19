@@ -16,7 +16,7 @@ public interface CommonCodeService {
 
     List<CommonCodeDTO> list();
 
-    List<CommonCodeDTO> majorCodelist();
+    List<CommonCodeDTO> majorCodeList();
 
-    List<CommonCodeDTO> subCodelist(CommonCodeDTO commonCodeDTO);
+    List<CommonCodeDTO> subCodeList(String mojorCode);
 }

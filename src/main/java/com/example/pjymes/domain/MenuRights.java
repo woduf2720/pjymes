@@ -1,8 +1,6 @@
 package com.example.pjymes.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -15,5 +13,9 @@ public class MenuRights {
 
     @EmbeddedId
     private MenuRightsId menuRightsId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menuId", insertable = false, updatable = false)
+    private Menu menu;
 }
 

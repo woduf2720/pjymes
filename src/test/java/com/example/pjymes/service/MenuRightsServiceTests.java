@@ -19,7 +19,6 @@ public class MenuRightsServiceTests {
     @Test
     public void testRegister() {
         MenuRightsDTO menuRightsDTO = MenuRightsDTO.builder()
-                .menuName("확인")
                 .build();
         log.info("menuRightsDTO : " + menuRightsDTO);
 
@@ -38,7 +37,7 @@ public class MenuRightsServiceTests {
 
     @Test
     public void testList() {
-        List<MenuRightsDTO> responseDTO = menuRightsService.list();
+        List<MenuRightsDTO> responseDTO = menuRightsService.listByCommonCodeId("0101");
         log.info(responseDTO);
     }
 }

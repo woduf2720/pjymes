@@ -13,13 +13,13 @@ public class CustomMenuRightsRepositoryImpl implements CustomMenuRightsRepositor
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<MenuRights> listBySubCode(String subCode) {
+    public List<MenuRights> listByCommonCodeId(String commonCodeId) {
         QMenuRights qMenuRights = QMenuRights.menuRights;
 
         return jpaQueryFactory
                 .select(qMenuRights)
                 .from(qMenuRights)
-                .where(qMenuRights.menuRightsId.typeId.eq(subCode))
+                .where(qMenuRights.menuRightsId.commonCodeId.eq(commonCodeId))
                 .fetch();
     }
 }

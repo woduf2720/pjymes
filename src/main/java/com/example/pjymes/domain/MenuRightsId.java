@@ -12,6 +12,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MenuRightsId implements Serializable {
-    private String typeId;
+    private String commonCodeId;
     private Long menuId;
 }

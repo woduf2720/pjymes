@@ -73,7 +73,7 @@ public class CommonCodeServiceImpl implements CommonCodeService{
     }
 
     @Override
-    public List<CommonCodeDTO> majorCodelist() {
+    public List<CommonCodeDTO> majorCodeList() {
         log.info("majorCodelist...");
         List<CommonCode> result = commonCodeRepository.majorCodeSearch();
         List<CommonCodeDTO> dtoList = result.stream()
@@ -82,10 +82,9 @@ public class CommonCodeServiceImpl implements CommonCodeService{
     }
 
     @Override
-    public List<CommonCodeDTO> subCodelist(CommonCodeDTO commonCodeDTO) {
+    public List<CommonCodeDTO> subCodeList(String majorCode) {
         log.info("subCodelist...");
-        log.info(commonCodeDTO);
-        List<CommonCode> result = commonCodeRepository.subCodeSearch(commonCodeDTO);
+        List<CommonCode> result = commonCodeRepository.subCodeSearch(majorCode);
         List<CommonCodeDTO> dtoList = result.stream()
                 .map(commonCode -> modelMapper.map(commonCode, CommonCodeDTO.class)).collect(Collectors.toList());
         return dtoList;

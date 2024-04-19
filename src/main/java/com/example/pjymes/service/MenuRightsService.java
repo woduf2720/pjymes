@@ -12,5 +12,5 @@ public interface MenuRightsService {
 
     List<MenuRightsDTO> list();
 
-    List<MenuRightsDTO> listBySubCode(String subCode);
+    List<MenuRightsDTO> listByCommonCodeId(String commonCodeId);
 }

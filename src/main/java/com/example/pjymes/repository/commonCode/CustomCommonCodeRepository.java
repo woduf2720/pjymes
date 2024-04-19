@@ -9,7 +9,7 @@ public interface CustomCommonCodeRepository {
 
     List<CommonCode> majorCodeSearch();
 
-    List<CommonCode> subCodeSearch(CommonCodeDTO commonCodeDTO);
+    List<CommonCode> subCodeSearch(String majorCode);
 
     Long majorCodeCountSearch(CommonCodeDTO commonCodeDTO);
 

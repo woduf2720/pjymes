@@ -3,6 +3,7 @@ package com.example.pjymes.controller;
 import com.example.pjymes.domain.Menu;
 import com.example.pjymes.dto.MenuDTO;
 import com.example.pjymes.service.MenuService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/menu")
 @Log4j2
+@RequiredArgsConstructor
 public class MenuRestController {
 
-    @Autowired
-    private MenuService menuService;
+    private final MenuService menuService;
 
     @GetMapping
     public List<MenuDTO> getMenu() {

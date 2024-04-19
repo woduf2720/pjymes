@@ -4,29 +4,51 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout.html}">
 <div layout:fragment="Content">
-    <div style="height: 5rem; background-color: lightgray;">
-        <span>메뉴 관리</span>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMemberModal">추가</button>
-        <button type="button" id="deleteBtn" class="btn btn-primary">삭제</button>
+    <div class="top-bar">
+        <span class="page-title">사용자 관리</span>
+        <button type="button" id="addedModalBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#memberModal">추가</button>
+        <button type="button" id="modifiedModalBtn" class="btn btn-primary">수정</button>
     </div>
     <div id="memberTable"></div>
 
-    <div class="modal fade" id="addMemberModal" tabindex="-1">
+    <div class="modal fade" id="memberModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">메뉴 추가</h5>
+                    <h5 class="modal-title">사용자 추가</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <label>
-                        유저 id
-                        <input id="parentId">
+                        아이디
+                        <input id="mid">
+                    </label>
+                    <label>
+                        비밀번호
+                        <input id="mpw" class="addedModal none">
+                        <button id="pwReset" class="modifiedModal none">1111로 초기화</button>
+                    </label>
+                    <label>
+                        사용자명
+                        <input id="mname">
+                    </label>
+                    <label>
+                        사용자 타입
+                        <select id="commonCodeId">
+                            <option th:each="subCodeList : ${subCodeList}" th:value="${subCodeList.commonCodeId}"
+                                    th:text="${subCodeList.commonCodeName}">
+                            </option>
+                        </select>
+                    </label>
+                    <label>
+                        사용유무
+                        <input type="checkbox" id="useStatus" checked>
                     </label>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" id="addBtn" class="btn btn-primary addedModal none">추가</button>
+                    <button type="button" id="modifyBtn" class="btn btn-primary modifiedModal none">수정</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="button" id="addBtn" class="btn btn-primary">추가</button>
                 </div>
             </div>
         </div>
@@ -39,45 +61,94 @@
         ajaxURL:"/member",
         layout:"fitData",
         selectableRows: "1",
-        editTriggerEvent:"dblclick",
         columns:[
             {title:"id", field:"mid"},
-            {title:"비밀번호", field:"mpw", editor:"input"},
-            {title:"이메일", field:"email", editor:"input"}
+            {title:"사용자명", field:"mname"},
+            {title:"사용자타입", field:"commonCodeName"},
+            {title:"사용유무", field:"useStatus", hozAlign: "center", formatter:"tickCross"}
         ],
     });
 
-    memberTable.on("cellEdited", function(cell){
-        const rowData = cell.getRow().getData();
+    let modalTitle = document.querySelector("#memberModal .modal-title");
+    let modalMid = document.querySelector("#mid");
 
-        axios.put("/menu/"+rowData.menuId, rowData)
-            .then(function (response) {
-                console.log(response)
-            }).catch(function (error) {
-                console.log(error)
-            })
-    });
+    document.getElementById("addedModalBtn").addEventListener("click", function () {
+        modalTitle.textContent = "사용자 추가"
+        modalMid.readOnly = false
+        document.getElementById('commonCodeId').value = "0101";
+        document.querySelectorAll('.addedModal').forEach(function(element) {
+            element.classList.remove('none');
+        });
+        document.querySelectorAll('.modifiedModal').forEach(function(element) {
+            element.classList.add('none');
+        });
+    })
 
-    const addMemberModal = document.getElementById('addMemberModal')
+    document.getElementById("modifiedModalBtn").addEventListener("click", function (e) {
+        const rows = memberTable.getRows("selected");
+        if(rows.length === 0){
+            return alert("수정할 사용자를 선택해주세요");
+        }else{
+            modalTitle.textContent = "사용자 수정"
+            modalMid.readOnly = true
+            new bootstrap.Modal(document.getElementById('memberModal')).show()
+            document.getElementById('mid').value = rows[0].getData().mid;
+            document.getElementById('mname').value = rows[0].getData().mname;
+            document.getElementById('commonCodeId').value = rows[0].getData().commonCodeId;
+            document.getElementById('useStatus').checked = rows[0].getData().useStatus;
+
+            document.querySelectorAll('.addedModal').forEach(function(element) {
+                element.classList.add('none');
+            });
+            document.querySelectorAll('.modifiedModal').forEach(function(element) {
+                element.classList.remove('none');
+            });
+        }
+    })
+
+    const memberModal = document.getElementById('memberModal')
 
     document.getElementById("addBtn").addEventListener("click", function () {
         const data = {
-            "parentId" : document.getElementById('parentId').value,
-            "menuName" : document.getElementById('menuName').value,
-            "url" : document.getElementById('url').value
+            "mid" : document.getElementById('mid').value,
+            "mpw" : document.getElementById('mpw').value,
+            "mname" : document.getElementById('mname').value,
+            "commonCodeId" : document.getElementById('commonCodeId').value,
+            "useStatus" : document.getElementById('useStatus').checked
         }
         axios.post("/member", data)
             .then(function (response) {
                 console.log(response)
-                bootstrap.Modal.getInstance(addMemberModal).hide();
-                memberTable.replaceData("/menu")
+                bootstrap.Modal.getInstance(memberModal).hide();
+                memberTable.replaceData("/member")
             }).catch(function (error) {
             console.log(error)
         })
     })
 
-    addMemberModal.addEventListener('hidden.bs.modal', event => {
-        document.getElementById('parentId').value = null;
+    document.getElementById("modifyBtn").addEventListener("click", function () {
+        const data = {
+            "mid" : document.getElementById('mid').value,
+            "mname" : document.getElementById('mname').value,
+            "commonCodeId" : document.getElementById('commonCodeId').value,
+            "useStatus" : document.getElementById('useStatus').checked
+        }
+        axios.put("/member", data)
+            .then(function (response) {
+                console.log(response)
+                bootstrap.Modal.getInstance(memberModal).hide();
+                memberTable.replaceData("/member")
+            }).catch(function (error) {
+            console.log(error)
+        })
+    })
+
+    memberModal.addEventListener('hidden.bs.modal', event => {
+        document.getElementById('mid').value = null;
+        document.getElementById('mpw').value = null;
+        document.getElementById('mname').value = null;
+        document.getElementById('commonCodeId').value = null;
+        document.getElementById('useStatus').checked = false;
     })
 </script>
 </html>

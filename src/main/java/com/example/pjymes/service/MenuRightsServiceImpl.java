@@ -47,12 +47,12 @@ public class MenuRightsServiceImpl implements MenuRightsService{
     }
 
     @Override
-    public List<MenuRightsDTO> listBySubCode(String subCode) {
-        log.info("typeRights listBySubCode...");
-        List<MenuRights> result = menuRightsRepository.listBySubCode(subCode);
+    public List<MenuRightsDTO> listByCommonCodeId(String commonCodeId) {
+        log.info("menuRights listByCommonCodeId...");
+        List<MenuRights> result = menuRightsRepository.listByCommonCodeId(commonCodeId);
         List<MenuRightsDTO> dtoList = result.stream()
-                .map(menuRights -> modelMapper.map(menuRights, MenuRightsDTO.class)).collect(Collectors.toList());
-
+                .map(menuRights -> modelMapper.map(menuRights, MenuRightsDTO.class))
+                .collect(Collectors.toList());
         log.info(dtoList);
         return dtoList;
     }

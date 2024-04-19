@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface CustomMenuRightsRepository {
 
-    List<MenuRights> listBySubCode(String subCode);
+    List<MenuRights> listByCommonCodeId(String commonCodeId);
 
 }
