@@ -6,16 +6,16 @@
 <div layout:fragment="Content">
     <div class="top-bar">
         <span class="page-title">거래처 관리</span>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">추가</button>
-        <button type="button" id="deleteBtn" class="btn btn-primary">삭제</button>
+        <button type="button" id="addedModalBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#customerModal">추가</button>
+        <button type="button" id="modifiedModalBtn" class="btn btn-primary">수정</button>
     </div>
     <div id="customerManageTable"></div>
 
-    <div class="modal fade" id="addCustomerModal" tabindex="-1">
+    <div class="modal fade" id="customerModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">메뉴 추가</h5>
+                    <h5 class="modal-title">거래처 추가</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -27,10 +27,39 @@
                         거래처명
                         <input id="customerName">
                     </label>
+                    <label>
+                        분류
+                        <input id="category">
+                    </label>
+                    <label>
+                        사업자 등록번호
+                        <input id="customerNumber">
+                    </label>
+                    <label>
+                        주소
+                        <input id="address">
+                    </label>
+                    <label>
+                        담당자
+                        <input id="manager">
+                    </label>
+                    <label>
+                        담당자 전화번호
+                        <input id="managerPhone">
+                    </label>
+                    <label>
+                        담당자 이메일
+                        <input id="managerEmail">
+                    </label>
+                    <label>
+                        사용유무
+                        <input type="checkbox" id="useStatus" checked>
+                    </label>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" id="addBtn" class="btn btn-primary addedModal none">추가</button>
+                    <button type="button" id="modifyBtn" class="btn btn-primary modifiedModal none">수정</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="button" id="addBtn" class="btn btn-primary">추가</button>
                 </div>
             </div>
         </div>
@@ -44,6 +73,7 @@
         layout:"fitData",
         selectableRows: "1",
         columns:[
+            {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
             {title:"거래처코드", field:"customerCode"},
             {title:"거래처명", field:"customerName"},
             {title:"분류", field:"category"},
@@ -52,45 +82,107 @@
             {title:"담당자", field:"manager"},
             {title:"담당자 전화번호", field:"managerPhone"},
             {title:"담당자 이메일", field:"managerEmail"},
+            {title:"사용유무", field:"useStatus", hozAlign: "center", formatter:"tickCross"},
         ],
     });
 
-    document.getElementById("deleteBtn").addEventListener("click", function () {
-        const row = customerManageTable.getSelectedRows()[0];
-        if(row){
-            axios.delete("/customerManage/"+row.getData().menuId)
-                .then(function (response) {
-                    console.log(response)
-                    customerManageTable.deleteRow(row)
-                }).catch(function (error) {
-                console.log(error)
-            })
+    let modalTitle = document.querySelector("#customerModal .modal-title");
+    let customerCode = document.querySelector("#customerCode");
+
+    document.getElementById("addedModalBtn").addEventListener("click", function () {
+        modalTitle.textContent = "거래처 추가"
+        customerCode.readOnly = false
+        document.querySelectorAll('.addedModal').forEach(function(element) {
+            element.classList.remove('none');
+        });
+        document.querySelectorAll('.modifiedModal').forEach(function(element) {
+            element.classList.add('none');
+        });
+    })
+
+    document.getElementById("modifiedModalBtn").addEventListener("click", function (e) {
+        const rows = customerManageTable.getRows("selected");
+        if(rows.length === 0){
+            return alert("수정할 품목을 선택해주세요");
         }else{
-            alert("삭제할 행을 선택해주세요.")
+            modalTitle.textContent = "품목 수정"
+            customerCode.readOnly = true
+            new bootstrap.Modal(document.getElementById('customerModal')).show()
+            document.getElementById('customerCode').value = rows[0].getData().customerCode;
+            document.getElementById('customerName').value = rows[0].getData().customerName;
+            document.getElementById('category').value = rows[0].getData().category;
+            document.getElementById('customerNumber').value = rows[0].getData().customerNumber;
+            document.getElementById('address').value = rows[0].getData().address;
+            document.getElementById('manager').value = rows[0].getData().manager;
+            document.getElementById('managerPhone').value = rows[0].getData().managerPhone;
+            document.getElementById('managerEmail').value = rows[0].getData().managerEmail;
+            document.getElementById('useStatus').checked = rows[0].getData().useStatus;
+
+            document.querySelectorAll('.addedModal').forEach(function(element) {
+                element.classList.add('none');
+            });
+            document.querySelectorAll('.modifiedModal').forEach(function(element) {
+                element.classList.remove('none');
+            });
         }
     })
 
-    const addCustomerModal = document.getElementById('addCustomerModal')
+    const customerModal = document.getElementById('customerModal')
 
     document.getElementById("addBtn").addEventListener("click", function () {
         const data = {
             "customerCode" : document.getElementById('customerCode').value,
-            "customerName" : document.getElementById('customerName').value
+            "customerName" : document.getElementById('customerName').value,
+            "category" : document.getElementById('category').value,
+            "customerNumber" : document.getElementById('customerNumber').value,
+            "address" : document.getElementById('address').value,
+            "manager" : document.getElementById('manager').value,
+            "managerPhone" : document.getElementById('managerPhone').value,
+            "managerEmail" : document.getElementById('managerEmail').value,
+            "useStatus" : document.getElementById('useStatus').checked
         }
         axios.post("/customerManage", data)
             .then(function (response) {
                 console.log(response)
-                bootstrap.Modal.getInstance(addCustomerModal).hide();
-                customerManageTable.replaceData("/menu")
+                bootstrap.Modal.getInstance(customerModal).hide();
+                customerManageTable.replaceData("/customerManage")
             }).catch(function (error) {
             console.log(error)
         })
     })
 
+    document.getElementById("modifyBtn").addEventListener("click", function () {
+        const data = {
+            "customerCode" : document.getElementById('customerCode').value,
+            "customerName" : document.getElementById('customerName').value,
+            "category" : document.getElementById('category').value,
+            "customerNumber" : document.getElementById('customerNumber').value,
+            "address" : document.getElementById('address').value,
+            "manager" : document.getElementById('manager').value,
+            "managerPhone" : document.getElementById('managerPhone').value,
+            "managerEmail" : document.getElementById('managerEmail').value,
+            "useStatus" : document.getElementById('useStatus').checked
+        }
+        axios.put("/customerManage", data)
+            .then(function (response) {
+                console.log(response)
+                bootstrap.Modal.getInstance(customerModal).hide();
+                customerManageTable.replaceData("/customerManage")
+            }).catch(function (error) {
+            console.log(error)
+        })
+    })
 
-    addCustomerModal.addEventListener('hidden.bs.modal', event => {
+    customerModal.addEventListener('hidden.bs.modal', event => {
         document.getElementById('customerCode').value = null;
         document.getElementById('customerName').value = null;
+        document.getElementById('category').value = null;
+        document.getElementById('customerNumber').value = null;
+        document.getElementById('address').value = null;
+        document.getElementById('manager').value = null;
+        document.getElementById('managerPhone').value = null;
+        document.getElementById('managerEmail').value = null;
+        document.getElementById('useStatus').checked = true;
     })
 </script>
 </html>

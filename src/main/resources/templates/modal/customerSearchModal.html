@@ -1,0 +1,75 @@
+<div class="modal fade" id="customerSearchModal" tabindex="-1" aria-labelledby="customerSearchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="customerSearchModalLabel">거래처 검색</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3 g-3 align-items-center">
+                    <label for="searchInput" class="col-sm-2 col-form-label">검색</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="searchInput" class="form-control" placeholder="거래처를 입력하세요">
+                    </div>
+                </div>
+                <div id="customerSearchTable"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary">검색</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const customerSearchModal = new bootstrap.Modal(document.getElementById('customerSearchModal'))
+    const customerSearch = document.getElementById("customerSearch")
+
+    if (customerSearch) {
+        customerSearch.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                customerModalShow(customerSearch.value, customerSearch, "input")
+            }
+        })
+    }
+
+    var originTag = ["test"]
+    function customerModalShow(value, tag, status) {
+        originTag = [value, tag, status]
+        customerSearchModal.show();
+    }
+
+    var customerSearchTable = new Tabulator("#customerSearchTable", {
+        height: "20rem",
+        layout:"fitData",
+        ajaxURL:"/customerManage",
+        columns:[
+            {title:"거래처코드", field:"customerCode"},
+            {title:"거래처명", field:"customerName"},
+        ],
+    });
+
+    customerSearchTable.on("rowClick", function(e, row){
+        row.getTable().deselectRow();
+        row.select();
+    });
+
+    customerSearchTable.on("rowDblClick", function(e, row){
+        customerSearchModal.hide();
+        customerSearchResult(row.getData())
+    });
+
+    function customerSearchResult (data) {
+        let tag = originTag[1]
+        let stat = originTag[2]
+        if(stat === "input") {
+            tag.value = data.customerName;
+        }else{
+            tag.getRow().update({
+                "customerCode" : data.customerCode,
+                "customerName" : data.customerName
+            })
+        }
+    }
+</script>

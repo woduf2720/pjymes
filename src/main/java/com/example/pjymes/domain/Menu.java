@@ -20,10 +20,10 @@ public class Menu {
 
     private Integer displayOrder;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 50, nullable = false)
     private String menuName;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 50, nullable = false)
     private String url;
 
     @ManyToOne

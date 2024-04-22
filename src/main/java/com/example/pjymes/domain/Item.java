@@ -3,16 +3,14 @@ package com.example.pjymes.domain;
 import com.example.pjymes.dto.ItemDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Item extends BaseEntity{
 
     @Id

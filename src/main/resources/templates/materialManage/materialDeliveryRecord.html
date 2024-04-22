@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<div layout:fragment="Content">
+    <div class="top-bar">
+        <span class="page-title">자재 출고 현황</span>
+        <div>
+            <div>
+                <label>발주일
+                    <input id="startDate" class="today" type="date" value="2024-04-20">
+                </label>
+                <label style="text-align: center">~
+                    <input id="endDate" class="today" type="date" value="2024-04-20">
+                </label>
+            </div>
+            <div>
+                <label>거래처
+                    <input id="customerSearch">
+                </label>
+            </div>
+        </div>
+    </div>
+    <div id="menuTable"></div>
+</div>
+<script layout:fragment="script" th:inline="javascript">
+
+    var menuTable = new Tabulator("#menuTable", {
+        height: "45rem",
+        ajaxURL:"/menu",
+        layout:"fitData",
+        columns:[
+            {title:"id", field:"menuId"},
+            {title:"순서", field:"displayOrder"},
+            {title:"메뉴명", field:"menuName"},
+            {title:"url", field:"url"}
+        ],
+    });
+
+</script>
+</html>

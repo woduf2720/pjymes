@@ -1,0 +1,78 @@
+<div class="modal fade" id="itemSearchModal" tabindex="-1" aria-labelledby="itemSearchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="itemSearchModalLabel">품목 검색</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3 g-3 align-items-center">
+                    <label for="searchInput" class="col-sm-2 col-form-label">검색</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="searchInput" class="form-control" placeholder="품목을 입력하세요">
+                    </div>
+                </div>
+                <div id="itemSearchTable"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary">검색</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const itemSearchModal = new bootstrap.Modal(document.getElementById('itemSearchModal'))
+    const itemSearch = document.getElementById("itemSearch")
+
+    if (itemSearch) {
+        itemSearch.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                itemModalShow(itemSearch.value, itemSearch, "input")
+            }
+        })
+    }
+
+    var originTag = ["test"]
+    function itemModalShow(value, tag, status) {
+        originTag = [value, tag, status]
+        itemSearchModal.show();
+    }
+
+    var itemSearchTable = new Tabulator("#itemSearchTable", {
+        height: "20rem",
+        layout:"fitData",
+        ajaxURL:"/itemManage",
+        selectableRows: "1",
+        columns:[
+            {title:"품목코드", field:"itemCode"},
+            {title:"품목명", field:"itemName"},
+        ],
+    });
+
+    itemSearchTable.on("rowClick", function(e, row){
+        row.getTable().deselectRow();
+        row.select();
+    });
+
+    itemSearchTable.on("rowDblClick", function(e, row){
+        itemSearchModal.hide();
+        itemSearchResult(row.getData())
+    });
+
+    function itemSearchResult (data) {
+        let tag = originTag[1]
+        let stat = originTag[2]
+        if(stat === "input") {
+            tag.value = data.itemName;
+        }else{
+            tag.getRow().update({
+                "itemCode" : data.itemCode,
+                "itemName" : data.itemName,
+                "standard" : data.standard,
+                "unitPrice" : data.unitPrice
+            })
+        }
+    }
+</script>

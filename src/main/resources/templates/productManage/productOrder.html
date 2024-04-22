@@ -1,0 +1,41 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<div layout:fragment="Content">
+
+    <div style="display: flex; justify-content: space-between;">
+        <div style="width: calc(50% - 10px)">
+            <div class="top-bar">
+                <span class="page-title">수주 관리</span>
+                <button type="button" id="addMasterBtn" class="btn btn-primary">발주 추가</button>
+                <div>
+                    <div>
+                        <label>발주일
+                            <input id="startDate" class="today" type="date" value="2024-04-20">
+                        </label>
+                        <label style="text-align: center">~
+                            <input id="endDate" class="today" type="date" value="2024-04-20">
+                        </label>
+                    </div>
+                    <div>
+                        <label>거래처
+                            <input id="customerSearch">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div id="orderMasterTable"></div>
+        </div>
+        <div style="width: 50%">
+            <div class="top-bar">
+                <button type="button" id="addSubBtn" class="btn btn-primary">품목 추가</button>
+                <button type="button" id="saveBtn" class="btn btn-primary">저장</button>
+                <button type="button" id="deleteBtn" class="btn btn-primary">삭제</button>
+            </div>
+            <div id="orderSubTable" ></div>
+        </div>
+    </div>
+</div>
+<script layout:fragment="script" th:src="@{/js/materialManage/materialOrder.js}"></script>
+</html>
