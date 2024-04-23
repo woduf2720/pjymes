@@ -17,5 +17,5 @@ public class MemberDTO{
     private String mname;
     private String commonCodeId;
     private String commonCodeName;
-    private boolean useStatus;
+    private Boolean useStatus;
 }

@@ -37,8 +37,17 @@ public class MemberRestController {
 
     @PutMapping
     public Map<String, String> putMember(@RequestBody MemberDTO memberDTO) {
-        log.info("put..." + memberDTO);
+        log.info("putMember..." + memberDTO);
         memberService.modify(memberDTO);
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("memberId", memberDTO.getMid());
+        return resultMap;
+    }
+
+    @PutMapping("/password")
+    public Map<String, String> putPassword(@RequestBody MemberDTO memberDTO) {
+        log.info("putPassword..." + memberDTO);
+        memberService.changePassword(memberDTO);
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("memberId", memberDTO.getMid());
         return resultMap;

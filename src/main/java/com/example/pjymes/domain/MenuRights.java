@@ -1,5 +1,6 @@
 package com.example.pjymes.domain;
 
+import com.example.pjymes.dto.MenuRightsDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,5 +18,11 @@ public class MenuRights {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menuId", insertable = false, updatable = false)
     private Menu menu;
+
+    private Boolean useStatus = true;
+
+    public void change(MenuRightsDTO menuRightsDTO) {
+        this.useStatus = menuRightsDTO.getUseStatus();
+    }
 }
 

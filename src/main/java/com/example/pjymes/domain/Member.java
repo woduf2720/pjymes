@@ -25,7 +25,7 @@ public class Member extends BaseEntity{
     @JoinColumn(name = "commonCodeId")
     private CommonCode commonCode;
 
-    private boolean useStatus;
+    private Boolean useStatus;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default

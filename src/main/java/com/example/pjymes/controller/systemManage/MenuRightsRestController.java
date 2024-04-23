@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/menuRights")
@@ -25,6 +27,15 @@ public class MenuRightsRestController {
     public List<MenuRightsDTO> getMenuRightsByCommonCodeId(@PathVariable String commonCodeId) {
         log.info("getMenuRightsByCommonCodeId...");
         return menuRightsService.listByCommonCodeId(commonCodeId);
+    }
+
+    @PutMapping
+    public Map<String, MenuRightsDTO> putMenuRights(@RequestBody MenuRightsDTO menuRightsDTO) {
+        log.info("put..." + menuRightsDTO);
+        menuRightsService.modify(menuRightsDTO);
+        Map<String, MenuRightsDTO> resultMap = new HashMap<>();
+        resultMap.put("menuRightsDTO", menuRightsDTO);
+        return resultMap;
     }
 
 }

@@ -21,23 +21,6 @@
         }
         .top-bar {
             height: 5rem;
-            background-color: lightgray;
-            display: flex;
-            align-items: center;
-            padding: 10px;
-        }
-        .top-bar .page-title {
-            font-weight: bolder;
-            color: black;
-            font-size: x-large;
-            background-color: cornsilk;
-            padding: 5px;
-        }
-        .top-bar button {
-            margin: 5px;
-        }
-        .none {
-            display: none;
         }
     </style>
 </head>
@@ -45,9 +28,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="/main" style="color: gold">PJYMES</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
             <ul class="navbar-nav">
             </ul>
@@ -61,6 +41,7 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.2.0/dist/js/tabulator.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/js/common.js"></script>
 <script>
     fetch("/menu")
         .then(function(response) {

@@ -19,4 +19,6 @@ public class CommonCodeDTO {
     private String majorCode;
     private String subCode;
     private String commonCodeName;
+    private String remarks;
+    private Boolean useStatus;
 }

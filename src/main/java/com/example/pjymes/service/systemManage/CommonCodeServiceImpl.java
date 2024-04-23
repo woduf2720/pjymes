@@ -53,7 +53,7 @@ public class CommonCodeServiceImpl implements CommonCodeService{
         log.info("commonCode modify...");
         Optional<CommonCode> result = commonCodeRepository.findById(commonCodeDTO.getCommonCodeId());
         CommonCode commonCode = result.orElseThrow();
-        commonCode.change(commonCodeDTO.getCommonCodeName());
+        commonCode.change(commonCodeDTO);
         commonCodeRepository.save(commonCode);
     }
 

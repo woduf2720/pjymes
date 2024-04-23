@@ -42,7 +42,7 @@ public class MemberServiceImpl implements MemberService{
         log.info("member modify...");
         Optional<Member> result = memberRepository.findById(memberDTO.getMid());
         Member member = result.orElseThrow();
-        member.change(member.getMname(), "", member.isUseStatus());
+        member.change(memberDTO.getMname(), "", memberDTO.getUseStatus());
         memberRepository.save(member);
     }
 
@@ -52,5 +52,14 @@ public class MemberServiceImpl implements MemberService{
         List<Member> result = memberRepository.findAll();
         return result.stream()
                 .map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public void changePassword(MemberDTO memberDTO) {
+        log.info("member changePassword...");
+        Optional<Member> result = memberRepository.findById(memberDTO.getMid());
+        Member member = result.orElseThrow();
+        member.changePassword(memberDTO.getMpw());
+        memberRepository.save(member);
     }
 }

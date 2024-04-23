@@ -3,104 +3,21 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout.html}">
-<div layout:fragment="Content">
-    <div style="display: flex; justify-content: space-between;">
-        <div style="width: calc(50% - 10px)">
-            <div class="top-bar">
-                <span class="page-title">권한 관리</span>
+<th:block layout:fragment="Content">
+    <div class="d-flex justify-content-between">
+        <div class="w-50 pe-2">
+            <div class="top-bar bg-dark-subtle d-flex align-items-center p-2">
+                <span class="page-title fw-bold bg-light p-1 fs-2 me-3">메뉴 권한 관리</span>
+            </div>
+            <div id="rightsTable"></div>
+        </div>
+        <div class="w-50">
+            <div class="top-bar bg-dark-subtle d-flex align-items-center p-2">
             </div>
             <div id="menuRightsTable"></div>
         </div>
-        <div style="width: 50%">
-            <div class="top-bar">
-                <button type="button" id="authorityAddBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#commonCodeModal">수정</button>
-            </div>
-            <div id="menuTable"></div>
-        </div>
     </div>
 
-    <div class="modal fade" id="menuRightsModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">코드 추가</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <label>
-                        권한
-                        <input id="authority">
-                    </label>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="button" id="addBtn" class="btn btn-primary">추가</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<script layout:fragment="script" th:inline="javascript">
-
-    var menuRightsTable = new Tabulator("#menuRightsTable", {
-        height: "45rem",
-        ajaxURL:"/commonCode/sub",
-        ajaxParams: {"majorCode" : "01"},
-        layout:"fitData",
-        selectableRows: "1",
-        columns:[
-            {title:"사용자 코드", field:"commonCodeId"},
-            {title:"사용자 타입", field:"commonCodeName"}
-        ],
-    });
-
-    menuRightsTable.on("rowSelected", function(row){
-        menuTable.setData("/menuRights/"+row.getData().commonCodeId);
-    });
-
-    menuRightsTable.on("cellEdited", function(cell){
-        const rowData = cell.getRow().getData();
-
-        axios.put("/authority/"+rowData.menuId, rowData)
-            .then(function (response) {
-                console.log(response)
-            }).catch(function (error) {
-                console.log(error)
-            })
-    });
-
-    const menuRightsModal = document.getElementById('menuRightsModal')
-
-    document.getElementById("addBtn").addEventListener("click", function () {
-        const data = {
-            "parentId" : document.getElementById('parentId').value,
-            "menuName" : document.getElementById('menuName').value,
-            "url" : document.getElementById('url').value
-        }
-        axios.post("/authority", data)
-            .then(function (response) {
-                console.log(response)
-                bootstrap.Modal.getInstance(menuRightsModal).hide();
-                menuRightsTable.replaceData("/menu")
-            }).catch(function (error) {
-            console.log(error)
-        })
-    })
-
-
-    menuRightsModal.addEventListener('hidden.bs.modal', event => {
-        document.getElementById('parentId').value = null;
-        document.getElementById('menuName').value = null;
-        document.getElementById('url').value = null;
-    })
-
-    var menuTable = new Tabulator("#menuTable", {
-        height: "45rem",
-        layout:"fitData",
-        columns:[
-            {title:"메뉴코드", field:"menuId"},
-            {title:"메뉴명", field:"menuName"},
-        ],
-    });
-</script>
+</th:block>
+<script layout:fragment="script" th:src="@{/js/systemManage/menuRights.js}"></script>
 </html>

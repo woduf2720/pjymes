@@ -1,5 +1,6 @@
 package com.example.pjymes.service.systemManage;
 
+import com.example.pjymes.domain.Menu;
 import com.example.pjymes.domain.MenuRights;
 import com.example.pjymes.domain.MenuRightsId;
 import com.example.pjymes.dto.MenuRightsDTO;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +26,7 @@ public class MenuRightsServiceImpl implements MenuRightsService{
 
     @Override
     public MenuRightsId register(MenuRightsDTO menuRightsDTO) {
-        log.info("typeRights register...");
+        log.info("menuRights register...");
         MenuRights menuRights = modelMapper.map(menuRightsDTO, MenuRights.class);
         MenuRightsId menuRightsId = menuRightsRepository.save(menuRights).getMenuRightsId();
         return menuRightsId;
@@ -32,7 +34,11 @@ public class MenuRightsServiceImpl implements MenuRightsService{
 
     @Override
     public void modify(MenuRightsDTO menuRightsDTO) {
-
+        log.info("menuRights modify...");
+        Optional<MenuRights> result = menuRightsRepository.findById(new MenuRightsId(menuRightsDTO.getCommonCodeId(), menuRightsDTO.getMenuId()));
+        MenuRights menuRights = result.orElseThrow();
+        menuRights.change(menuRightsDTO);
+        menuRightsRepository.save(menuRights);
     }
 
     @Override

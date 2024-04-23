@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MenuRightsDTO {
 
-    private String typeId;
+    private String commonCodeId;
     private Long menuId;
     private String menuName;
+    private Boolean useStatus;
 }

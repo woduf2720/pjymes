@@ -12,4 +12,6 @@ public interface MemberService {
     void modify(MemberDTO memberDTO);
 
     List<MemberDTO> list();
+
+    void changePassword(MemberDTO memberDTO);
 }
