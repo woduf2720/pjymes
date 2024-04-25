@@ -19,8 +19,9 @@ public class MenuServiceTests {
     @Test
     public void testRegister() {
         MenuDTO menuDTO = MenuDTO.builder()
-                .menuName("관리자 메뉴")
-                .url("adminMenu")
+                .name("테스트메뉴")
+                .url("testMenu")
+                .parentId(28L)
                 .build();
         log.info("menuDTO : " + menuDTO);
 
@@ -33,8 +34,8 @@ public class MenuServiceTests {
     public void testModify() {
 
         MenuDTO menuDTO = MenuDTO.builder()
-                .menuId(2L)
-                .menuName("new menuName2")
+                .id(2L)
+                .name("new menuName2")
                 .build();
         menuService.modify(menuDTO);
     }

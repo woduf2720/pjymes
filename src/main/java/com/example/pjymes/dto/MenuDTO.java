@@ -1,10 +1,9 @@
 package com.example.pjymes.dto;
 
-import com.example.pjymes.domain.Menu;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 public class MenuDTO {
 
-    private Long menuId;
-    private String menuName;
+    private Long id;
+    private Integer orderIndex;
+    private String name;
     private String url;
-    private Integer displayOrder;
     private Long parentId;
-    private MenuDTO parentMenu;
 
     @Builder.Default
     private List<MenuDTO> children = new ArrayList<>();

@@ -7,9 +7,9 @@ var menuTable = new Tabulator("#menuTable", {
     dataTreeChildField:"children",
     editTriggerEvent:"dblclick",
     columns:[
-        {title:"id", field:"menuId"},
-        {title:"순서", field:"displayOrder", editor:"input"},
-        {title:"메뉴명", field:"menuName", editor:"input"},
+        {title:"id", field:"id"},
+        {title:"순서", field:"orderIndex", editor:"input"},
+        {title:"메뉴명", field:"name", editor:"input"},
         {title:"url", field:"url", editor:"input"}
     ],
 });
@@ -22,7 +22,7 @@ menuTable.on("rowClick", function(e, row){
 menuTable.on("cellEdited", function(cell){
     const rowData = cell.getRow().getData();
 
-    axios.put("/menu/"+rowData.menuId, rowData)
+    axios.put("/menu", rowData)
         .then(function (response) {
             console.log(response)
         }).catch(function (error) {
@@ -30,38 +30,6 @@ menuTable.on("cellEdited", function(cell){
     })
 });
 
-document.getElementById("deleteBtn").addEventListener("click", function () {
-    const row = menuTable.getSelectedRows()[0];
-    if(row){
-        axios.delete("/menu/"+row.getData().menuId)
-            .then(function (response) {
-                console.log(response)
-                menuTable.deleteRow(row)
-            }).catch(function (error) {
-            console.log(error)
-        })
-    }else{
-        alert("삭제할 행을 선택해주세요.")
-    }
-})
-
-const addMenuModal = document.getElementById('addMenuModal')
-
-addMenuModal.addEventListener('shown.bs.modal', event => {
-    const inputElements = event.target.querySelectorAll('.form-input');
-    if (inputElements.length > 0) {
-        focusFirstValidInput(inputElements);
-        let selectedRows = menuTable.getSelectedRows()
-        if(selectedRows.length > 0){
-            let data = selectedRows[0].getData()
-            if(data.parentId == null) {
-                document.getElementById('parentId').value = data.menuId
-            }else{
-
-            }
-        }
-    }
-})
 
 document.getElementById("addBtn").addEventListener("click", function () {
     const data = inputToJson("form-input")
@@ -76,7 +44,41 @@ document.getElementById("addBtn").addEventListener("click", function () {
     })
 })
 
+const addMenuModal = document.getElementById('addMenuModal')
+
+addMenuModal.addEventListener('shown.bs.modal', event => {
+    const inputElements = event.target.querySelectorAll('.form-input');
+    if (inputElements.length > 0) {
+        focusFirstValidInput(inputElements);
+        let selectedRows = menuTable.getSelectedRows()
+        if(selectedRows.length > 0){
+            let data = selectedRows[0].getData()
+            if(data.parentId == null) {
+                document.getElementById('parentId').value = data.id
+            }else{
+
+            }
+        }
+    }
+})
 
 addMenuModal.addEventListener('hidden.bs.modal', event => {
     inputToNull("form-input")
+})
+
+document.getElementById("deleteBtn").addEventListener("click", function () {
+    const row = menuTable.getSelectedRows()[0];
+    if(row){
+        axios.delete("/menu/"+row.getData().id)
+            .then(function (response) {
+                menuTable.deleteRow(row)
+                .then(function(){
+                    alert("삭제되었습니다.")
+                })
+            }).catch(function (error) {
+            alert("하위 메뉴가 있으면 삭제 할 수 없습니다.")
+        })
+    }else{
+        alert("삭제할 행을 선택해주세요.")
+    }
 })

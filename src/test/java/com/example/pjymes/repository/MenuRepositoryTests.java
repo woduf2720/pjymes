@@ -20,19 +20,19 @@ public class MenuRepositoryTests {
     public void testInsert() {
         IntStream.rangeClosed(1,3).forEach(i -> {
             Menu menu = Menu.builder()
-                    .menuName("menu"+i)
+                    .name("menu"+i)
                     .build();
 
             Menu result = menuRepository.save(menu);
-            log.info("menuId : " + result.getMenuId());
+            log.info("menuId : " + result.getId());
         });
     }
 
     @Test
     public void testSelect() {
-        Long menuId = 1L;
+        Long id = 1L;
 
-        Optional<Menu> result = menuRepository.findById(menuId);
+        Optional<Menu> result = menuRepository.findById(id);
 
         Menu menu = result.orElseThrow();
 

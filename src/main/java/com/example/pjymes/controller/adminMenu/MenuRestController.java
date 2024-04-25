@@ -27,33 +27,29 @@ public class MenuRestController {
     @PostMapping
     public Map<String, Long> postMenu(@RequestBody MenuDTO menuDTO) {
         log.info("postMenu..." + menuDTO);
-        if(menuDTO.getParentId() != null){
-            menuDTO.setParentMenu(menuService.readOne(menuDTO.getParentId()));
-        }
+//        if(menuDTO.getParentMenuId() != null){
+//            menuDTO.setParentMenu(menuService.readOne(menuDTO.getParentMenuId()));
+//        }
         Long menuId = menuService.register(menuDTO);
         Map<String, Long> resultMap = new HashMap<>();
         resultMap.put("menuId", menuId);
         return resultMap;
     }
 
-    @PutMapping("/{menuId}")
-    public Map<String, Long> putMenu(@PathVariable("menuId") Long menuId, @RequestBody MenuDTO menuDTO) {
+    @PutMapping
+    public Map<String, Long> putMenu(@RequestBody MenuDTO menuDTO) {
         log.info("put..." + menuDTO);
-        menuDTO.setMenuId(menuId);
-        if(menuDTO.getParentId() != null){
-            menuDTO.setParentMenu(menuService.readOne(menuDTO.getParentId()));
-        }
         menuService.modify(menuDTO);
         Map<String, Long> resultMap = new HashMap<>();
-        resultMap.put("menuId", menuId);
+        resultMap.put("id", menuDTO.getId());
         return resultMap;
     }
 
-    @DeleteMapping("/{menuId}")
-    public Map<String, Long> deleteMenu(@PathVariable("menuId") Long menuId) {
-        menuService.remove(menuId);
+    @DeleteMapping("/{id}")
+    public Map<String, Long> deleteMenu(@PathVariable Long id) {
+        menuService.remove(id);
         Map<String, Long> resultMap = new HashMap<>();
-        resultMap.put("menuId", menuId);
+        resultMap.put("id", id);
         return resultMap;
     }
 }

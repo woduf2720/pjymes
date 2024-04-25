@@ -28,11 +28,15 @@ public class MenuServiceImpl implements MenuService{
     @Override
     public Long register(MenuDTO menuDTO) {
         log.info("menu register...");
-        Long count = menuRepository.orderSearch(menuDTO);
-        menuDTO.setDisplayOrder(count.intValue());
+        Long parentId = menuDTO.getParentId();
+        long count = menuRepository.findAllById(parentId).size();
+        menuDTO.setOrderIndex((int) count+1);
+
         Menu menu = modelMapper.map(menuDTO, Menu.class);
-        Long menuId = menuRepository.save(menu).getMenuId();
-        return menuId;
+
+        menu.setParent(menuRepository.findById(parentId).orElseThrow());
+
+        return menuRepository.save(menu).getId();
     }
 
     @Override
@@ -40,17 +44,16 @@ public class MenuServiceImpl implements MenuService{
         log.info("menu readOne...");
         Optional<Menu> result = menuRepository.findById(menuId);
         Menu menu = result.orElseThrow();
-        MenuDTO menuDTO = modelMapper.map(menu, MenuDTO.class);
-        return menuDTO;
+        return modelMapper.map(menu, MenuDTO.class);
     }
 
     @CacheEvict(value = "menu", allEntries = true)
     @Override
     public void modify(MenuDTO menuDTO) {
         log.info("menu modify...");
-        Optional<Menu> result = menuRepository.findById(menuDTO.getMenuId());
+        Optional<Menu> result = menuRepository.findById(menuDTO.getId());
         Menu menu = result.orElseThrow();
-        menu.change(menuDTO.getDisplayOrder(), menuDTO.getMenuName(), menuDTO.getUrl());
+        menu.change(menuDTO.getOrderIndex(), menuDTO.getName(), menuDTO.getUrl());
         menuRepository.save(menu);
     }
 
@@ -70,7 +73,7 @@ public class MenuServiceImpl implements MenuService{
 
         // 부모가 없는 최상위 메뉴들을 찾아서 계층 구조 생성
         for (Menu menu : result) {
-            if (menu.getParentMenu() == null) {
+            if (menu.getParent() == null) {
                 dtoList.add(convertToDTO(menu, result));
             }
         }
@@ -85,7 +88,7 @@ public class MenuServiceImpl implements MenuService{
 
         // 자식 메뉴가 있는 경우 재귀적으로 처리
         for (Menu childMenu : menuList) {
-            if (childMenu.getParentMenu() != null && childMenu.getParentMenu().getMenuId().equals(menu.getMenuId())) {
+            if (childMenu.getParent() != null && childMenu.getParent().getId().equals(menu.getId())) {
                 menudto.getChildren().add(convertToDTO(childMenu, menuList));
             }
         }
