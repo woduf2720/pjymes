@@ -6,17 +6,16 @@ import com.example.pjymes.dto.MenuDTO;
 import java.util.List;
 
 public interface CommonCodeService {
-    String register(CommonCodeDTO commonCodeDTO);
+    Long register(CommonCodeDTO commonCodeDTO);
 
-    CommonCodeDTO readOne(String commonCodeId);
+    CommonCodeDTO readOne(Long commonCodeId);
 
     void modify(CommonCodeDTO commonCodeDTO);
 
-    void remove(String commonCodeId);
+    void remove(Long commonCodeId);
 
     List<CommonCodeDTO> list();
 
-    List<CommonCodeDTO> majorCodeList();
+    List<CommonCodeDTO> listByParentId(Long id);
 
-    List<CommonCodeDTO> subCodeList(String mojorCode);
 }

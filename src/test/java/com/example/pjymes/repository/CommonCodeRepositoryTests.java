@@ -20,20 +20,19 @@ public class CommonCodeRepositoryTests {
     public void testInsert() {
         IntStream.rangeClosed(1,3).forEach(i -> {
             CommonCode commonCode = CommonCode.builder()
-                    .commonCodeId("010"+i)
-                    .majorCode("01")
-                    .subCode("0"+i)
-                    .commonCodeName("코드명"+i)
+                    .name("사용자 타입")
+                    .description("테스트")
+                    .active(true)
                     .build();
 
             CommonCode result = commonCodeRepository.save(commonCode);
-            log.info("menuId : " + result.getCommonCodeId());
+            log.info("id : " + result);
         });
     }
 
     @Test
     public void testSelect() {
-        String commonCodeId = "0103";
+        Long commonCodeId = 1L;
 
         Optional<CommonCode> result = commonCodeRepository.findById(commonCodeId);
 
@@ -44,20 +43,20 @@ public class CommonCodeRepositoryTests {
 
     @Test
     public void testUpdate() {
-        String commonCodeId = "0103";
+        Long commonCodeId = 1L;
 
         Optional<CommonCode> result = commonCodeRepository.findById(commonCodeId);
 
         CommonCode commonCode = result.orElseThrow();
 
-        commonCode.change("변경된 코드명");
+        commonCode.change("변경될 이름", "비고", true);
 
         commonCodeRepository.save(commonCode);
     }
 
     @Test
     public void testDelete() {
-        String commonCodeId = "0103";
+        Long commonCodeId = 3L;
 
         commonCodeRepository.deleteById(commonCodeId);
     }

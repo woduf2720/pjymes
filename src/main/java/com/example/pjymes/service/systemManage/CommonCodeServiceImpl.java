@@ -1,6 +1,7 @@
 package com.example.pjymes.service.systemManage;
 
 import com.example.pjymes.domain.CommonCode;
+import com.example.pjymes.domain.Menu;
 import com.example.pjymes.dto.CommonCodeDTO;
 import com.example.pjymes.repository.CommonCodeRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,42 +24,33 @@ public class CommonCodeServiceImpl implements CommonCodeService{
     private final CommonCodeRepository commonCodeRepository;
 
     @Override
-    public String register(CommonCodeDTO commonCodeDTO) {
+    public Long register(CommonCodeDTO commonCodeDTO) {
         log.info("commonCode register...");
-        String subCode = commonCodeDTO.getSubCode();
-        if("00".equals(subCode)){
-            Long count = commonCodeRepository.majorCodeCountSearch(commonCodeDTO);
-            commonCodeDTO.setMajorCode(String.format("%02d", count));
-        }else{
-            Long count = commonCodeRepository.subCodeCountSearch(commonCodeDTO);
-            commonCodeDTO.setSubCode(String.format("%02d", count));
-        }
-        commonCodeDTO.setCommonCodeId(commonCodeDTO.getMajorCode()+commonCodeDTO.getSubCode());
+        Long parentId = commonCodeDTO.getParentId();
         CommonCode commonCode = modelMapper.map(commonCodeDTO, CommonCode.class);
-        String commonCodeId = commonCodeRepository.save(commonCode).getCommonCodeId();
-        return commonCodeId;
+        commonCode.setParent(commonCodeRepository.findById(parentId).orElseThrow());
+        return commonCodeRepository.save(commonCode).getId();
     }
 
     @Override
-    public CommonCodeDTO readOne(String commonCodeId) {
+    public CommonCodeDTO readOne(Long commonCodeId) {
         log.info("commonCode readOne...");
         Optional<CommonCode> result = commonCodeRepository.findById(commonCodeId);
         CommonCode commonCode = result.orElseThrow();
-        CommonCodeDTO commonCodeDTO = modelMapper.map(commonCode, CommonCodeDTO.class);
-        return commonCodeDTO;
+        return modelMapper.map(commonCode, CommonCodeDTO.class);
     }
 
     @Override
     public void modify(CommonCodeDTO commonCodeDTO) {
         log.info("commonCode modify...");
-        Optional<CommonCode> result = commonCodeRepository.findById(commonCodeDTO.getCommonCodeId());
+        Optional<CommonCode> result = commonCodeRepository.findById(commonCodeDTO.getId());
         CommonCode commonCode = result.orElseThrow();
-        commonCode.change(commonCodeDTO);
+        commonCode.change(commonCodeDTO.getName(), commonCodeDTO.getDescription(), commonCodeDTO.getActive());
         commonCodeRepository.save(commonCode);
     }
 
     @Override
-    public void remove(String commonCodeId) {
+    public void remove(Long commonCodeId) {
         log.info("commonCode remove...");
         commonCodeRepository.deleteById(commonCodeId);
     }
@@ -67,26 +59,15 @@ public class CommonCodeServiceImpl implements CommonCodeService{
     public List<CommonCodeDTO> list() {
         log.info("commonCode list...");
         List<CommonCode> result = commonCodeRepository.findAll();
-        List<CommonCodeDTO> dtoList = result.stream()
+        return result.stream()
                 .map(commonCode -> modelMapper.map(commonCode, CommonCodeDTO.class)).collect(Collectors.toList());
-        return dtoList;
     }
 
     @Override
-    public List<CommonCodeDTO> majorCodeList() {
-        log.info("majorCodelist...");
-        List<CommonCode> result = commonCodeRepository.majorCodeSearch();
-        List<CommonCodeDTO> dtoList = result.stream()
+    public List<CommonCodeDTO> listByParentId(Long id) {
+        log.info("listByParentId...");
+        List<CommonCode> result = commonCodeRepository.findAllByParentId(id);
+        return result.stream()
                 .map(commonCode -> modelMapper.map(commonCode, CommonCodeDTO.class)).collect(Collectors.toList());
-        return dtoList;
-    }
-
-    @Override
-    public List<CommonCodeDTO> subCodeList(String majorCode) {
-        log.info("subCodelist...");
-        List<CommonCode> result = commonCodeRepository.subCodeSearch(majorCode);
-        List<CommonCodeDTO> dtoList = result.stream()
-                .map(commonCode -> modelMapper.map(commonCode, CommonCodeDTO.class)).collect(Collectors.toList());
-        return dtoList;
     }
 }

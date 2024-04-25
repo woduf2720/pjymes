@@ -25,41 +25,35 @@ public class CommonCodeRestController {
     }
 
     @PostMapping
-    public Map<String, String> postCommonCode(@RequestBody CommonCodeDTO commonCodeDTO) {
+    public Map<String, Long> postCommonCode(@RequestBody CommonCodeDTO commonCodeDTO) {
         log.info("postCommonCode..." + commonCodeDTO);
-        String commonCodeId = commonCodeService.register(commonCodeDTO);
-        Map<String, String> resultMap = new HashMap<>();
+        Long commonCodeId = commonCodeService.register(commonCodeDTO);
+        Map<String, Long> resultMap = new HashMap<>();
         resultMap.put("commonCodeId", commonCodeId);
         return resultMap;
     }
 
-    @PutMapping("/{commonCodeId}")
-    public Map<String, String> putMenu(@PathVariable("commonCodeId") String commonCodeId, @RequestBody CommonCodeDTO commonCodeDTO) {
+    @PutMapping
+    public Map<String, Long> putMenu(@RequestBody CommonCodeDTO commonCodeDTO) {
         log.info("put..." + commonCodeDTO);
-        commonCodeDTO.setCommonCodeId(commonCodeId);
         commonCodeService.modify(commonCodeDTO);
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("commonCodeId", commonCodeId);
+        Map<String, Long> resultMap = new HashMap<>();
+        resultMap.put("id", commonCodeDTO.getId());
         return resultMap;
     }
 
-    @DeleteMapping("/{commonCodeId}")
-    public Map<String, String> deleteMenu(@PathVariable("commonCodeId") String commonCodeId) {
-        commonCodeService.remove(commonCodeId);
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("commonCodeId", commonCodeId);
+    @DeleteMapping("/{id}")
+    public Map<String, Long> deleteMenu(@PathVariable Long id) {
+        commonCodeService.remove(id);
+        Map<String, Long> resultMap = new HashMap<>();
+        resultMap.put("id", id);
         return resultMap;
     }
 
-    @GetMapping("/major")
-    public List<CommonCodeDTO> getMajorCode() {
-        log.info("getMajorCode...");
-        return commonCodeService.majorCodeList();
-    }
-
-    @GetMapping("/sub")
-    public List<CommonCodeDTO> getSubCode(CommonCodeDTO commonCodeDTO) {
-        log.info("getSubCode...");
-        return commonCodeService.subCodeList(commonCodeDTO.getMajorCode());
+    @GetMapping("/{id}")
+    public List<CommonCodeDTO> getListByParentId(@PathVariable Long id) {
+        log.info("getListByParentId...");
+        id = id == 0? null : id;
+        return commonCodeService.listByParentId(id);
     }
 }

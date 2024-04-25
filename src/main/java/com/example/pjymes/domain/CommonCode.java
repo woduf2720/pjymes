@@ -1,10 +1,10 @@
 package com.example.pjymes.domain;
 
 import com.example.pjymes.dto.CommonCodeDTO;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -15,22 +15,27 @@ import lombok.*;
 public class CommonCode {
 
     @Id
-    @Column(length = 4, nullable = false)
-    private String commonCodeId;
-    @Column(length = 2, nullable = false)
-    private String majorCode;
-    @Column(length = 2, nullable = false)
-    private String subCode;
-    @Column(length = 20, nullable = false)
-    private String commonCodeName;
-    @Column(length = 20, nullable = false)
-    private String remarks;
-    private Boolean useStatus = true;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    //수정시 이용
-    public void change(CommonCodeDTO commonCodeDTO) {
-        this.commonCodeName = commonCodeDTO.getCommonCodeName();
-        this.remarks = commonCodeDTO.getRemarks();
-        this.useStatus = commonCodeDTO.getUseStatus();
+    @Column(length = 50, nullable = false)
+    private String name;
+
+    @Column(length = 100)
+    private String description;
+
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.RESTRICT)
+    private CommonCode parent;
+
+    @Column(nullable = false)
+    private Boolean active;
+
+    public void change(String name, String description, Boolean active) {
+        this.name = name;
+        this.description = description;
+        this.active = active;
     }
 }

@@ -9,15 +9,15 @@
         <div class="w-50 pe-2">
             <div class="top-bar bg-dark-subtle d-flex align-items-center p-2">
                 <span class="page-title fw-bold bg-light p-1 fs-2 me-3">공통 코드 관리</span>
-                <button type="button" id="majorCodeAddBtn" class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#commonCodeModal">상위 코드 추가</button>
+                <button type="button" id="parentAddBtn" class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#commonCodeModal">상위 코드 추가</button>
             </div>
-            <div id="majorCodeTable"></div>
+            <div id="commonCodeParentTable"></div>
         </div>
         <div class="w-50 pe-2">
             <div class="top-bar bg-dark-subtle d-flex align-items-center p-2">
-                <button type="button" id="subCodeAddBtn" class="btn btn-primary mx-1">하위 코드 추가</button>
+                <button type="button" id="childAddBtn" class="btn btn-primary mx-1">하위 코드 추가</button>
             </div>
-            <div id="subCodeTable" ></div>
+            <div id="commonCodeChildTable" ></div>
         </div>
     </div>
 
@@ -29,19 +29,22 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="majorCode">
-                    <input type="hidden" id="subCode">
+                    <input type="hidden" id="parentId" class="form-input">
                     <div class="mb-3 row">
-                        <label for="commonCodeName" class="col-sm-3 col-form-label">코드명</label>
+                        <label for="name" class="col-sm-3 col-form-label">코드명</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control form-input" id="commonCodeName">
+                            <input type="text" class="form-control form-input" id="name">
                         </div>
                     </div>
                     <div class="mb-3 row">
-                        <label for="remarks" class="col-sm-3 col-form-label">비고</label>
+                        <label for="description" class="col-sm-3 col-form-label">비고</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control form-input" id="remarks">
+                            <input type="text" class="form-control form-input" id="description">
                         </div>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label" for="active">사용유무</label>
+                        <input type="checkbox" class="form-check-input form-input" id="active" checked>
                     </div>
                 </div>
                 <div class="modal-footer">

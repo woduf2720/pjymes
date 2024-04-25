@@ -19,21 +19,21 @@ public class CommonCodeServiceTests {
     @Test
     public void testRegister() {
         CommonCodeDTO commonCodeDTO = CommonCodeDTO.builder()
-                .majorCode("02")
-                .commonCodeName("하위코드1")
+                .name("사용자 타입2")
+                .description("테스트2")
+                .parentId(1L)
+                .active(true)
                 .build();
 
         log.info("commonCodeDTO : " + commonCodeDTO);
-        String menuId = commonCodeService.register(commonCodeDTO);
-        log.info("menuId : " + menuId);
+        Long commonCodeId = commonCodeService.register(commonCodeDTO);
+        log.info("commonCodeId : " + commonCodeId);
     }
 
     @Test
     public void testModify() {
 
         CommonCodeDTO commonCodeDTO = CommonCodeDTO.builder()
-                .commonCodeId("0103")
-                .commonCodeName("복구한 코드명")
                 .build();
         log.info("commonCodeDTO : " + commonCodeDTO);
         commonCodeService.modify(commonCodeDTO);
