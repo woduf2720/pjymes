@@ -1,8 +1,6 @@
 package com.example.pjymes.service.systemManage;
 
-import com.example.pjymes.domain.Menu;
 import com.example.pjymes.domain.MenuRights;
-import com.example.pjymes.domain.MenuRightsId;
 import com.example.pjymes.dto.MenuRightsDTO;
 import com.example.pjymes.repository.MenuRightsRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,17 +23,16 @@ public class MenuRightsServiceImpl implements MenuRightsService{
     private final MenuRightsRepository menuRightsRepository;
 
     @Override
-    public MenuRightsId register(MenuRightsDTO menuRightsDTO) {
+    public Long register(MenuRightsDTO menuRightsDTO) {
         log.info("menuRights register...");
         MenuRights menuRights = modelMapper.map(menuRightsDTO, MenuRights.class);
-        MenuRightsId menuRightsId = menuRightsRepository.save(menuRights).getMenuRightsId();
-        return menuRightsId;
+        return menuRightsRepository.save(menuRights).getId();
     }
 
     @Override
     public void modify(MenuRightsDTO menuRightsDTO) {
         log.info("menuRights modify...");
-        Optional<MenuRights> result = menuRightsRepository.findById(new MenuRightsId(menuRightsDTO.getCommonCodeId(), menuRightsDTO.getMenuId()));
+        Optional<MenuRights> result = menuRightsRepository.findById(menuRightsDTO.getId());
         MenuRights menuRights = result.orElseThrow();
         menuRights.change(menuRightsDTO);
         menuRightsRepository.save(menuRights);
@@ -53,14 +50,12 @@ public class MenuRightsServiceImpl implements MenuRightsService{
     }
 
     @Override
-    public List<MenuRightsDTO> listByCommonCodeId(String commonCodeId) {
-        log.info("menuRights listByCommonCodeId...");
-        List<MenuRights> result = menuRightsRepository.listByCommonCodeId(commonCodeId);
-        List<MenuRightsDTO> dtoList = result.stream()
+    public List<MenuRightsDTO> listByUserTypeId(Long userTypeId) {
+        log.info("menuRights listByUserTypeId...");
+        List<MenuRights> result = menuRightsRepository.findByUserTypeId(userTypeId);
+        return result.stream()
                 .map(menuRights -> modelMapper.map(menuRights, MenuRightsDTO.class))
                 .collect(Collectors.toList());
-        log.info(dtoList);
-        return dtoList;
     }
 
 

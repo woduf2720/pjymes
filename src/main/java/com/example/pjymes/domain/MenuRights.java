@@ -12,17 +12,22 @@ import lombok.*;
 @ToString
 public class MenuRights {
 
-    @EmbeddedId
-    private MenuRightsId menuRightsId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menuId", insertable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_type_id", referencedColumnName = "id")
+    private CommonCode userType;
+
+    @ManyToOne
+    @JoinColumn(name = "menu_id", referencedColumnName = "id")
     private Menu menu;
 
-    private Boolean useStatus = true;
+    private Boolean hasAccess;
 
     public void change(MenuRightsDTO menuRightsDTO) {
-        this.useStatus = menuRightsDTO.getUseStatus();
+        this.hasAccess = menuRightsDTO.getHasAccess();
     }
 }
 

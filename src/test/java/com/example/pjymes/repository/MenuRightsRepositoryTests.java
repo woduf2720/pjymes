@@ -2,7 +2,6 @@ package com.example.pjymes.repository;
 
 import com.example.pjymes.domain.Menu;
 import com.example.pjymes.domain.MenuRights;
-import com.example.pjymes.domain.MenuRightsId;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ public class MenuRightsRepositoryTests {
         List<Menu> menuList = menuRepository.findAll();
         menuList.forEach(menu -> {
             MenuRights menuRights = MenuRights.builder()
-                    .menuRightsId(new MenuRightsId("1", menu.getMenuId()))
                     .build();
             menuRightsRepository.save(menuRights);
         });
@@ -37,9 +35,8 @@ public class MenuRightsRepositoryTests {
 
     @Test
     public void testSelect() {
-        MenuRightsId menuRightsId = new MenuRightsId("0101", 1L);
 
-        Optional<MenuRights> result = menuRightsRepository.findById(menuRightsId);
+        Optional<MenuRights> result = menuRightsRepository.findById(1L);
 
         MenuRights menuRights = result.orElseThrow();
 
@@ -48,9 +45,7 @@ public class MenuRightsRepositoryTests {
 
     @Test
     public void testUpdate() {
-        MenuRightsId menuRightsId = new MenuRightsId("1", 1L);
-
-        Optional<MenuRights> result = menuRightsRepository.findById(menuRightsId);
+        Optional<MenuRights> result = menuRightsRepository.findById(1L);
 
         MenuRights menuRights = result.orElseThrow();
 
@@ -59,7 +54,7 @@ public class MenuRightsRepositoryTests {
 
     @Test
     public void testList() {
-        List<MenuRights> result = menuRightsRepository.listByCommonCodeId("0101");
+        List<MenuRights> result = menuRightsRepository.findByUserTypeId(6L);
         log.info(result.stream().toList());
     }
 }

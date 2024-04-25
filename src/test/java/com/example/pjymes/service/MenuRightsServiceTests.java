@@ -1,6 +1,5 @@
 package com.example.pjymes.service;
 
-import com.example.pjymes.domain.MenuRightsId;
 import com.example.pjymes.dto.MenuRightsDTO;
 import com.example.pjymes.service.systemManage.MenuRightsService;
 import lombok.extern.log4j.Log4j2;
@@ -23,7 +22,7 @@ public class MenuRightsServiceTests {
                 .build();
         log.info("menuRightsDTO : " + menuRightsDTO);
 
-        MenuRightsId menuRightsId = menuRightsService.register(menuRightsDTO);
+        Long menuRightsId = menuRightsService.register(menuRightsDTO);
 
         log.info("menuRightsId : " + menuRightsId);
     }
@@ -38,7 +37,7 @@ public class MenuRightsServiceTests {
 
     @Test
     public void testList() {
-        List<MenuRightsDTO> responseDTO = menuRightsService.listByCommonCodeId("0101");
+        List<MenuRightsDTO> responseDTO = menuRightsService.listByCommonCodeId(1L);
         log.info(responseDTO);
     }
 }

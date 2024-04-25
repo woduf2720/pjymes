@@ -23,10 +23,10 @@ public class MenuRightsRestController {
         log.info("getMenuRights...");
         return menuRightsService.list();
     }
-    @GetMapping("/{commonCodeId}")
-    public List<MenuRightsDTO> getMenuRightsByCommonCodeId(@PathVariable String commonCodeId) {
-        log.info("getMenuRightsByCommonCodeId...");
-        return menuRightsService.listByCommonCodeId(commonCodeId);
+    @GetMapping("/{userTypeId}")
+    public List<MenuRightsDTO> getMenuRightsByUserTypeId(@PathVariable Long userTypeId) {
+        log.info("getMenuRightsByUserTypeId...");
+        return menuRightsService.listByUserTypeId(userTypeId);
     }
 
     @PutMapping
