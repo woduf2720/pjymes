@@ -7,23 +7,39 @@
             </div>
             <div class="modal-body">
                 <div class="row mb-3 g-3 align-items-center">
-                    <label for="searchInput" class="col-sm-2 col-form-label">검색</label>
+                    <label for="customerSearchModalInput" class="col-sm-2 col-form-label">검색</label>
                     <div class="col-sm-10">
-                        <input type="text" id="searchInput" class="form-control" placeholder="거래처를 입력하세요">
+                        <input type="text" id="customerSearchModalInput" class="form-control form-input" placeholder="거래처를 입력하세요">
                     </div>
                 </div>
                 <div id="customerSearchTable"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary">검색</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    const customerSearchModal = new bootstrap.Modal(document.getElementById('customerSearchModal'))
+    const customerSearchModal = document.getElementById('customerSearchModal')
+    const newCustomerSearchModal = new bootstrap.Modal(customerSearchModal);
+    var originTag = []
+    customerSearchModal.addEventListener('shown.bs.modal', event => {
+        const firstInput = event.target.querySelector('.form-input');
+        if (firstInput) {
+            firstInput.focus();
+        }
+        customerSearchTable.setData("/customerManage", originTag[0])
+        .then(function(result){
+            console.log(result)
+            const rows = customerSearchTable.getRows();
+            if(rows.length > 0){
+                rows[0].select();
+            }
+        })
+    })
+
     const customerSearch = document.getElementById("customerSearch")
 
     if (customerSearch) {
@@ -34,10 +50,9 @@
         })
     }
 
-    var originTag = ["test"]
     function customerModalShow(value, tag, status) {
         originTag = [value, tag, status]
-        customerSearchModal.show();
+        newCustomerSearchModal.show();
     }
 
     var customerSearchTable = new Tabulator("#customerSearchTable", {
@@ -45,8 +60,8 @@
         layout:"fitData",
         ajaxURL:"/customerManage",
         columns:[
-            {title:"거래처코드", field:"customerCode"},
-            {title:"거래처명", field:"customerName"},
+            {title:"거래처코드", field:"code"},
+            {title:"거래처명", field:"name"},
         ],
     });
 
@@ -56,7 +71,7 @@
     });
 
     customerSearchTable.on("rowDblClick", function(e, row){
-        customerSearchModal.hide();
+        newCustomerSearchModal.hide();
         customerSearchResult(row.getData())
     });
 
@@ -64,12 +79,33 @@
         let tag = originTag[1]
         let stat = originTag[2]
         if(stat === "input") {
-            tag.value = data.customerName;
+            tag.value = data.name;
         }else{
             tag.getRow().update({
-                "customerCode" : data.customerCode,
-                "customerName" : data.customerName
+                "code" : data.code,
+                "name" : data.name
             })
         }
     }
+
+    const customerSearchModalInput = document.getElementById('customerSearchModalInput')
+
+    customerSearchModalInput.addEventListener("keypress", function (e) {
+        let searchWord = this.value
+        if(searchWord.length > 0){
+            searchWord = "/"+searchWord
+        }
+        if(e.key === "Enter"){
+            customerSearchTable.setData("/customerManage"+searchWord)
+            .then(function(result){
+                console.log(result)
+                const rows = customerSearchTable.getRows();
+                if(rows.length > 0){
+                    rows[0].select();
+                }
+
+            })
+        }
+    })
+
 </script>

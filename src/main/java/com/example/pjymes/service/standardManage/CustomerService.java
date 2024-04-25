@@ -12,4 +12,6 @@ public interface CustomerService {
     void modify(CustomerDTO customerDTO);
 
     List<CustomerDTO> list();
+
+    List<CustomerDTO> listByKeyword(String keyword);
 }

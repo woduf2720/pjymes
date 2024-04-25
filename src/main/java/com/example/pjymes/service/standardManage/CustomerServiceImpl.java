@@ -26,7 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
     public String register(CustomerDTO customerDTO) {
         log.info("customer register...");
         Customer customer = modelMapper.map(customerDTO, Customer.class);
-        return customerRepository.save(customer).getCustomerCode();
+        return customerRepository.save(customer).getCode();
     }
 
     @Override
@@ -40,9 +40,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void modify(CustomerDTO customerDTO) {
         log.info("customer modify...");
-        Optional<Customer> result = customerRepository.findById(customerDTO.getCustomerCode());
+        Optional<Customer> result = customerRepository.findById(customerDTO.getCode());
         Customer customer = result.orElseThrow();
-        customer.change(customerDTO);
+        customer.change(customerDTO.getName(), customerDTO.getCategory(), customerDTO.getRegistrationNumber(),
+                customerDTO.getAddress(), customerDTO.getManager(), customerDTO.getManagerPhone(), customerDTO.getManagerEmail(),
+                customerDTO.getActive());
         customerRepository.save(customer);
     }
 
@@ -50,9 +52,16 @@ public class CustomerServiceImpl implements CustomerService {
     public List<CustomerDTO> list() {
         log.info("customer list...");
         List<Customer> result = customerRepository.findAll();
-        List<CustomerDTO> dtoList = result.stream()
+        return result.stream()
                 .map(customer -> modelMapper.map(customer, CustomerDTO.class)).collect(Collectors.toList());
-        return dtoList;
+    }
+
+    @Override
+    public List<CustomerDTO> listByKeyword(String keyword) {
+        log.info("listByKeyword...");
+        List<Customer> result = customerRepository.findByKeyword(keyword);
+        return result.stream()
+                .map(customer -> modelMapper.map(customer, CustomerDTO.class)).collect(Collectors.toList());
     }
 
 }

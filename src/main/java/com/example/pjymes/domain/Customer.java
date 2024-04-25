@@ -15,24 +15,25 @@ import lombok.*;
 public class Customer {
 
     @Id
-    private String customerCode;
-    private String customerName;
+    private String code;
+    private String name;
     private String category;
-    private String customerNumber;
+    private String registrationNumber;
     private String address;
     private String manager;
     private String managerPhone;
     private String managerEmail;
-    private Boolean useStatus;
+    private Boolean active;
 
-    public void change(CustomerDTO customerDTO){
-        this.customerName = customerDTO.getCustomerName();
-        this.category = customerDTO.getCategory();
-        this.customerNumber = customerDTO.getCustomerNumber();
-        this.address = customerDTO.getAddress();
-        this.manager = customerDTO.getManager();
-        this.managerPhone = customerDTO.getManagerPhone();
-        this.managerEmail = customerDTO.getManagerEmail();
-        this.useStatus = customerDTO.getUseStatus();
+    public void change(String name, String category, String registrationNumber, String address,
+                       String manager, String managerPhone, String managerEmail, Boolean active){
+        this.name = name;
+        this.category = category;
+        this.registrationNumber = registrationNumber;
+        this.address = address;
+        this.manager = manager;
+        this.managerPhone = managerPhone;
+        this.managerEmail = managerEmail;
+        this.active = active;
     }
 }

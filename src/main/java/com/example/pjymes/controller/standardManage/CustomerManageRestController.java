@@ -34,11 +34,17 @@ public class CustomerManageRestController {
     }
 
     @PutMapping
-    public Map<String, String> putItem(@RequestBody CustomerDTO customerDTO) {
+    public Map<String, String> putCustomer(@RequestBody CustomerDTO customerDTO) {
         log.info("put..." + customerDTO);
         customerService.modify(customerDTO);
         Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("customerCode", customerDTO.getCustomerCode());
+        resultMap.put("customerCode", customerDTO.getCode());
         return resultMap;
+    }
+
+    @GetMapping("/{keyword}")
+    public List<CustomerDTO> getCustomerSearch(@PathVariable String keyword) {
+        log.info("getCustomerSearch...");
+        return customerService.listByKeyword(keyword);
     }
 }

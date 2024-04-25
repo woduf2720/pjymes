@@ -5,20 +5,20 @@ var customerManageTable = new Tabulator("#customerManageTable", {
     selectableRows: "1",
     columns:[
         {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
-        {title:"거래처코드", field:"customerCode"},
-        {title:"거래처명", field:"customerName"},
+        {title:"거래처코드", field:"code"},
+        {title:"거래처명", field:"name"},
         {title:"분류", field:"category"},
-        {title:"사업자 등록번호", field:"customerNumber"},
+        {title:"사업자 등록번호", field:"registrationNumber"},
         {title:"주소", field:"address"},
         {title:"담당자", field:"manager"},
         {title:"담당자 전화번호", field:"managerPhone"},
         {title:"담당자 이메일", field:"managerEmail"},
-        {title:"사용유무", field:"useStatus", hozAlign: "center", formatter:"tickCross"},
+        {title:"사용유무", field:"active", hozAlign: "center", formatter:"tickCross"},
     ],
 });
 
 let modalTitle = document.querySelector("#customerModal .modal-title");
-let customerCode = document.querySelector("#customerCode");
+let customerCode = document.querySelector("#code");
 
 document.getElementById("addedModalBtn").addEventListener("click", function () {
     modalTitle.textContent = "거래처 추가"
@@ -36,18 +36,18 @@ document.getElementById("modifiedModalBtn").addEventListener("click", function (
     if(rows.length === 0){
         return alert("수정할 품목을 선택해주세요");
     }else{
-        modalTitle.textContent = "품목 수정"
+        modalTitle.textContent = "거래처 수정"
         customerCode.readOnly = true
         new bootstrap.Modal(document.getElementById('customerModal')).show()
-        document.getElementById('customerCode').value = rows[0].getData().customerCode;
-        document.getElementById('customerName').value = rows[0].getData().customerName;
+        document.getElementById('code').value = rows[0].getData().code;
+        document.getElementById('name').value = rows[0].getData().name;
         document.getElementById('category').value = rows[0].getData().category;
-        document.getElementById('customerNumber').value = rows[0].getData().customerNumber;
+        document.getElementById('registrationNumber').value = rows[0].getData().registrationNumber;
         document.getElementById('address').value = rows[0].getData().address;
         document.getElementById('manager').value = rows[0].getData().manager;
         document.getElementById('managerPhone').value = rows[0].getData().managerPhone;
         document.getElementById('managerEmail').value = rows[0].getData().managerEmail;
-        document.getElementById('useStatus').checked = rows[0].getData().useStatus;
+        document.getElementById('active').checked = rows[0].getData().active;
 
         document.querySelectorAll('.addedModal').forEach(function(element) {
             element.classList.add('d-none');
