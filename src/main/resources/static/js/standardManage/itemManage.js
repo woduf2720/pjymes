@@ -5,18 +5,18 @@ var itemManageTable = new Tabulator("#itemManageTable", {
     selectableRows: "1",
     columns:[
         {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
-        {title:"품목코드", field:"itemCode"},
-        {title:"품목명", field:"itemName"},
-        {title:"규격", field:"standard"},
+        {title:"품목코드", field:"code"},
+        {title:"품목명", field:"name"},
+        {title:"규격", field:"specification"},
         {title:"분류", field:"category"},
         {title:"단가", field:"unitPrice"},
-        {title:"수정일자", field:"modDate"},
-        {title:"사용유무", field:"useStatus", hozAlign: "center", formatter:"tickCross"},
+        {title:"수정일자", field:"updateAt"},
+        {title:"사용유무", field:"active", hozAlign: "center", formatter:"tickCross"},
     ],
 });
 
 let modalTitle = document.querySelector("#itemModal .modal-title");
-let itemCode = document.querySelector("#itemCode");
+let itemCode = document.querySelector("#code");
 
 document.getElementById("addedModalBtn").addEventListener("click", function () {
     modalTitle.textContent = "품목 추가"
@@ -37,12 +37,12 @@ document.getElementById("modifiedModalBtn").addEventListener("click", function (
         modalTitle.textContent = "품목 수정"
         itemCode.readOnly = true
         new bootstrap.Modal(document.getElementById('itemModal')).show()
-        document.getElementById('itemCode').value = rows[0].getData().itemCode;
-        document.getElementById('itemName').value = rows[0].getData().itemName;
-        document.getElementById('standard').value = rows[0].getData().standard;
+        document.getElementById('code').value = rows[0].getData().code;
+        document.getElementById('name').value = rows[0].getData().name;
+        document.getElementById('specification').value = rows[0].getData().specification;
         document.getElementById('category').value = rows[0].getData().category;
         document.getElementById('unitPrice').value = rows[0].getData().unitPrice;
-        document.getElementById('useStatus').checked = rows[0].getData().useStatus;
+        document.getElementById('active').checked = rows[0].getData().active;
 
         document.querySelectorAll('.addedModal').forEach(function(element) {
             element.classList.add('d-none');

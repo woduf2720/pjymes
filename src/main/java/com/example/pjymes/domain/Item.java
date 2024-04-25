@@ -14,18 +14,18 @@ import lombok.*;
 public class Item extends BaseEntity{
 
     @Id
-    private String itemCode;
-    private String itemName;
-    private String standard;
+    private String code;
+    private String name;
+    private String specification;
     private String category;
     private Long unitPrice;
-    private Boolean useStatus;
+    private Boolean active;
 
     public void change(ItemDTO itemDTO){
-        this.itemName = itemDTO.getItemName();
-        this.standard = itemDTO.getStandard();
+        this.name = itemDTO.getName();
+        this.specification = itemDTO.getSpecification();
         this.category = itemDTO.getCategory();
         this.unitPrice = itemDTO.getUnitPrice();
-        this.useStatus = itemDTO.getUseStatus();
+        this.active = itemDTO.getActive();
     }
 }

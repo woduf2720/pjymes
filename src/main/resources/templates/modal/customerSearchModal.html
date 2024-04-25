@@ -23,7 +23,7 @@
 
 <script>
     const customerSearchModal = document.getElementById('customerSearchModal')
-    const newCustomerSearchModal = new bootstrap.Modal(customerSearchModal);
+
     var originTag = []
     customerSearchModal.addEventListener('shown.bs.modal', event => {
         const firstInput = event.target.querySelector('.form-input');
@@ -52,7 +52,7 @@
 
     function customerModalShow(value, tag, status) {
         originTag = [value, tag, status]
-        newCustomerSearchModal.show();
+        bootstrap.Modal.getInstance(customerSearchModal).show();
     }
 
     var customerSearchTable = new Tabulator("#customerSearchTable", {
@@ -71,7 +71,7 @@
     });
 
     customerSearchTable.on("rowDblClick", function(e, row){
-        newCustomerSearchModal.hide();
+        bootstrap.Modal.getInstance(customerSearchModal).hide();
         customerSearchResult(row.getData())
     });
 

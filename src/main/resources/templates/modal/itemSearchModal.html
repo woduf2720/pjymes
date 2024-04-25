@@ -7,23 +7,38 @@
             </div>
             <div class="modal-body">
                 <div class="row mb-3 g-3 align-items-center">
-                    <label for="searchInput" class="col-sm-2 col-form-label">검색</label>
+                    <label for="itemSearchModalInput" class="col-sm-2 col-form-label">검색</label>
                     <div class="col-sm-10">
-                        <input type="text" id="searchInput" class="form-control" placeholder="품목을 입력하세요">
+                        <input type="text" id="itemSearchModalInput" class="form-control form-input" placeholder="품목을 입력하세요">
                     </div>
                 </div>
                 <div id="itemSearchTable"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary">검색</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    const itemSearchModal = new bootstrap.Modal(document.getElementById('itemSearchModal'))
+    const itemSearchModal = document.getElementById('itemSearchModal')
+
+    var originTag = []
+    itemSearchModal.addEventListener('shown.bs.modal', event => {
+        const firstInput = event.target.querySelector('.form-input');
+        if (firstInput) {
+            firstInput.focus();
+        }
+        itemSearchTable.setData("/itemManage", originTag[0])
+        .then(function(result){
+            console.log(result)
+            const rows = itemSearchTable.getRows();
+            if(rows.length > 0){
+                rows[0].select();
+            }
+        })
+    })
     const itemSearch = document.getElementById("itemSearch")
 
     if (itemSearch) {
@@ -34,20 +49,18 @@
         })
     }
 
-    var originTag = ["test"]
     function itemModalShow(value, tag, status) {
         originTag = [value, tag, status]
-        itemSearchModal.show();
+        bootstrap.Modal.getInstance(itemSearchModal).show();
     }
 
     var itemSearchTable = new Tabulator("#itemSearchTable", {
         height: "20rem",
         layout:"fitData",
         ajaxURL:"/itemManage",
-        selectableRows: "1",
         columns:[
-            {title:"품목코드", field:"itemCode"},
-            {title:"품목명", field:"itemName"},
+            {title:"품목코드", field:"code"},
+            {title:"품목명", field:"name"},
         ],
     });
 
@@ -57,7 +70,7 @@
     });
 
     itemSearchTable.on("rowDblClick", function(e, row){
-        itemSearchModal.hide();
+        bootstrap.Modal.getInstance(itemSearchModal).hide();
         itemSearchResult(row.getData())
     });
 
@@ -68,11 +81,31 @@
             tag.value = data.itemName;
         }else{
             tag.getRow().update({
-                "itemCode" : data.itemCode,
-                "itemName" : data.itemName,
-                "standard" : data.standard,
+                "code" : data.code,
+                "name" : data.name,
+                "specification" : data.specification,
                 "unitPrice" : data.unitPrice
             })
         }
     }
+
+    const itemSearchModalInput = document.getElementById('itemSearchModalInput')
+
+    itemSearchModalInput.addEventListener("keypress", function (e) {
+        let searchWord = this.value
+        if(searchWord.length > 0){
+            searchWord = "/"+searchWord
+        }
+        if(e.key === "Enter"){
+            itemSearchTable.setData("/itemManage"+searchWord)
+            .then(function(result){
+                console.log(result)
+                const rows = itemSearchTable.getRows();
+                if(rows.length > 0){
+                    rows[0].select();
+                }
+
+            })
+        }
+    })
 </script>

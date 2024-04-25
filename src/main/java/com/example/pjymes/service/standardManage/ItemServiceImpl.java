@@ -26,7 +26,7 @@ public class ItemServiceImpl implements ItemService {
     public String register(ItemDTO itemDTO) {
         log.info("item register...");
         Item item = modelMapper.map(itemDTO, Item.class);
-        return itemRepository.save(item).getItemCode();
+        return itemRepository.save(item).getCode();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void modify(ItemDTO itemDTO) {
         log.info("item modify...");
-        Optional<Item> result = itemRepository.findById(itemDTO.getItemCode());
+        Optional<Item> result = itemRepository.findById(itemDTO.getCode());
         Item item = result.orElseThrow();
         item.change(itemDTO);
         itemRepository.save(item);

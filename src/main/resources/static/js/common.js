@@ -42,3 +42,8 @@ function focusFirstValidInput(inputElements) {
         nextFocusElement.focus();
     }
 }
+
+
+document.querySelectorAll('.todayDate').forEach(function(element) {
+    element.value = moment().format('YYYY-MM-DD');
+});

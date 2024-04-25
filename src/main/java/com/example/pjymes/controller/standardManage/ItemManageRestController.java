@@ -38,7 +38,7 @@ public class ItemManageRestController {
         log.info("put..." + itemDTO);
         itemService.modify(itemDTO);
         Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("itemCode", itemDTO.getItemCode());
+        resultMap.put("itemCode", itemDTO.getCode());
         return resultMap;
     }
 }

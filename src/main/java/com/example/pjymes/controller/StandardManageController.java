@@ -22,10 +22,8 @@ public class StandardManageController {
     @GetMapping("/memberManage")
     public void memberManage(Model model) {
         log.info("memberManage.....");
-        List<CommonCodeDTO> subCodeList = commonCodeService.subCodeList("01");
-        model.addAttribute("subCodeList", subCodeList);
-        log.info("memberManage.....");
-        System.out.println(subCodeList);
+        List<CommonCodeDTO> userTypeList = commonCodeService.listByParentId(1L);
+        model.addAttribute("userTypeList", userTypeList);
     }
 
     @GetMapping("/itemManage")
