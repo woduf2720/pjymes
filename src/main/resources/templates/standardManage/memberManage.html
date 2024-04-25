@@ -39,18 +39,18 @@
                         </div>
                     </div>
                     <div class="mb-3 row">
-                        <label for="commonCodeId" class="col-sm-3 col-form-label">사용자타입</label>
+                        <label for="userTypeId" class="col-sm-3 col-form-label">사용자타입</label>
                         <div class="col-sm-9">
-                            <select id="commonCodeId" class="form-select form-input">
-                                <option th:each="subCodeList : ${subCodeList}" th:value="${subCodeList.commonCodeId}"
-                                        th:text="${subCodeList.commonCodeName}">
+                            <select id="userTypeId" class="form-select form-input">
+                                <option th:each="userType : ${userTypeList}" th:value="${userType.id}"
+                                        th:text="${userType.name}">
                                 </option>
                             </select>
                         </div>
                     </div>
                     <div class="form-check">
-                        <label class="form-check-label" for="useStatus">사용유무</label>
-                        <input id="useStatus" class="form-check-input form-input" type="checkbox" value="" checked>
+                        <label class="form-check-label" for="active">사용유무</label>
+                        <input id="active" class="form-check-input form-input" type="checkbox" value="" checked>
                     </div>
                 </div>
                 <div class="modal-footer">

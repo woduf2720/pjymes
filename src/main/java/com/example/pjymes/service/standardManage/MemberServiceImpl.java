@@ -6,6 +6,7 @@ import com.example.pjymes.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +22,13 @@ public class MemberServiceImpl implements MemberService{
 
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public String register(MemberDTO memberDTO) {
         log.info("member register...");
         Member member = modelMapper.map(memberDTO, Member.class);
+        member.changePassword(passwordEncoder.encode(memberDTO.getMpw()));
         return memberRepository.save(member).getMid();
     }
 
@@ -42,7 +45,7 @@ public class MemberServiceImpl implements MemberService{
         log.info("member modify...");
         Optional<Member> result = memberRepository.findById(memberDTO.getMid());
         Member member = result.orElseThrow();
-        member.change(memberDTO.getMname(), "", memberDTO.getUseStatus());
+        member.change(memberDTO.getMname(), memberDTO.getUserTypeId(), memberDTO.getActive());
         memberRepository.save(member);
     }
 

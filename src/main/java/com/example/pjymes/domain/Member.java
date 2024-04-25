@@ -22,10 +22,10 @@ public class Member extends BaseEntity{
     private String mname;
 
     @ManyToOne
-    @JoinColumn(name = "commonCodeId")
-    private CommonCode commonCode;
+    @JoinColumn(name = "user_type_id", referencedColumnName = "id")
+    private CommonCode userType;
 
-    private Boolean useStatus;
+    private Boolean active;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
@@ -35,9 +35,9 @@ public class Member extends BaseEntity{
         this.mpw = mpw;
     }
 
-    public void change(String mname, String commonCodeId, boolean useStatus){
+    public void change(String mname, Long userTypeId, boolean active){
         this.mname = mname;
-        this.useStatus = useStatus;
+        this.active = active;
     }
 
     public void addRole(MemberRole memberRole) {

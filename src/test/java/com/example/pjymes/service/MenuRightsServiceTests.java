@@ -37,7 +37,7 @@ public class MenuRightsServiceTests {
 
     @Test
     public void testList() {
-        List<MenuRightsDTO> responseDTO = menuRightsService.listByCommonCodeId(1L);
+        List<MenuRightsDTO> responseDTO = menuRightsService.listByUserTypeId(6L);
         log.info(responseDTO);
     }
 }

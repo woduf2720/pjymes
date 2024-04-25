@@ -7,8 +7,8 @@ var memberTable = new Tabulator("#memberTable", {
         {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
         {title:"id", field:"mid"},
         {title:"사용자명", field:"mname"},
-        {title:"사용자타입", field:"commonCodeName"},
-        {title:"사용유무", field:"useStatus", hozAlign: "center", formatter:"tickCross"}
+        {title:"사용자타입", field:"userTypeName"},
+        {title:"사용유무", field:"active", hozAlign: "center", formatter:"tickCross"}
     ],
 });
 
@@ -18,7 +18,6 @@ let modalMid = document.querySelector("#mid");
 document.getElementById("addedModalBtn").addEventListener("click", function () {
     modalTitle.textContent = "사용자 추가"
     modalMid.readOnly = false
-    document.getElementById('commonCodeId').value = "0101";
     document.querySelectorAll('.addedModal').forEach(function(element) {
         element.classList.remove('d-none');
     });
@@ -39,8 +38,8 @@ document.getElementById("modifiedModalBtn").addEventListener("click", function (
         new bootstrap.Modal(memberModal).show()
         document.getElementById('mid').value = rows[0].getData().mid;
         document.getElementById('mname').value = rows[0].getData().mname;
-        document.getElementById('commonCodeId').value = rows[0].getData().commonCodeId;
-        document.getElementById('useStatus').checked = rows[0].getData().useStatus;
+        document.getElementById('userTypeId').value = rows[0].getData().userTypeId;
+        document.getElementById('active').checked = rows[0].getData().active;
 
         document.querySelectorAll('.addedModal').forEach(function(element) {
             element.classList.add('d-none');
