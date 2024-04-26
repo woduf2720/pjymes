@@ -38,7 +38,8 @@ document.getElementById("modifiedModalBtn").addEventListener("click", function (
     }else{
         modalTitle.textContent = "거래처 수정"
         customerCode.readOnly = true
-        new bootstrap.Modal(document.getElementById('customerModal')).show()
+        new bootstrap.Modal(document.getElementById('customerModal')).show();
+
         document.getElementById('code').value = rows[0].getData().code;
         document.getElementById('name').value = rows[0].getData().name;
         document.getElementById('category').value = rows[0].getData().category;

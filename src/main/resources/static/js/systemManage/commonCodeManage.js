@@ -25,13 +25,12 @@ commonCodeParentTable.on("cellEdited", function(cell){
 });
 
 const commonCodeModal = document.getElementById('commonCodeModal')
-const newCommonCodeModal = new bootstrap.Modal(commonCodeModal);
 
 document.getElementById("childAddBtn").addEventListener("click", function () {
     let row = commonCodeParentTable.getRows("selected")[0]
     if(row != null){
         document.getElementById('parentId').value = row.getData().id;
-        newCommonCodeModal.show()
+        bootstrap.Modal.getInstance(commonCodeModal).show()
     }else{
         alert("상위코드를 선택해주세요.")
     }
@@ -48,7 +47,7 @@ document.getElementById("addBtn").addEventListener("click", function () {
     console.log(data)
     axios.post("/commonCode", data)
         .then(function (response) {
-            newCommonCodeModal.hide();
+            bootstrap.Modal.getInstance(commonCodeModal).hide();
             if(data.parentId === null){
                 commonCodeParentTable.replaceData("/commonCode/0")
             }else{

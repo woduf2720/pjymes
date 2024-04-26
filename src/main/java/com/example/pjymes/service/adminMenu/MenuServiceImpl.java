@@ -82,17 +82,16 @@ public class MenuServiceImpl implements MenuService{
         return dtoList;
     }
 
-    // 재귀적으로 메뉴를 순회하면서 DTO로 변환
     private MenuDTO convertToDTO(Menu menu, List<Menu> menuList) {
-        MenuDTO menudto = modelMapper.map(menu, MenuDTO.class);
+        MenuDTO menuDto = modelMapper.map(menu, MenuDTO.class);
 
         // 자식 메뉴가 있는 경우 재귀적으로 처리
         for (Menu childMenu : menuList) {
             if (childMenu.getParent() != null && childMenu.getParent().getId().equals(menu.getId())) {
-                menudto.getChildren().add(convertToDTO(childMenu, menuList));
+                menuDto.getChildren().add(convertToDTO(childMenu, menuList));
             }
         }
 
-        return menudto;
+        return menuDto;
     }
 }

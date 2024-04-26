@@ -27,9 +27,6 @@ public class MenuRestController {
     @PostMapping
     public Map<String, Long> postMenu(@RequestBody MenuDTO menuDTO) {
         log.info("postMenu..." + menuDTO);
-//        if(menuDTO.getParentMenuId() != null){
-//            menuDTO.setParentMenu(menuService.readOne(menuDTO.getParentMenuId()));
-//        }
         Long menuId = menuService.register(menuDTO);
         Map<String, Long> resultMap = new HashMap<>();
         resultMap.put("menuId", menuId);
