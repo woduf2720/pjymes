@@ -1,17 +1,25 @@
 package com.example.pjymes.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderMasterDTO {
 
     private String orderNo;
     private String customerCode;
     private String customerName;
-    private LocalDateTime deliveryDate;
+    private LocalDate orderDate;
+    private LocalDate deliveryDate;
     private Long price;
-    private List<OrderSubDTO> orderSubs;
+
+    private List<OrderSubDTO> orderSubDTOList;
 }

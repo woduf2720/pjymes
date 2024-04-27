@@ -56,6 +56,7 @@ const orderMasterTable = new Tabulator("#orderMasterTable", {
         {title:"발주번호", field:"orderNo"},
         {title:"거래처코드", field:"customerCode", editor:orderMasterEditor, editable:orderMasterEditCheck},
         {title:"거래처명", field:"customerName"},
+        {title:"발주일자", field:"orderDate", editor:"input", editable:orderMasterEditCheck},
         {title:"납기일자", field:"deliveryDate", editor:"input", editable:orderMasterEditCheck},
         {title:"합계금액", field:"price"},
     ],
@@ -64,14 +65,11 @@ const orderMasterTable = new Tabulator("#orderMasterTable", {
 orderMasterTable.on("rowClick", function(e, row){
     row.getTable().deselectRow();
     row.select();
+    console.log(row.getData());
 });
 
 orderMasterTable.on("rowSelected", function(row){
-    let orderSubData = row.getData().orderSubs
-    if(orderSubData == null) {
-        orderSubData = [{}]
-    }
-    orderSubTable.setData(orderSubData)
+    orderSubTable.setData("/materialOrder/orderSub/"+row.getData().orderNo)
 });
 
 document.getElementById("addMasterBtn").addEventListener("click", function () {
@@ -81,13 +79,27 @@ document.getElementById("addMasterBtn").addEventListener("click", function () {
             return row.getCell("customerCode").edit();
         }
     }
-    orderMasterTable.addRow({"deliveryDate" : new Intl.DateTimeFormat('kr').format(new Date), })
-        .then(function(row){
-            row.getTable().deselectRow();
-            row.select()
-            row.getCell("customerCode").edit();
-        });
+
+    orderMasterTable.addRow({
+        "orderDate" : luxon.DateTime.local().toFormat('yyyy-MM-dd'),
+        "deliveryDate" : luxon.DateTime.local().toFormat('yyyy-MM-dd')
+    })
+    .then(function(row){
+        row.getTable().deselectRow();
+        row.select()
+        row.getCell("customerCode").edit();
+    });
 })
+
+document.getElementById("materialOrderSearchBtn").addEventListener("click", function () {
+    const startDate = document.getElementById("startDate").value
+    const endDate = document.getElementById("endDate").value
+    const keyword = document.getElementById("customerSearch").value
+    const queryString = "keyword=" + encodeURIComponent(keyword)
+        + "&startDate=" + encodeURIComponent(startDate) + "&endDate=" + encodeURIComponent(endDate);
+    orderMasterTable.setData("/materialOrder/orderMaster?" + queryString);
+})
+
 
 const orderSubEditor = function(cell, onRendered, success, cancel, editorParams){
     //cell - the cell component for the editable cell
@@ -133,15 +145,22 @@ const orderSubEditor = function(cell, onRendered, success, cancel, editorParams)
     return editor;
 };
 
+var orderSubEditCheck = function(cell){
+    let data = cell.getRow().getData();
+    console.log(data)
+    return data.orderNo == null;
+}
+
 const orderSubTable = new Tabulator("#orderSubTable", {
     height: "45rem",
     layout:"fitData",
     tabEndNewRow: true,
+    selectableRows: true,
     columns:[
         {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
-        {title:"품목코드", field:"itemCode", editor:orderSubEditor},
+        {title:"품목코드", field:"itemCode", editor:orderSubEditor, editable:orderSubEditCheck},
         {title:"품목명", field:"itemName"},
-        {title:"규격", field:"standard", editor:"input"},
+        {title:"규격", field:"itemSpecification"},
         {title:"단가", field:"unitPrice", editor:"input"},
         {title:"수량", field:"quantity", editor:"input"},
         {title:"금액", field:"price"},
@@ -182,13 +201,31 @@ document.getElementById("saveBtn").addEventListener("click", function () {
     let selectedMasterRow = orderMasterTable.getRows("selected")[0]
     let subData = orderSubTable.getData()
 
-    selectedMasterRow.update({"orderSubs" : subData})
+    selectedMasterRow.update({"orderSubDTOList" : subData})
 
-    axios.post("/materialOrder", orderMasterTable.getData("selected"))
+    axios.post("/materialOrder", selectedMasterRow.getData())
         .then(function (response) {
-            console.log(response)
             orderMasterTable.replaceData()
+            alert("저장되었습니다.")
         }).catch(function (error) {
         console.log(error)
     })
 })
+
+document.getElementById("deleteBtn").addEventListener("click", function () {
+    let selectedSubRow = orderSubTable.getRows("selected")
+    let selectedSubData = orderSubTable.getData("selected")
+
+    axios.delete("/materialOrder", {data : selectedSubData})
+        .then(function (response) {
+            console.log(response)
+            orderSubTable.deleteRow(selectedSubRow)
+            if(orderSubTable.getRows().length === 0){
+                orderMasterTable.replaceData()
+            }
+            alert("삭제되었습니다.")
+        }).catch(function (error) {
+        console.log(error)
+    })
+})
+

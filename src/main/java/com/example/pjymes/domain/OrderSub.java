@@ -2,6 +2,8 @@ package com.example.pjymes.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -9,20 +11,21 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"orderNo", "itemCode"})})
 public class OrderSub {
 
-    @EmbeddedId
-    private OrderSubId orderSubId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long orderSubId;
 
-    // OrderMaster를 설정하는 메서드
+    @Setter
     @ManyToOne
-    @MapsId("orderNo")
-    @JoinColumn(name = "order_no")
+    @JoinColumn(name = "orderNo")
+    @OnDelete(action = OnDeleteAction.RESTRICT)
     private OrderMaster orderMaster;
 
     @ManyToOne
-    @MapsId("itemCode")
-    @JoinColumn(name = "item_code")
+    @JoinColumn(name = "itemCode")
     private Item item;
 
     private Long quantity;

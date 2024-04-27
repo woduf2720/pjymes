@@ -22,7 +22,8 @@
 </div>
 
 <script>
-    const itemSearchModal = document.getElementById('itemSearchModal')
+    const itemSearchModal = document.getElementById('itemSearchModal');
+    const newItemSearchModal = new bootstrap.Modal(itemSearchModal);
 
     var originTag = []
     itemSearchModal.addEventListener('shown.bs.modal', event => {
@@ -51,7 +52,7 @@
 
     function itemModalShow(value, tag, status) {
         originTag = [value, tag, status]
-        bootstrap.Modal.getInstance(itemSearchModal).show();
+        newItemSearchModal.show();
     }
 
     var itemSearchTable = new Tabulator("#itemSearchTable", {
@@ -70,7 +71,7 @@
     });
 
     itemSearchTable.on("rowDblClick", function(e, row){
-        bootstrap.Modal.getInstance(itemSearchModal).hide();
+        newItemSearchModal.hide();
         itemSearchResult(row.getData())
     });
 
@@ -81,9 +82,9 @@
             tag.value = data.itemName;
         }else{
             tag.getRow().update({
-                "code" : data.code,
-                "name" : data.name,
-                "specification" : data.specification,
+                "itemCode" : data.code,
+                "itemName" : data.name,
+                "itemSpecification" : data.specification,
                 "unitPrice" : data.unitPrice
             })
         }

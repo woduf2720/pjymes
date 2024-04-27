@@ -4,20 +4,19 @@ import com.example.pjymes.domain.Customer;
 import com.example.pjymes.domain.Item;
 import com.example.pjymes.domain.OrderMaster;
 import com.example.pjymes.domain.OrderSub;
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.IntStream;
 
 @SpringBootTest
 @Log4j2
-public class OrderMasterRepositoryTests {
+public class MaterialOrderRepositoryTests {
 
     @Autowired
     private OrderMasterRepository orderMasterRepository;
@@ -27,38 +26,40 @@ public class OrderMasterRepositoryTests {
 
     @Test
     public void testInsert() {
-
-        OrderSub orderSub1 = OrderSub.builder()
-                .item(Item.builder().itemCode("P0001").build())
-                .quantity(5L)
-                .unitPrice(10000L)
+        log.info("테스트 시작");
+        OrderMaster orderMaster = OrderMaster.builder()
+                .orderNo("240424-C0001-01")
+                .customer(Customer.builder().code("C0001").build())
+                .orderDate(LocalDate.of(2024, 4, 24))
+                .deliveryDate(LocalDate.of(2024, 4, 24))
                 .price(50000L)
                 .build();
 
+        OrderSub orderSub1 = OrderSub.builder()
+                .item(Item.builder().code("P0001").build())
+                .quantity(5L)
+                .unitPrice(10000L)
+                .price(50000L)
+                .orderMaster(orderMaster)
+                .build();
+
         OrderSub orderSub2 = OrderSub.builder()
-                .item(Item.builder().itemCode("P0002").build())
+                .item(Item.builder().code("P0002").build())
                 .quantity(3L)
                 .unitPrice(15000L)
                 .price(45000L)
+                .orderMaster(orderMaster)
                 .build();
 
         List<OrderSub> orderSubs = new ArrayList<>();
         orderSubs.add(orderSub1);
         orderSubs.add(orderSub2);
 
-        OrderMaster orderMaster = OrderMaster.builder()
-                .orderNo("240422-C0001-01")
-                .customer(Customer.builder().customerCode("C0001").build())
-                .deliveryDate(LocalDateTime.of(2024, 4, 22, 12, 30, 0))
-                .price(50000L)
-                .build();
-
         // when
-        OrderMaster savedOrderMaster = orderMasterRepository.save(orderMaster);
+        orderMasterRepository.save(orderMaster);
         orderSubRepository.saveAll(orderSubs);
-
         // then
-            log.info("orderNo : " + savedOrderMaster.getOrderNo());
+        log.info("테스트 완료 ");
     }
 
     @Test

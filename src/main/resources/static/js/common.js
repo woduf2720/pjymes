@@ -43,7 +43,6 @@ function focusFirstValidInput(inputElements) {
     }
 }
 
-
 document.querySelectorAll('.todayDate').forEach(function(element) {
-    element.value = moment().format('YYYY-MM-DD');
+    element.value = luxon.DateTime.local().toFormat('yyyy-MM-dd')
 });
