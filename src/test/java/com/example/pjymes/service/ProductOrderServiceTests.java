@@ -14,7 +14,7 @@ import java.util.List;
 
 @SpringBootTest
 @Log4j2
-public class MaterialOrderServiceTests {
+public class ProductOrderServiceTests {
 
     @Autowired
     private MaterialOrderService materialOrderService;
