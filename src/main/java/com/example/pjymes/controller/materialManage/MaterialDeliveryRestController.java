@@ -22,7 +22,7 @@ public class MaterialDeliveryRestController {
 
     private final MaterialDeliveryService materialDeliveryService;
 
-    @GetMapping("")
+    @GetMapping
     public List<DeliveryDTO> getMaterialDelivery(@ModelAttribute SearchDTO searchDTO){
         log.info("getMaterialDelivery..." + searchDTO);
         return materialDeliveryService.list(searchDTO);

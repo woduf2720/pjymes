@@ -2,40 +2,21 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout.html}">
-<div layout:fragment="Content">
-
-    <div style="display: flex; justify-content: space-between;">
-        <div style="width: calc(50% - 10px)">
-            <div class="top-bar">
-                <span class="page-title">제품 입고 관리</span>
-                <div>
-                    <div>
-                        <label>발주일
-                            <input id="startDate" class="today" type="date" value="2024-04-20">
-                        </label>
-                        <label style="text-align: center">~
-                            <input id="endDate" class="today" type="date" value="2024-04-20">
-                        </label>
-                    </div>
-                    <div>
-                        <label>거래처
-                            <input id="customerSearch">
-                        </label>
-                    </div>
-                </div>
+<th:block layout:fragment="Content">
+    <div class="d-flex justify-content-between">
+        <div class="w-50 pe-2">
+            <div class="top-bar bg-dark-subtle d-flex align-items-center p-2">
+                <span class="page-title fw-bold bg-light p-1 fs-2 me-2">제품 입고 관리</span>
             </div>
-            <div id="orderMasterTable"></div>
+            <div id="itemTable"></div>
         </div>
-        <div style="width: 50%">
-            <div class="top-bar">
+        <div class="w-50">
+            <div class="top-bar bg-dark-subtle d-flex align-items-center p-2">
+                <button type="button" id="saveBtn" class="btn btn-primary mx-1">저장</button>
             </div>
-            <div id="orderSubTable" ></div>
-            <div class="mid-bar" style="height: 5rem; background-color: lightgray;">
-                <button type="button" id="saveBtn" class="btn btn-primary">저장</button>
-            </div>
-            <div id="warehousingTable" ></div>
+            <div id="lotTable"></div>
         </div>
     </div>
-</div>
-<script layout:fragment="script" th:src="@{/js/materialManage/materialDelivery.js}"></script>
+</th:block>
+<script layout:fragment="script" th:src="@{/js/productManage/productWarehousing.js}"></script>
 </html>
