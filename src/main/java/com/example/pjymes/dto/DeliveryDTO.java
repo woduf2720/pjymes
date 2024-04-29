@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderSubDTO {
+public class DeliveryDTO {
 
-    private Long orderSubId;
+    private Long id;
+    private String orderMasterOrderNo;
+    private String lotMasterLotNo;
     private String orderNo;
+    private String lotNo;
     private String itemCode;
     private String itemName;
     private String itemSpecification;
     private Long quantity;
-    private Long warehousingQuantity;
-    private Long unitPrice;
-    private Long price;
 }

@@ -1,11 +1,9 @@
-package com.example.pjymes.repository.materialManage;
+package com.example.pjymes.repository.customRepository;
 
 import com.example.pjymes.domain.OrderMaster;
 import com.example.pjymes.domain.QOrderMaster;
-import com.example.pjymes.dto.OrderMasterDTO;
 import com.example.pjymes.dto.SearchDTO;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 

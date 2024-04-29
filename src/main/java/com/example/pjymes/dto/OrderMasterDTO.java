@@ -20,6 +20,7 @@ public class OrderMasterDTO {
     private LocalDate orderDate;
     private LocalDate deliveryDate;
     private Long price;
+    private Boolean active;
 
     private List<OrderSubDTO> orderSubDTOList;
 }

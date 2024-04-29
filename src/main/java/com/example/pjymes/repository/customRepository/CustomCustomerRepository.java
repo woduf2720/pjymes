@@ -1,4 +1,4 @@
-package com.example.pjymes.repository.customer;
+package com.example.pjymes.repository.customRepository;
 
 import com.example.pjymes.domain.Customer;
 

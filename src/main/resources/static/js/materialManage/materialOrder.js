@@ -52,20 +52,25 @@ const orderMasterTable = new Tabulator("#orderMasterTable", {
     height: "45rem",
     ajaxURL:"/materialOrder",
     layout:"fitData",
+    rowFormatter:function(row){
+        if(row.getData().active){row.getElement().style.color = "red";}
+    },
     columns:[
         {title:"발주번호", field:"orderNo"},
         {title:"거래처코드", field:"customerCode", editor:orderMasterEditor, editable:orderMasterEditCheck},
         {title:"거래처명", field:"customerName"},
         {title:"발주일자", field:"orderDate", editor:"input", editable:orderMasterEditCheck},
         {title:"납기일자", field:"deliveryDate", editor:"input", editable:orderMasterEditCheck},
-        {title:"합계금액", field:"price"},
+        {title:"합계금액", field:"price"}
     ],
 });
 
 orderMasterTable.on("rowClick", function(e, row){
+    if(row.getData().active){
+        return;
+    }
     row.getTable().deselectRow();
     row.select();
-    console.log(row.getData());
 });
 
 orderMasterTable.on("rowSelected", function(row){

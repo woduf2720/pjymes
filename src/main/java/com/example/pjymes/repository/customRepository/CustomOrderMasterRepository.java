@@ -1,4 +1,4 @@
-package com.example.pjymes.repository.materialManage;
+package com.example.pjymes.repository.customRepository;
 
 import com.example.pjymes.domain.OrderMaster;
 import com.example.pjymes.dto.SearchDTO;

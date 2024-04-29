@@ -23,10 +23,15 @@ public class OrderMaster extends BaseEntity{
     private LocalDate orderDate;
     private LocalDate deliveryDate;
     private Long price;
+    private Boolean active = false;
 
     public void change(LocalDate orderDate, LocalDate deliveryDate, Long price){
         this.orderDate = orderDate;
         this.deliveryDate = deliveryDate;
         this.price = price;
+    }
+
+    public void changeActive(Boolean active){
+        this.active = active;
     }
 }
