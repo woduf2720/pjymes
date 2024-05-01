@@ -1,0 +1,74 @@
+<div class="modal fade" id="productOrderSearchModal" tabindex="-1" aria-labelledby="productOrderSearchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productOrderSearchModalLabel">품목 검색</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3 row">
+                    <label for="orderDate" class="col-sm-2 col-form-label">지시일</label>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control form-input todayDate" id="orderDate">
+                    </div>
+                    <label for="dueDate" class="col-sm-2 col-form-label">마감일</label>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control form-input tomorrowDate" id="dueDate">
+                    </div>
+                </div>
+                <div id="productOrderSearchTable"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="addBtn" class="btn btn-primary addedModal">추가</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const productOrderSearchModal = document.getElementById('productOrderSearchModal');
+    const newProductOrderSearchModal = new bootstrap.Modal(productOrderSearchModal);
+
+    var originTag = []
+    productOrderSearchModal.addEventListener('shown.bs.modal', event => {
+        const firstInput = event.target.querySelector('.form-input');
+        if (firstInput) {
+            firstInput.focus();
+        }
+        productOrderSearchTable.setData("/productOrder", originTag[0])
+        .then(function(result){
+            console.log(result)
+            const rows = productOrderSearchTable.getRows();
+            if(rows.length > 0){
+                rows[0].select();
+            }
+        })
+    })
+
+    const productOrderSearchTable = new Tabulator("#productOrderSearchTable", {
+        height: "20rem",
+        layout:"fitData",
+        ajaxURL:"/productOrder",
+        selectRows: 1,
+        columns:[
+            {title:"발주번호", field:"orderNo"},
+            {title:"거래처명", field:"customerName"},
+            {title:"발주일자", field:"orderDate"},
+            {title:"납기일자", field:"deliveryDate"},
+            {title:"합계금액", field:"price"}
+        ],
+    });
+
+    document.getElementById("addBtn").addEventListener("click", function () {
+        const data = inputToJson("form-input")
+
+        axios.post("/bomManage", data)
+            .then(function (response) {
+                newProductOrderSearchModal.hide();
+                productionPlanTable.replaceData()
+            }).catch(function (error) {
+        })
+    })
+
+</script>

@@ -43,6 +43,12 @@ function focusFirstValidInput(inputElements) {
     }
 }
 
-document.querySelectorAll('.todayDate').forEach(function(element) {
-    element.value = luxon.DateTime.local().toFormat('yyyy-MM-dd')
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('.todayDate').forEach(function(element) {
+        element.value = luxon.DateTime.local().toFormat('yyyy-MM-dd')
+    });
+    document.querySelectorAll('.tomorrowDate').forEach(function(element) {
+        element.value = luxon.DateTime.local().plus({ days: 1 }).toFormat('yyyy-MM-dd')
+    });
 });
