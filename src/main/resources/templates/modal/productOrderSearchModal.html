@@ -60,6 +60,11 @@
         ],
     });
 
+    productOrderSearchTable.on("rowDblClick", function(e, row){
+        newProductOrderSearchModal.hide();
+        getModalData(row.getData())
+    });
+
     document.getElementById("addBtn").addEventListener("click", function () {
         const data = inputToJson("form-input")
 

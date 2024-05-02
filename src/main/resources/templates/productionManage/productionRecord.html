@@ -3,40 +3,45 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout.html}">
-<div layout:fragment="Content">
-    <div class="top-bar">
-        <span class="page-title">생산 실적</span>
-        <div>
-            <div>
-                <label>발주일
-                    <input id="startDate" class="today" type="date" value="2024-04-20">
-                </label>
-                <label style="text-align: center">~
-                    <input id="endDate" class="today" type="date" value="2024-04-20">
-                </label>
+<th:block layout:fragment="Content">
+    <div class="top-bar bg-dark-subtle d-flex align-items-center p-2">
+        <span class="page-title fw-bold bg-light p-1 fs-2 me-3">생산 실적</span>
+        <button type="button" id="searchBtn" class="btn btn-primary m-1">검색</button>
+        <div class="mx-2">
+            <div class="input-group">
+                <label class="input-group-text">지시일</label>
+                <input type="date" id="startDate" class="form-control todayDate" aria-label="startDate">
+                <span class="input-group-text">~</span>
+                <input type="date" id="endDate" class="form-control todayDate" aria-label="endDate">
             </div>
-            <div>
-                <label>거래처
-                    <input id="customerSearch">
-                </label>
+            <div class="input-group">
+                <span class="input-group-text">품목</span>
+                <input type="text" id="customerSearch" class="form-control" aria-label="customerSearch">
             </div>
         </div>
     </div>
-    <div id="menuTable"></div>
-</div>
+    <div id="productionPlanTable"></div>
+</th:block>
 <script layout:fragment="script" th:inline="javascript">
 
-    var menuTable = new Tabulator("#menuTable", {
+    let productionPlanTable = new Tabulator("#productionPlanTable", {
         height: "45rem",
-        ajaxURL:"/menu",
         layout:"fitData",
         columns:[
-            {title:"id", field:"menuId"},
-            {title:"순서", field:"displayOrder"},
-            {title:"메뉴명", field:"menuName"},
-            {title:"url", field:"url"}
-        ],
+            {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
+            {title:"계획번호", field:"planNo"},
+            {title:"수주번호", field:"orderNo"},
+            {title:"거래처코드", field:"customerCode"},
+            {title:"거래처명", field:"customerName"},
+            {title:"품목코드", field:"itemCode"},
+            {title:"품목명", field:"name"},
+            {title:"지시수량", field:"quantity"}
+        ]
     });
+
+    document.getElementById("searchBtn").addEventListener("click", function () {
+        productionPlanTable.setData("/productionPlan")
+    })
 
 </script>
 </html>
