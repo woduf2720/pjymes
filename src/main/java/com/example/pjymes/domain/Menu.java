@@ -25,11 +25,17 @@ public class Menu {
     @Column(length = 100, nullable = false)
     private String url;
 
+    @ManyToOne
+    @JoinColumn(name = "authentication", referencedColumnName = "id")
+    private Role role;
+
     @Setter
     @ManyToOne
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.RESTRICT)
     private Menu parent;
+
+
 
     public void change(Integer orderIndex, String name, String url) {
         this.orderIndex = orderIndex;

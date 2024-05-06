@@ -9,12 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberDTO{
+public class RoleDTO {
 
-    private String mid;
-    private String mpw;
-    private String mname;
-    private Long roleId;
-    private String roleName;
-    private Boolean active;
+    private Long id;
+    private String name;
 }

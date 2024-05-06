@@ -1,19 +1,17 @@
 package com.example.pjymes.domain;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.HashSet;
-import java.util.Set;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.*;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Member extends BaseEntity{
 
     @Id
@@ -21,30 +19,19 @@ public class Member extends BaseEntity{
     private String mpw;
     private String mname;
 
-    @ManyToOne
-    @JoinColumn(name = "user_type_id", referencedColumnName = "id")
-    private CommonCode userType;
-
     private Boolean active;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Builder.Default
-    private Set<MemberRole> roleSet = new HashSet<>();
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "user_type_id", referencedColumnName = "id")
+    private Role role;
 
     public void changePassword(String mpw) {
         this.mpw = mpw;
     }
 
-    public void change(String mname, Long userTypeId, boolean active){
+    public void change(String mname, boolean active){
         this.mname = mname;
         this.active = active;
-    }
-
-    public void addRole(MemberRole memberRole) {
-        this.roleSet.add(memberRole);
-    }
-
-    public void clearRoles() {
-        this.roleSet.clear();
     }
 }

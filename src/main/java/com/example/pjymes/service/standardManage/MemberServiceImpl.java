@@ -1,8 +1,10 @@
 package com.example.pjymes.service.standardManage;
 
 import com.example.pjymes.domain.Member;
+import com.example.pjymes.domain.Role;
 import com.example.pjymes.dto.MemberDTO;
 import com.example.pjymes.repository.MemberRepository;
+import com.example.pjymes.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -22,6 +24,7 @@ public class MemberServiceImpl implements MemberService{
 
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -29,6 +32,8 @@ public class MemberServiceImpl implements MemberService{
         log.info("member register...");
         Member member = modelMapper.map(memberDTO, Member.class);
         member.changePassword(passwordEncoder.encode(memberDTO.getMpw()));
+        Role role = roleRepository.findById(memberDTO.getRoleId()).orElseThrow();
+        member.setRole(role);
         return memberRepository.save(member).getMid();
     }
 
@@ -45,7 +50,9 @@ public class MemberServiceImpl implements MemberService{
         log.info("member modify...");
         Optional<Member> result = memberRepository.findById(memberDTO.getMid());
         Member member = result.orElseThrow();
-        member.change(memberDTO.getMname(), memberDTO.getUserTypeId(), memberDTO.getActive());
+        member.change(memberDTO.getMname(), memberDTO.getActive());
+        Role role = roleRepository.findById(memberDTO.getRoleId()).orElseThrow();
+        member.setRole(role);
         memberRepository.save(member);
     }
 
@@ -53,8 +60,13 @@ public class MemberServiceImpl implements MemberService{
     public List<MemberDTO> list() {
         log.info("memberlist...");
         List<Member> result = memberRepository.findAll();
-        return result.stream()
+        log.info(result.toString());
+        List<MemberDTO> memberDTOList = result.stream()
                 .map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
+
+        log.info("memberDTOList...");
+        log.info(memberDTOList);
+        return memberDTOList;
     }
 
     @Override
@@ -62,7 +74,9 @@ public class MemberServiceImpl implements MemberService{
         log.info("member changePassword...");
         Optional<Member> result = memberRepository.findById(memberDTO.getMid());
         Member member = result.orElseThrow();
-        member.changePassword(memberDTO.getMpw());
+        member.changePassword(passwordEncoder.encode(memberDTO.getMpw()));
+        Role role = roleRepository.findById(memberDTO.getRoleId()).orElseThrow();
+        member.setRole(role);
         memberRepository.save(member);
     }
 }

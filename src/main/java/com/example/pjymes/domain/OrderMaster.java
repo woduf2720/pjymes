@@ -23,6 +23,7 @@ public class OrderMaster extends BaseEntity{
     private LocalDate orderDate;
     private LocalDate deliveryDate;
     private Long price;
+    @Builder.Default
     private Boolean active = false;
 
     public void change(LocalDate orderDate, LocalDate deliveryDate, Long price){

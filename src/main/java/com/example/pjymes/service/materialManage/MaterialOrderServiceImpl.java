@@ -74,6 +74,7 @@ public class MaterialOrderServiceImpl implements MaterialOrderService {
     public List<OrderMasterDTO> orderMasterList() {
         log.info("orderMaster list...");
         List<OrderMaster> result = orderMasterRepository.findAll();
+        log.info(result);
         return result.stream()
                 .map(orderMaster -> modelMapper.map(orderMaster, OrderMasterDTO.class)).collect(Collectors.toList());
     }

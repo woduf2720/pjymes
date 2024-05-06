@@ -1,7 +1,6 @@
 package com.example.pjymes.repository;
 
 import com.example.pjymes.domain.Member;
-import com.example.pjymes.domain.MemberRole;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +29,8 @@ public class MemberRepositoryTests {
                     .mpw(passwordEncoder.encode("1111"))
                     .build();
 
-            member.addRole(MemberRole.USER);
 
-            if(i>= 2){
-                member.addRole(MemberRole.ADMIN);
-            }
+
             memberRepository.save(member);
         });
     }
@@ -42,13 +38,10 @@ public class MemberRepositoryTests {
     @Test
     public void testRead(){
 
-        Optional<Member> result = memberRepository.getWithRoles("user3");
+        Optional<Member> result = memberRepository.findById("user1");
 
         Member member = result.orElseThrow();
-
         log.info(member);
-        log.info(member.getRoleSet());
 
-        member.getRoleSet().forEach(memberRole -> log.info(memberRole.name()));
     }
 }

@@ -19,6 +19,8 @@ public class MenuDTO {
     private String name;
     private String url;
     private Long parentId;
+    private Long roleId;
+    private String roleName;
 
     @Builder.Default
     private List<MenuDTO> children = new ArrayList<>();

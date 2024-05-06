@@ -39,11 +39,11 @@
                         </div>
                     </div>
                     <div class="mb-3 row">
-                        <label for="userTypeId" class="col-sm-3 col-form-label">사용자타입</label>
+                        <label for="roleId" class="col-sm-3 col-form-label">사용자타입</label>
                         <div class="col-sm-9">
-                            <select id="userTypeId" class="form-select form-input">
-                                <option th:each="userType : ${userTypeList}" th:value="${userType.id}"
-                                        th:text="${userType.name}">
+                            <select id="roleId" class="form-select form-input">
+                                <option id="roleName" th:each="roleDTO : ${roleDTOList}" th:value="${roleDTO.id}"
+                                        th:text="${roleDTO.name}">
                                 </option>
                             </select>
                         </div>
@@ -54,8 +54,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="addBtn" class="btn btn-primary addedModal d-none">추가</button>
-                    <button type="button" id="modifyBtn" class="btn btn-primary modifiedModal d-none">수정</button>
+                    <button type="button" id="addMemberBtn" class="btn btn-primary addedModal d-none">추가</button>
+                    <button type="button" id="modifyMemberBtn" class="btn btn-primary modifiedModal d-none">수정</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
                 </div>
             </div>

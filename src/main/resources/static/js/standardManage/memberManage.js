@@ -7,7 +7,7 @@ var memberTable = new Tabulator("#memberTable", {
         {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
         {title:"id", field:"mid"},
         {title:"사용자명", field:"mname"},
-        {title:"사용자타입", field:"userTypeName"},
+        {title:"사용자타입", field:"roleName"},
         {title:"사용유무", field:"active", hozAlign: "center", formatter:"tickCross"}
     ],
 });
@@ -16,8 +16,12 @@ let modalTitle = document.querySelector("#memberModal .modal-title");
 let modalMid = document.querySelector("#mid");
 
 document.getElementById("addedModalBtn").addEventListener("click", function () {
+    console.log(memberTable.getData())
     modalTitle.textContent = "사용자 추가"
     modalMid.readOnly = false
+    document.getElementById("roleId").selectedIndex = 0;
+    document.getElementById("active").checked = true
+
     document.querySelectorAll('.addedModal').forEach(function(element) {
         element.classList.remove('d-none');
     });
@@ -38,7 +42,7 @@ document.getElementById("modifiedModalBtn").addEventListener("click", function (
         new bootstrap.Modal(memberModal).show()
         document.getElementById('mid').value = rows[0].getData().mid;
         document.getElementById('mname').value = rows[0].getData().mname;
-        document.getElementById('userTypeId').value = rows[0].getData().userTypeId;
+        document.getElementById('roleId').value = rows[0].getData().roleId;
         document.getElementById('active').checked = rows[0].getData().active;
 
         document.querySelectorAll('.addedModal').forEach(function(element) {
@@ -56,7 +60,7 @@ memberModal.addEventListener('shown.bs.modal', event => {
         focusFirstValidInput(inputElements);
     }
 })
-document.getElementById("addBtn").addEventListener("click", function () {
+document.getElementById("addMemberBtn").addEventListener("click", function () {
     const data = inputToJson("form-input")
 
     axios.post("/member", data)
@@ -69,7 +73,8 @@ document.getElementById("addBtn").addEventListener("click", function () {
     })
 })
 
-document.getElementById("modifyBtn").addEventListener("click", function () {
+document.getElementById("modifyMemberBtn").addEventListener("click", function () {
+    console.log("멤버 수정")
     const data = inputToJson("form-input")
 
     axios.put("/member", data)

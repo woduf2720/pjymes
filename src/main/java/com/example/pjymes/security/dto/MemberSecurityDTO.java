@@ -1,10 +1,15 @@
 package com.example.pjymes.security.dto;
 
+import com.example.pjymes.domain.Member;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collector;
 
 @Getter
 @Setter
@@ -14,16 +19,23 @@ public class MemberSecurityDTO extends User {
     private String mid;
     private String mpw;
     private String mname;
-    private String commonCodeId;
-    private String commonCodeName;
-    private boolean useStatus;
+    private Long userTypeId;
+    private String userTypeName;
+    private boolean active;
 
-    public MemberSecurityDTO(String username, String password, String mname, Collection<? extends GrantedAuthority> authorities) {
+    public MemberSecurityDTO(Member member) {
 
-        super(username, password, authorities);
+        super(member.getMid(),
+                member.getMpw(),
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + member.getRole().getName()))
+        );
 
-        this.mid = username;
-        this.mpw = password;
-        this.mname = mname;
+        this.mid = member.getMid();
+        this.mpw = member.getMpw();
+        this.mname = member.getMname();
+        this.userTypeId = member.getRole().getId();
+        this.userTypeName = member.getRole().getName();
+        this.active = member.getActive();
     }
+
 }

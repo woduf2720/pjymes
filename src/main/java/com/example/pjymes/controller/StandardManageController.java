@@ -1,7 +1,7 @@
 package com.example.pjymes.controller;
 
-import com.example.pjymes.dto.CommonCodeDTO;
-import com.example.pjymes.service.systemManage.CommonCodeService;
+import com.example.pjymes.dto.RoleDTO;
+import com.example.pjymes.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -17,13 +17,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StandardManageController {
 
-    private final CommonCodeService commonCodeService;
+    private final RoleService roleService;
 
     @GetMapping("/memberManage")
     public void memberManage(Model model) {
         log.info("memberManage.....");
-        List<CommonCodeDTO> userTypeList = commonCodeService.listByParentId(1L);
-        model.addAttribute("userTypeList", userTypeList);
+
+        List<RoleDTO> roleDTOList = roleService.list();
+
+        model.addAttribute("roleDTOList", roleDTOList);
     }
 
     @GetMapping("/itemManage")
