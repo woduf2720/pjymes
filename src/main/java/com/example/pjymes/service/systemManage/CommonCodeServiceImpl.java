@@ -1,7 +1,6 @@
 package com.example.pjymes.service.systemManage;
 
 import com.example.pjymes.domain.CommonCode;
-import com.example.pjymes.domain.Menu;
 import com.example.pjymes.dto.CommonCodeDTO;
 import com.example.pjymes.repository.CommonCodeRepository;
 import lombok.RequiredArgsConstructor;

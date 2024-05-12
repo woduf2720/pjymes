@@ -8,9 +8,10 @@ var menuTable = new Tabulator("#menuTable", {
     editTriggerEvent:"dblclick",
     columns:[
         {title:"id", field:"id"},
-        {title:"순서", field:"orderIndex", editor:"input"},
+        {title:"순서", field:"orderIndex", editor:"input", hozAlign:"center"},
         {title:"메뉴명", field:"name", editor:"input"},
-        {title:"url", field:"url", editor:"input"}
+        {title:"url", field:"url", editor:"input"},
+        {title:"권한", field:"roleName"}
     ],
 });
 
@@ -31,7 +32,7 @@ menuTable.on("cellEdited", function(cell){
 });
 
 
-document.getElementById("addBtn").addEventListener("click", function () {
+document.getElementById("addMenuBtn").addEventListener("click", function () {
     const data = inputToJson("form-input")
 
     axios.post("/menu", data)
@@ -49,8 +50,10 @@ const addMenuModal = document.getElementById('addMenuModal')
 addMenuModal.addEventListener('shown.bs.modal', event => {
     const inputElements = event.target.querySelectorAll('.form-input');
     if (inputElements.length > 0) {
+        document.getElementById("roleId").selectedIndex = 0;
         focusFirstValidInput(inputElements);
         let selectedRows = menuTable.getSelectedRows()
+
         if(selectedRows.length > 0){
             let data = selectedRows[0].getData()
             if(data.parentId == null) {
@@ -66,18 +69,21 @@ addMenuModal.addEventListener('hidden.bs.modal', event => {
     inputToNull("form-input")
 })
 
-document.getElementById("deleteBtn").addEventListener("click", function () {
+document.getElementById("deleteMenuBtn").addEventListener("click", function () {
     const row = menuTable.getSelectedRows()[0];
+
     if(row){
-        axios.delete("/menu/"+row.getData().id)
-            .then(function (response) {
-                menuTable.deleteRow(row)
-                .then(function(){
-                    alert("삭제되었습니다.")
-                })
-            }).catch(function (error) {
-            alert("하위 메뉴가 있으면 삭제 할 수 없습니다.")
-        })
+        if(confirm("선택한 행을 삭제하시겠습니까?")) {
+            axios.delete("/menu/"+row.getData().id)
+                .then(function (response) {
+                    menuTable.deleteRow(row)
+                        .then(function(){
+                            alert("삭제되었습니다.")
+                        })
+                }).catch(function (error) {
+                alert("하위 메뉴가 있으면 삭제 할 수 없습니다.")
+            })
+        }
     }else{
         alert("삭제할 행을 선택해주세요.")
     }

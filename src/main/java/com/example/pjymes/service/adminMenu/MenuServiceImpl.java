@@ -33,8 +33,9 @@ public class MenuServiceImpl implements MenuService{
         menuDTO.setOrderIndex((int) count+1);
 
         Menu menu = modelMapper.map(menuDTO, Menu.class);
-
-        menu.setParent(menuRepository.findById(parentId).orElseThrow());
+        if(parentId != null){
+            menu.setParent(menuRepository.findById(parentId).orElseThrow());
+        }
 
         return menuRepository.save(menu).getId();
     }
