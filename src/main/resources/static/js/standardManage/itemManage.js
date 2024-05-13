@@ -73,11 +73,11 @@ document.getElementById("addBtn").addEventListener("click", function () {
 
     axios.post("/itemManage", data)
         .then(function (response) {
-            console.log(response)
+            alert("저장되었습니다.")
             bootstrap.Modal.getInstance(itemModal).hide();
             itemManageTable.replaceData("/itemManage")
         }).catch(function (error) {
-        console.log(error)
+        alert(error.response.data.message);
     })
 })
 
@@ -86,7 +86,7 @@ document.getElementById("modifyBtn").addEventListener("click", function () {
 
     axios.put("/itemManage", data)
         .then(function (response) {
-            console.log(response)
+            alert("수정되었습니다.")
             bootstrap.Modal.getInstance(itemModal).hide();
             itemManageTable.replaceData("/itemManage")
         }).catch(function (error) {
