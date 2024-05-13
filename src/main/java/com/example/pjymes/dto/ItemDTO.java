@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Data
 @NoArgsConstructor
@@ -13,7 +15,8 @@ public class ItemDTO {
     private String code;
     private String name;
     private String specification;
-    private String category;
+    private Long categoryId;
+    private String categoryName;
     private Long unitPrice;
     private Boolean active;
 }

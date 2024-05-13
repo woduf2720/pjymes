@@ -8,12 +8,24 @@
         <div class="w-50 pe-2">
             <div class="top-bar bg-dark-subtle d-flex align-items-center p-2">
                 <span class="page-title fw-bold bg-light p-1 fs-2 me-3">BOM 관리</span>
+                <div>
+                    <div class="input-group">
+                        <label for="categoryId" class="input-group-text">분류</label>
+                        <select id="categoryId" class="form-select form-input">
+                            <option value="" selected>전체</option>
+                            <option th:each="category : ${categoryList}" th:value="${category.id}"
+                                    th:text="${category.name}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
             </div>
+
             <div id="itemTable"></div>
         </div>
         <div class="w-50">
             <div class="top-bar bg-dark-subtle d-flex align-items-center p-2">
-                <button type="button" id="addBomBtn" class="btn btn-primary mx-1">bom 추가</button>
+                <button type="button" id="addBomModalBtn" class="btn btn-primary mx-1">bom 추가</button>
                 <button type="button" id="deleteBomBtn" class="btn btn-primary mx-1">삭제</button>
             </div>
             <div id="bomManageTable"></div>
@@ -54,7 +66,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="button" id="addBtn" class="btn btn-primary">추가</button>
+                    <button type="button" id="addBomBtn" class="btn btn-primary">추가</button>
                 </div>
             </div>
         </div>

@@ -12,4 +12,6 @@ public interface ItemService {
     void modify(ItemDTO itemDTO);
 
     List<ItemDTO> list();
+
+    List<ItemDTO> listByCategory(Long categoryId);
 }

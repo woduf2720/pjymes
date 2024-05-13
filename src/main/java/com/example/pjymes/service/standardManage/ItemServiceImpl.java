@@ -1,7 +1,10 @@
 package com.example.pjymes.service.standardManage;
 
+import com.example.pjymes.domain.CommonCode;
 import com.example.pjymes.domain.Item;
+import com.example.pjymes.domain.Role;
 import com.example.pjymes.dto.ItemDTO;
+import com.example.pjymes.repository.CommonCodeRepository;
 import com.example.pjymes.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,6 +24,7 @@ public class ItemServiceImpl implements ItemService {
 
     private final ModelMapper modelMapper;
     private final ItemRepository itemRepository;
+    private final CommonCodeRepository commonCodeRepository;
 
     @Override
     public String register(ItemDTO itemDTO) {
@@ -43,6 +47,8 @@ public class ItemServiceImpl implements ItemService {
         Optional<Item> result = itemRepository.findById(itemDTO.getCode());
         Item item = result.orElseThrow();
         item.change(itemDTO);
+        CommonCode category = commonCodeRepository.findById(itemDTO.getCategoryId()).orElseThrow();
+        item.setCategory(category);
         itemRepository.save(item);
     }
 
@@ -50,6 +56,17 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDTO> list() {
         log.info("item list...");
         List<Item> result = itemRepository.findAll();
+        log.info(result);
+        return result.stream()
+                .map(item -> modelMapper.map(item, ItemDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ItemDTO> listByCategory(Long categoryId) {
+        log.info("item listByCategory...");
+        CommonCode category = commonCodeRepository.findById(categoryId).orElseThrow();
+        List<Item> result = itemRepository.findByCategory(category);
+        log.info(result);
         return result.stream()
                 .map(item -> modelMapper.map(item, ItemDTO.class)).collect(Collectors.toList());
     }

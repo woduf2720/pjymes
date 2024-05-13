@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"code", "parent_code"}))
 public class Bom {
 
     @Id

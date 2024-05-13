@@ -1,6 +1,7 @@
 package com.example.pjymes.controller.standardManage;
 
 import com.example.pjymes.dto.ItemDTO;
+import com.example.pjymes.dto.SearchDTO;
 import com.example.pjymes.service.standardManage.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,9 +20,16 @@ public class ItemManageRestController {
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemDTO> getItem() {
+    public List<ItemDTO> getItem(SearchDTO searchDTO) {
         log.info("getItem...");
-        return itemService.list();
+        log.info(searchDTO);
+        if(searchDTO.getCategoryId() != null) {
+            //분류로만 검색
+            return itemService.listByCategory(searchDTO.getCategoryId());
+        }else{
+            //전체 리스트
+            return itemService.list();
+        }
     }
 
     @PostMapping

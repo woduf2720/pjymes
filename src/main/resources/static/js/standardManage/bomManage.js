@@ -1,20 +1,29 @@
-var itemTable = new Tabulator("#itemTable", {
+const categoryId = document.getElementById("categoryId");
+function handleSelectChange() {
+    //itemTable.setData(this.value === "" ? "/itemManage" : "/itemManage/" + this.value)
+    itemTable.setData("/itemManage", {"categoryId": this.value})
+}
+categoryId.addEventListener("change",handleSelectChange)
+
+const itemTable = new Tabulator("#itemTable", {
     height: "45rem",
-    ajaxURL:"/itemManage",
-    layout:"fitData",
+    layout: "fitData",
+    ajaxURL: "/itemManage",
+    ajaxParams:{"categoryId": categoryId.value},
     selectableRows: "1",
     columns:[
         {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
         {title:"품목코드", field:"code"},
         {title:"품목명", field:"name"},
         {title:"규격", field:"specification"},
-        {title:"분류", field:"category"},
+        {title:"분류", field:"categoryName"}
     ],
 });
 
 itemTable.on("rowSelected", function(row){
-    bomManageTable.setData("/bomManage/"+row.getData().code)
+    bomManageTable.setData("/bomManage", row.getData())
         .then(function(){
+            console.log(bomManageTable.getData())
             bomManageTable.getRows()[0].select()
         })
 });
@@ -32,28 +41,25 @@ var bomManageTable = new Tabulator("#bomManageTable", {
         {title:"품목코드", field:"itemCode"},
         {title:"품목코드", field:"itemName"},
         {title:"규격", field:"itemSpecification"},
-        {title:"수량", field:"quantity", editor:"input"},
+        {title:"분류", field:"itemCategoryName"},
+        {title:"수량", field:"quantity", hozAlign: "right", editor:"input"},
     ],
 });
 
 bomManageTable.on("rowClick", function(e, row){
     row.getTable().deselectRow();
     row.select();
-    console.log(row.getData())
 });
 
 bomManageTable.on("cellEdited", function(cell){
     const rowData = cell.getRow().getData();
 
     axios.put("/bomManage", rowData)
-        .then(function (response) {
-        }).catch(function (error) {
-    })
 });
 
 const addBomModal = document.getElementById('addBomModal')
 
-document.getElementById("addBomBtn").addEventListener("click", function () {
+document.getElementById("addBomModalBtn").addEventListener("click", function () {
     let row = bomManageTable.getRows("selected")[0]
     if(row != null) {
         document.getElementById('parentId').value = row.getData().id;
@@ -69,16 +75,16 @@ addBomModal.addEventListener('hidden.bs.modal', event => {
     inputToNull("form-input")
 })
 
-document.getElementById("addBtn").addEventListener("click", function () {
+document.getElementById("addBomBtn").addEventListener("click", function () {
     const data = inputToJson("form-input")
 
     axios.post("/bomManage", data)
         .then(function (response) {
-            console.log(response)
+            alert("저장되었습니다.")
             bootstrap.Modal.getInstance(addBomModal).hide();
-            bomManageTable.replaceData()
+            bomManageTable.setData("/bomManage", itemTable.getData("selected")[0])
         }).catch(function (error) {
-        console.log(error)
+            alert(error.response.data.message)
     })
 })
 
@@ -114,6 +120,7 @@ document.getElementById("deleteBomBtn").addEventListener("click", function () {
                 .then(function (response) {
                     console.log(response)
                     row.delete();
+                    alert("삭제되었습니다.")
                 }).catch(function (error) {
                 console.log(error)
             })

@@ -49,6 +49,8 @@ public class BomServiceImpl implements BomService {
                 .itemCode(item.getCode())
                 .itemName(item.getName())
                 .itemSpecification(item.getSpecification())
+                .itemCategoryId(item.getCategory().getId())
+                .itemCategoryName(item.getCategory().getName())
                 .level(1L)
                 .build();
 

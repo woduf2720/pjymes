@@ -2,6 +2,7 @@ package com.example.pjymes.controller.standardManage;
 
 import com.example.pjymes.dto.BomDTO;
 import com.example.pjymes.dto.CustomerDTO;
+import com.example.pjymes.dto.ItemDTO;
 import com.example.pjymes.service.standardManage.BomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,10 +20,11 @@ public class BomManageRestController {
 
     private final BomService bomService;
 
-    @GetMapping("/{itemCode}")
-    public List<BomDTO> getBom(@PathVariable String itemCode) {
+    @GetMapping
+    public List<BomDTO> getBom(ItemDTO itemDTO) {
         log.info("getBom...");
-        return bomService.readOne(itemCode);
+        log.info(itemDTO);
+        return bomService.readOne(itemDTO.getCode());
     }
 
     @PostMapping

@@ -4,19 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
+import org.springframework.http.HttpStatus;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SearchDTO {
+public class ErrorResponseDTO {
 
-    private String keyword;
-
-    private LocalDate startDate;
-    private LocalDate endDate;
-
-    private Long categoryId;
+    private HttpStatus status;
+    private String message;
 }

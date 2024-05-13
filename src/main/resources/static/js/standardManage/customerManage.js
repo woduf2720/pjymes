@@ -7,7 +7,7 @@ var customerManageTable = new Tabulator("#customerManageTable", {
         {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
         {title:"거래처코드", field:"code"},
         {title:"거래처명", field:"name"},
-        {title:"분류", field:"category"},
+        {title:"분류", field:"categoryName"},
         {title:"사업자 등록번호", field:"registrationNumber"},
         {title:"주소", field:"address"},
         {title:"담당자", field:"manager"},
@@ -23,6 +23,9 @@ let customerCode = document.querySelector("#code");
 document.getElementById("addedModalBtn").addEventListener("click", function () {
     modalTitle.textContent = "거래처 추가"
     customerCode.readOnly = false
+    document.getElementById("categoryId").selectedIndex = 0;
+    document.getElementById("active").checked = true
+
     document.querySelectorAll('.addedModal').forEach(function(element) {
         element.classList.remove('d-none');
     });
@@ -42,7 +45,7 @@ document.getElementById("modifiedModalBtn").addEventListener("click", function (
 
         document.getElementById('code').value = rows[0].getData().code;
         document.getElementById('name').value = rows[0].getData().name;
-        document.getElementById('category').value = rows[0].getData().category;
+        document.getElementById('categoryId').value = rows[0].getData().categoryId;
         document.getElementById('registrationNumber').value = rows[0].getData().registrationNumber;
         document.getElementById('address').value = rows[0].getData().address;
         document.getElementById('manager').value = rows[0].getData().manager;

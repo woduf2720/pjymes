@@ -3,7 +3,13 @@ package com.example.pjymes.domain;
 import com.example.pjymes.dto.ItemDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -17,14 +23,17 @@ public class Item extends BaseEntity{
     private String code;
     private String name;
     private String specification;
-    private String category;
     private Long unitPrice;
     private Boolean active;
+
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "category", referencedColumnName = "id")
+    private CommonCode category;
 
     public void change(ItemDTO itemDTO){
         this.name = itemDTO.getName();
         this.specification = itemDTO.getSpecification();
-        this.category = itemDTO.getCategory();
         this.unitPrice = itemDTO.getUnitPrice();
         this.active = itemDTO.getActive();
     }

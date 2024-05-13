@@ -13,7 +13,8 @@ public class CustomerDTO {
 
     private String code;
     private String name;
-    private String category;
+    private Long categoryId;
+    private String categoryName;
     private String registrationNumber;
     private String address;
     private String manager;

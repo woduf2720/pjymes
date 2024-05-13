@@ -1,8 +1,11 @@
 package com.example.pjymes.service.standardManage;
 
+import com.example.pjymes.domain.CommonCode;
 import com.example.pjymes.domain.Customer;
 import com.example.pjymes.dto.CustomerDTO;
+import com.example.pjymes.repository.CommonCodeRepository;
 import com.example.pjymes.repository.CustomerRepository;
+import com.example.pjymes.service.systemManage.CommonCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -21,6 +24,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final ModelMapper modelMapper;
     private final CustomerRepository customerRepository;
+    private final CommonCodeRepository commonCodeRepository;
 
     @Override
     public String register(CustomerDTO customerDTO) {
@@ -42,9 +46,9 @@ public class CustomerServiceImpl implements CustomerService {
         log.info("customer modify...");
         Optional<Customer> result = customerRepository.findById(customerDTO.getCode());
         Customer customer = result.orElseThrow();
-        customer.change(customerDTO.getName(), customerDTO.getCategory(), customerDTO.getRegistrationNumber(),
-                customerDTO.getAddress(), customerDTO.getManager(), customerDTO.getManagerPhone(), customerDTO.getManagerEmail(),
-                customerDTO.getActive());
+        customer.change(customerDTO);
+        CommonCode category = commonCodeRepository.findById(customerDTO.getCategoryId()).orElseThrow();
+        customer.setCategory(category);
         customerRepository.save(customer);
     }
 

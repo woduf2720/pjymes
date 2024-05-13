@@ -29,8 +29,8 @@ const commonCodeModal = document.getElementById('commonCodeModal')
 document.getElementById("childAddBtn").addEventListener("click", function () {
     let row = commonCodeParentTable.getRows("selected")[0]
     if(row != null){
+        new bootstrap.Modal(commonCodeModal).show()
         document.getElementById('parentId').value = row.getData().id;
-        bootstrap.Modal.getInstance(commonCodeModal).show()
     }else{
         alert("상위코드를 선택해주세요.")
     }
@@ -40,6 +40,7 @@ commonCodeModal.addEventListener('shown.bs.modal', event => {
     const inputElements = event.target.querySelectorAll('.form-input');
     if (inputElements.length > 0) {
         focusFirstValidInput(inputElements);
+        document.getElementById('active').checked = true;
     }
 })
 document.getElementById("addBtn").addEventListener("click", function () {

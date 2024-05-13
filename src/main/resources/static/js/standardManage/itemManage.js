@@ -8,9 +8,8 @@ var itemManageTable = new Tabulator("#itemManageTable", {
         {title:"품목코드", field:"code"},
         {title:"품목명", field:"name"},
         {title:"규격", field:"specification"},
-        {title:"분류", field:"category"},
+        {title:"분류", field:"categoryName"},
         {title:"단가", field:"unitPrice"},
-        {title:"수정일자", field:"updateAt"},
         {title:"사용유무", field:"active", hozAlign: "center", formatter:"tickCross"},
     ],
 });
@@ -19,8 +18,12 @@ let modalTitle = document.querySelector("#itemModal .modal-title");
 let itemCode = document.querySelector("#code");
 
 document.getElementById("addedModalBtn").addEventListener("click", function () {
+    console.log(itemManageTable.getData());
     modalTitle.textContent = "품목 추가"
     itemCode.readOnly = false
+    document.getElementById("categoryId").selectedIndex = 0;
+    document.getElementById("active").checked = true
+
     document.querySelectorAll('.addedModal').forEach(function(element) {
         element.classList.remove('d-none');
     });
@@ -40,7 +43,7 @@ document.getElementById("modifiedModalBtn").addEventListener("click", function (
         document.getElementById('code').value = rows[0].getData().code;
         document.getElementById('name').value = rows[0].getData().name;
         document.getElementById('specification').value = rows[0].getData().specification;
-        document.getElementById('category').value = rows[0].getData().category;
+        document.getElementById('categoryId').value = rows[0].getData().categoryId;
         document.getElementById('unitPrice').value = rows[0].getData().unitPrice;
         document.getElementById('active').checked = rows[0].getData().active;
 

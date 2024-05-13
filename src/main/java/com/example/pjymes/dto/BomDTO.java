@@ -20,6 +20,8 @@ public class BomDTO {
     private String itemCode;
     private String itemName;
     private String itemSpecification;
+    private Long itemCategoryId;
+    private String itemCategoryName;
     private Long quantity;
 
     private String parentItemCode;
