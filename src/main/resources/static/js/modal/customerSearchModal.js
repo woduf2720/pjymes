@@ -37,9 +37,9 @@ var customerSearchTable = new Tabulator("#customerSearchTable", {
         "selectedRowNext": "40"
     },
     columns:[
-        {title:"거래처코드", field:"code"},
-        {title:"거래처명", field:"name"},
-        {title:"분류", field:"categoryName"}
+        {title:"거래처코드", field:"code", headerFilter:"input"},
+        {title:"거래처명", field:"name", headerFilter:"input"},
+        {title:"분류", field:"categoryName", headerFilter:"input"}
     ],
 });
 

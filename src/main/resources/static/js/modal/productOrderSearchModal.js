@@ -3,10 +3,8 @@ const newProductOrderSearchModal = new bootstrap.Modal(productOrderSearchModal);
 
 var originTag = []
 productOrderSearchModal.addEventListener('shown.bs.modal', event => {
-    const firstInput = event.target.querySelector('.form-input');
-    if (firstInput) {
-        firstInput.focus();
-    }
+    event.target.querySelector('.tabulator-tableholder').focus();
+
     productOrderSearchTable.setData("/productOrder", originTag[0])
         .then(function(result){
             console.log(result)
@@ -38,14 +36,3 @@ productOrderSearchTable.on("rowDblClick", function(e, row){
     newProductOrderSearchModal.hide();
     getModalData(row.getData())
 });
-
-document.getElementById("addBtn").addEventListener("click", function () {
-    const data = inputToJson(".form-input")
-
-    axios.post("/bomManage", data)
-        .then(function (response) {
-            newProductOrderSearchModal.hide();
-            productionPlanTable.replaceData()
-        }).catch(function (error) {
-    })
-})

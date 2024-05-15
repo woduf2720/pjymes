@@ -3,10 +3,8 @@ const newItemSearchModal = new bootstrap.Modal(itemSearchModal);
 
 var originTag = []
 itemSearchModal.addEventListener('shown.bs.modal', event => {
-    const firstInput = event.target.querySelector('.form-input');
-    if (firstInput) {
-        firstInput.focus();
-    }
+    event.target.querySelector('.tabulator-tableholder').focus();
+
     itemSearchTable.setData("/itemManage", originTag[0])
         .then(function(result){
             console.log(result)
@@ -39,8 +37,10 @@ var itemSearchTable = new Tabulator("#itemSearchTable", {
         "selectedRowNext": "40"
     },
     columns:[
-        {title:"품목코드", field:"code"},
-        {title:"품목명", field:"name"},
+        {title:"품목코드", field:"code", headerFilter:"input"},
+        {title:"품목명", field:"name", headerFilter:"input"},
+        {title:"규격", field:"specification", headerFilter:"input"},
+        {title:"분류", field:"categoryName", headerFilter:"input"},
     ],
 });
 

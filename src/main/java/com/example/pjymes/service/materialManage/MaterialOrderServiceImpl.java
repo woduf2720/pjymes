@@ -38,6 +38,7 @@ public class MaterialOrderServiceImpl implements MaterialOrderService {
             String getOrderNo = orderMasterRepository.getOrderNo(newOrderNo);
             log.info("newOrderNo : " + newOrderNo + getOrderNo);
             orderMasterDTO.setOrderNo(newOrderNo + getOrderNo);
+            orderMasterDTO.setActive(false);
         }
 
         List<OrderSubDTO> orderSubDTOList = orderMasterDTO.getOrderSubDTOList();
@@ -45,6 +46,7 @@ public class MaterialOrderServiceImpl implements MaterialOrderService {
         //orderMaster 저장
         log.info("materialOrder register...");
         OrderMaster orderMaster = modelMapper.map(orderMasterDTO, OrderMaster.class);
+        log.info("orderMaster : " + orderMaster.toString());
         OrderMaster saveMasterData = orderMasterRepository.save(orderMaster);
         log.info("saveMasterData : " + saveMasterData);
         log.info("orderMaster complete...");

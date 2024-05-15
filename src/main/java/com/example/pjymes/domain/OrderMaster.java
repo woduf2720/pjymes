@@ -22,10 +22,9 @@ public class OrderMaster extends BaseEntity{
     private Customer customer;
     private LocalDate orderDate;
     private LocalDate deliveryDate;
-    private Long price;
-    @Builder.Default
     @Column(nullable = false)
-    private Boolean active = false;
+    private Long price;
+    private Boolean active;
 
     public void change(LocalDate orderDate, LocalDate deliveryDate, Long price){
         this.orderDate = orderDate;

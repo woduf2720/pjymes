@@ -185,16 +185,21 @@ orderSubTable.on("cellEdited", function(cell){
 });
 
 document.getElementById("addSubBtn").addEventListener("click", function () {
-    let rows = orderSubTable.getRows();
-    for (const row of rows) {
-        if(row.getData().itemName == null) {
-            return row.getCell("itemCode").edit();
+    const masterData = orderMasterTable.getData("selected")
+    if(masterData.length === 0){
+        alert("행을 선택해주세요.")
+    }else{
+        let rows = orderSubTable.getRows();
+        for (const row of rows) {
+            if(row.getData().itemName == null) {
+                return row.getCell("itemCode").edit();
+            }
         }
+        orderSubTable.addRow()
+            .then(function(row){
+                row.getCell("itemCode").edit();
+            });
     }
-    orderSubTable.addRow()
-        .then(function(row){
-            row.getCell("itemCode").edit();
-        });
 })
 
 document.getElementById("saveBtn").addEventListener("click", function () {
@@ -205,11 +210,11 @@ document.getElementById("saveBtn").addEventListener("click", function () {
 
     axios.post("/materialOrder", selectedMasterRow.getData())
         .then(function (response) {
-            console.log(response)
-            orderMasterTable.setData(response)
             alert("저장되었습니다.")
+            orderMasterTable.getRows("selected")[0].update(response.data)
+            orderSubTable.setData(response.data.orderSubDTOList);
         }).catch(function (error) {
-        alert(error.response.data.message)
+        alert(error.response.data)
     })
 })
 
@@ -222,7 +227,8 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
             console.log(response)
             orderSubTable.deleteRow(selectedSubRow)
             if(orderSubTable.getRows().length === 0){
-                orderMasterTable.replaceData()
+                console.log("확인")
+                orderMasterTable.deleteRow(orderMasterTable.getRows("selected"));
             }
             alert("삭제되었습니다.")
         }).catch(function (error) {
