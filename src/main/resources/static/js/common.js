@@ -43,6 +43,46 @@ function focusFirstValidInput(inputElements) {
     }
 }
 
+Tabulator.extendModule("keybindings", "actions", {
+    "selectedRowPrev":function(){ //delete selected rows
+        const row = this.table.getSelectedRows()[0];
+        const prevRow = row.getPrevRow();
+        if(prevRow){
+            row.getTable().deselectRow();
+            prevRow.select()
+        }
+    },
+    "selectedRowNext":function(){ //delete selected rows
+        const row = this.table.getSelectedRows()[0];
+        const nextRow = row.getNextRow ();
+        if(nextRow){
+            row.getTable().deselectRow();
+            nextRow.select()
+        }
+    },
+});
+
+function handleEnterKey(event) {
+    if (event.key === "Enter"){
+        const targetModal = event.target.closest(".modal")
+        const isModal = targetModal.classList.contains("modal");
+        if(isModal){
+            const kind = event.target.parentNode.id;
+            let tempTable = Tabulator.findTable("#"+kind)[0];
+            let tempData = tempTable.getData("selected")[0]
+            if(kind === "customerSearchTable"){
+                customerSearchResult(tempData)
+            }else if(kind === "itemSearchTable"){
+                itemSearchResult(tempData)
+            }else if(kind === "productOrderSearchTable"){
+                getModalData(tempData)
+            }
+            bootstrap.Modal.getInstance(targetModal).hide()
+        }
+    }
+}
+
+document.addEventListener("keydown", handleEnterKey);
 
 document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll('.todayDate').forEach(function(element) {
