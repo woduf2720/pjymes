@@ -71,10 +71,10 @@ customerModal.addEventListener('shown.bs.modal', event => {
     }
 })
 customerModal.addEventListener('hidden.bs.modal', event => {
-    inputToNull("form-input")
+    inputToNull(".form-input")
 })
 document.getElementById("addBtn").addEventListener("click", function () {
-    const data = inputToJson("form-input")
+    const data = inputToJson(".form-input")
 
     axios.post("/customerManage", data)
         .then(function (response) {
@@ -83,12 +83,12 @@ document.getElementById("addBtn").addEventListener("click", function () {
             bootstrap.Modal.getInstance(customerModal).hide();
             customerManageTable.replaceData("/customerManage")
         }).catch(function (error) {
-        alert(error.response.data.message);
+        alert(error.response.data);
     })
 })
 
 document.getElementById("modifyBtn").addEventListener("click", function () {
-    const data = inputToJson("form-input")
+    const data = inputToJson(".form-input")
 
     axios.put("/customerManage", data)
         .then(function (response) {

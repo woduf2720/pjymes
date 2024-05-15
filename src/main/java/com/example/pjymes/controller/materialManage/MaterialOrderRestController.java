@@ -27,8 +27,9 @@ public class MaterialOrderRestController {
     }
 
     @GetMapping("/orderMaster")
-    public List<OrderMasterDTO> getMaterialOrderMasterList(@ModelAttribute SearchDTO searchDTO) {
+    public List<OrderMasterDTO> getMaterialOrderMasterList(SearchDTO searchDTO) {
         log.info("getMaterialOrderMasterList...");
+        log.info(searchDTO);
         return materialOrderService.orderMasterListByKeyword(searchDTO);
     }
 
@@ -39,12 +40,9 @@ public class MaterialOrderRestController {
     }
 
     @PostMapping
-    public Map<String, String> postMaterialOrderMaster(@RequestBody OrderMasterDTO orderMasterDTO) {
+    public OrderMasterDTO postMaterialOrderMaster(@RequestBody OrderMasterDTO orderMasterDTO) {
         log.info("postMaterialOrderMaster..." + orderMasterDTO);
-        String orderNo = materialOrderService.register(orderMasterDTO);
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("orderNo", orderNo);
-        return resultMap;
+        return materialOrderService.register(orderMasterDTO);
     }
 
     @DeleteMapping

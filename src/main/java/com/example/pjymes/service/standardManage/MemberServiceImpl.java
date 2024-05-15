@@ -8,6 +8,7 @@ import com.example.pjymes.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,12 +30,17 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public String register(MemberDTO memberDTO) {
+        //저장 하되 이미 존재하는 데이터면 저장하지 않고 에러발생
         log.info("member register...");
-        Member member = modelMapper.map(memberDTO, Member.class);
-        member.changePassword(passwordEncoder.encode(memberDTO.getMpw()));
-        Role role = roleRepository.findById(memberDTO.getRoleId()).orElseThrow();
-        member.setRole(role);
-        return memberRepository.save(member).getMid();
+        if(memberDTO.getMid() == null || !memberRepository.existsById(memberDTO.getMid())){
+            Member member = modelMapper.map(memberDTO, Member.class);
+            member.changePassword(passwordEncoder.encode(memberDTO.getMpw()));
+            Role role = roleRepository.findById(memberDTO.getRoleId()).orElseThrow();
+            member.setRole(role);
+            return memberRepository.save(member).getMid();
+        }else{
+            throw new DataIntegrityViolationException("유저 id 중복");
+        }
     }
 
     @Override

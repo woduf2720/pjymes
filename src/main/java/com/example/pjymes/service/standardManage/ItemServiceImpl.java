@@ -9,6 +9,7 @@ import com.example.pjymes.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +30,12 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public String register(ItemDTO itemDTO) {
         log.info("item register...");
-        Item item = modelMapper.map(itemDTO, Item.class);
-        return itemRepository.save(item).getCode();
+        if(itemDTO.getCode() == null || !itemRepository.existsById(itemDTO.getCode())){
+            Item item = modelMapper.map(itemDTO, Item.class);
+            return itemRepository.save(item).getCode();
+        }else{
+            throw new DataIntegrityViolationException("품목코드 중복");
+        }
     }
 
     @Override

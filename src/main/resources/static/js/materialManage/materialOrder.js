@@ -50,7 +50,6 @@ var orderMasterEditCheck = function(cell){
 
 const orderMasterTable = new Tabulator("#orderMasterTable", {
     height: "45rem",
-    ajaxURL:"/materialOrder",
     layout:"fitData",
     rowFormatter:function(row){
         if(row.getData().active){row.getElement().style.color = "red";}
@@ -97,12 +96,9 @@ document.getElementById("addMasterBtn").addEventListener("click", function () {
 })
 
 document.getElementById("materialOrderSearchBtn").addEventListener("click", function () {
-    const startDate = document.getElementById("startDate").value
-    const endDate = document.getElementById("endDate").value
-    const keyword = document.getElementById("customerSearch").value
-    const queryString = "keyword=" + encodeURIComponent(keyword)
-        + "&startDate=" + encodeURIComponent(startDate) + "&endDate=" + encodeURIComponent(endDate);
-    orderMasterTable.setData("/materialOrder/orderMaster?" + queryString);
+    const data = inputToJson("#materialOrder .form-input")
+    orderMasterTable.setData("/materialOrder/orderMaster", data)
+    orderSubTable.clearData();
 })
 
 
@@ -152,7 +148,6 @@ const orderSubEditor = function(cell, onRendered, success, cancel, editorParams)
 
 var orderSubEditCheck = function(cell){
     let data = cell.getRow().getData();
-    console.log(data)
     return data.orderNo == null;
 }
 
@@ -210,10 +205,11 @@ document.getElementById("saveBtn").addEventListener("click", function () {
 
     axios.post("/materialOrder", selectedMasterRow.getData())
         .then(function (response) {
-            orderMasterTable.replaceData()
+            console.log(response)
+            orderMasterTable.setData(response)
             alert("저장되었습니다.")
         }).catch(function (error) {
-        console.log(error)
+        alert(error.response.data.message)
     })
 })
 

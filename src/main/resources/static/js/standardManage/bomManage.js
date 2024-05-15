@@ -10,7 +10,6 @@ const itemTable = new Tabulator("#itemTable", {
     layout: "fitData",
     ajaxURL: "/itemManage",
     ajaxParams:{"categoryId": categoryId.value},
-    selectableRows: "1",
     columns:[
         {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
         {title:"품목코드", field:"code"},
@@ -18,6 +17,11 @@ const itemTable = new Tabulator("#itemTable", {
         {title:"규격", field:"specification"},
         {title:"분류", field:"categoryName"}
     ],
+});
+
+itemTable.on("rowClick", function(e, row){
+    row.getTable().deselectRow();
+    row.select();
 });
 
 itemTable.on("rowSelected", function(row){
@@ -72,11 +76,11 @@ document.getElementById("addBomModalBtn").addEventListener("click", function () 
 })
 
 addBomModal.addEventListener('hidden.bs.modal', event => {
-    inputToNull("form-input")
+    inputToNull(".form-input")
 })
 
 document.getElementById("addBomBtn").addEventListener("click", function () {
-    const data = inputToJson("form-input")
+    const data = inputToJson(".form-input")
 
     axios.post("/bomManage", data)
         .then(function (response) {
@@ -84,7 +88,7 @@ document.getElementById("addBomBtn").addEventListener("click", function () {
             bootstrap.Modal.getInstance(addBomModal).hide();
             bomManageTable.setData("/bomManage", itemTable.getData("selected")[0])
         }).catch(function (error) {
-            alert(error.response.data.message)
+            alert(error.response.data)
     })
 })
 

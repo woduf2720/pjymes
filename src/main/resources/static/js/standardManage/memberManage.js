@@ -61,25 +61,24 @@ memberModal.addEventListener('shown.bs.modal', event => {
     }
 })
 document.getElementById("addMemberBtn").addEventListener("click", function () {
-    const data = inputToJson("form-input")
+    const data = inputToJson("#memberModal .form-input")
 
     axios.post("/member", data)
         .then(function (response) {
-            console.log(response)
+            alert("등록되었습니다.");
             bootstrap.Modal.getInstance(memberModal).hide();
             memberTable.replaceData("/member")
         }).catch(function (error) {
-        console.log(error)
+        alert(error.response.data);
     })
 })
 
 document.getElementById("modifyMemberBtn").addEventListener("click", function () {
-    console.log("멤버 수정")
-    const data = inputToJson("form-input")
+    const data = inputToJson("#memberModal .form-input")
 
     axios.put("/member", data)
         .then(function (response) {
-            console.log(response)
+            alert("수정되었습니다.");
             bootstrap.Modal.getInstance(memberModal).hide();
             memberTable.replaceData("/member")
         }).catch(function (error) {
@@ -88,15 +87,15 @@ document.getElementById("modifyMemberBtn").addEventListener("click", function ()
 })
 
 memberModal.addEventListener('hidden.bs.modal', event => {
-    inputToNull("form-input")
+    inputToNull("#memberModal .form-input")
 })
 
 document.getElementById("pwReset").addEventListener("click", function () {
-    let data = inputToJson("form-input")
+    let data = inputToJson("#memberModal .form-input")
     data.mpw = "1111"
     axios.put("/member/password", data)
         .then(function (response) {
-            console.log(response)
+            alert("비밀번호가 초기화 되었습니다.");
             bootstrap.Modal.getInstance(memberModal).hide();
             memberTable.replaceData("/member")
         }).catch(function (error) {

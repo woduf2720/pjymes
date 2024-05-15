@@ -44,7 +44,7 @@ commonCodeModal.addEventListener('shown.bs.modal', event => {
     }
 })
 document.getElementById("addBtn").addEventListener("click", function () {
-    const data = inputToJson("form-input")
+    const data = inputToJson(".form-input")
     console.log(data)
     axios.post("/commonCode", data)
         .then(function (response) {
@@ -61,7 +61,7 @@ document.getElementById("addBtn").addEventListener("click", function () {
 
 
 commonCodeModal.addEventListener('hidden.bs.modal', event => {
-    inputToNull("form-input")
+    inputToNull(".form-input")
 })
 
 let commonCodeChildTable = new Tabulator("#commonCodeChildTable", {

@@ -7,7 +7,7 @@ import com.example.pjymes.dto.SearchDTO;
 import java.util.List;
 
 public interface MaterialOrderService {
-    String register(OrderMasterDTO orderMasterDTO);
+    OrderMasterDTO register(OrderMasterDTO orderMasterDTO);
 
     OrderMasterDTO readOne(String orderNo);
 

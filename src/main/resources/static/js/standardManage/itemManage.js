@@ -65,11 +65,11 @@ itemModal.addEventListener('shown.bs.modal', event => {
     }
 })
 itemModal.addEventListener('hidden.bs.modal', event => {
-    inputToNull("form-input")
+    inputToNull(".form-input")
 })
 
 document.getElementById("addBtn").addEventListener("click", function () {
-    const data = inputToJson("form-input")
+    const data = inputToJson(".form-input")
 
     axios.post("/itemManage", data)
         .then(function (response) {
@@ -77,12 +77,12 @@ document.getElementById("addBtn").addEventListener("click", function () {
             bootstrap.Modal.getInstance(itemModal).hide();
             itemManageTable.replaceData("/itemManage")
         }).catch(function (error) {
-        alert(error.response.data.message);
+        alert(error.response.data);
     })
 })
 
 document.getElementById("modifyBtn").addEventListener("click", function () {
-    const data = inputToJson("form-input")
+    const data = inputToJson(".form-input")
 
     axios.put("/itemManage", data)
         .then(function (response) {

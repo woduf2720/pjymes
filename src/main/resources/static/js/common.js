@@ -1,5 +1,5 @@
 function inputToJson(className) {
-    const inputElements = document.querySelectorAll('.' + className);
+    const inputElements = document.querySelectorAll(className);
     const jsonData = {};
 
     inputElements.forEach(input => {
@@ -12,7 +12,7 @@ function inputToJson(className) {
 }
 
 function inputToNull(className) {
-    const inputElements = document.querySelectorAll('.' + className);
+    const inputElements = document.querySelectorAll(className);
 
     inputElements.forEach(input => {
         if (input.type === 'checkbox') {

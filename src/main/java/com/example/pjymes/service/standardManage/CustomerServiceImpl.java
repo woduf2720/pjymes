@@ -5,10 +5,10 @@ import com.example.pjymes.domain.Customer;
 import com.example.pjymes.dto.CustomerDTO;
 import com.example.pjymes.repository.CommonCodeRepository;
 import com.example.pjymes.repository.CustomerRepository;
-import com.example.pjymes.service.systemManage.CommonCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +29,12 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public String register(CustomerDTO customerDTO) {
         log.info("customer register...");
-        Customer customer = modelMapper.map(customerDTO, Customer.class);
-        return customerRepository.save(customer).getCode();
+        if(customerDTO.getCode() == null || !customerRepository.existsById(customerDTO.getCode())){
+            Customer customer = modelMapper.map(customerDTO, Customer.class);
+            return customerRepository.save(customer).getCode();
+        }else{
+            throw new DataIntegrityViolationException("거래처코드 중복");
+        }
     }
 
     @Override

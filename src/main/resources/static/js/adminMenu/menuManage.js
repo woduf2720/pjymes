@@ -33,7 +33,7 @@ menuTable.on("cellEdited", function(cell){
 
 
 document.getElementById("addMenuBtn").addEventListener("click", function () {
-    const data = inputToJson("form-input")
+    const data = inputToJson(".form-input")
 
     axios.post("/menu", data)
         .then(function (response) {
@@ -66,7 +66,7 @@ addMenuModal.addEventListener('shown.bs.modal', event => {
 })
 
 addMenuModal.addEventListener('hidden.bs.modal', event => {
-    inputToNull("form-input")
+    inputToNull(".form-input")
 })
 
 document.getElementById("deleteMenuBtn").addEventListener("click", function () {

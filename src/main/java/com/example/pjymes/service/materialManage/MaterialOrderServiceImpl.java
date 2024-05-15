@@ -30,12 +30,13 @@ public class MaterialOrderServiceImpl implements MaterialOrderService {
 
     @Override
     @Transactional
-    public String register(OrderMasterDTO orderMasterDTO) {
+    public OrderMasterDTO register(OrderMasterDTO orderMasterDTO) {
         if(orderMasterDTO.getOrderNo() == null){
             //발주번호 생성
             String newOrderNo = orderMasterDTO.getOrderDate().format(DateTimeFormatter.ofPattern("yyMMdd"))
                     +"-"+orderMasterDTO.getCustomerCode()+"-";
             String getOrderNo = orderMasterRepository.getOrderNo(newOrderNo);
+            log.info("newOrderNo : " + newOrderNo + getOrderNo);
             orderMasterDTO.setOrderNo(newOrderNo + getOrderNo);
         }
 
@@ -44,7 +45,8 @@ public class MaterialOrderServiceImpl implements MaterialOrderService {
         //orderMaster 저장
         log.info("materialOrder register...");
         OrderMaster orderMaster = modelMapper.map(orderMasterDTO, OrderMaster.class);
-        orderMasterRepository.save(orderMaster);
+        OrderMaster saveMasterData = orderMasterRepository.save(orderMaster);
+        log.info("saveMasterData : " + saveMasterData);
         log.info("orderMaster complete...");
 
         //orderSub 저장
@@ -56,10 +58,13 @@ public class MaterialOrderServiceImpl implements MaterialOrderService {
             orderSubList.add(orderSub);
         });
 
-        orderSubRepository.saveAll(orderSubList);
+        List<OrderSub> saveSubData = orderSubRepository.saveAll(orderSubList);
+        log.info("saveSubData : " + saveSubData);
         log.info("orderSub complete...");
-
-        return orderMasterDTO.getOrderNo();
+        OrderMasterDTO saveMasterDTOData = modelMapper.map(saveMasterData, OrderMasterDTO.class);
+        List<OrderSubDTO> saveSubDTOData = saveSubData.stream().map(orderSub -> modelMapper.map(orderSub, OrderSubDTO.class)).toList();
+        saveMasterDTOData.setOrderSubDTOList(saveSubDTOData);
+        return saveMasterDTOData;
     }
 
     @Override
