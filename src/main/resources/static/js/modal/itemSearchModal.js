@@ -14,7 +14,7 @@ itemSearchModal.addEventListener('shown.bs.modal', event => {
             }
         })
 })
-const itemSearch = document.getElementById("itemSearch")
+const itemSearch = document.querySelector(".itemSearch")
 
 if (itemSearch) {
     itemSearch.addEventListener("keypress", function(event) {
@@ -58,7 +58,7 @@ function itemSearchResult (data) {
     let tag = originTag[1]
     let stat = originTag[2]
     if(stat === "input") {
-        tag.value = data.itemName;
+        tag.value = data.name;
     }else{
         tag.getRow().update({
             "itemCode" : data.code,
@@ -68,23 +68,3 @@ function itemSearchResult (data) {
         })
     }
 }
-
-const itemSearchModalInput = document.getElementById('itemSearchModalInput')
-
-itemSearchModalInput.addEventListener("keypress", function (e) {
-    let searchWord = this.value
-    if(searchWord.length > 0){
-        searchWord = "/"+searchWord
-    }
-    if(e.key === "Enter"){
-        itemSearchTable.setData("/itemManage"+searchWord)
-            .then(function(result){
-                console.log(result)
-                const rows = itemSearchTable.getRows();
-                if(rows.length > 0){
-                    rows[0].select();
-                }
-
-            })
-    }
-})

@@ -55,8 +55,8 @@ public class MaterialDeliveryServiceImpl implements MaterialDeliveryService {
     @Override
     public List<DeliveryDTO> list(SearchDTO searchDTO) {
         log.info("lotMaster list...");
-        List<Delivery> result = materialDeliveryRepository.findAll();
-
+        List<Delivery> result = materialDeliveryRepository.findByKeyword(searchDTO);
+        log.info(result.toString());
         return result.stream()
                 .map(delivery -> modelMapper.map(delivery, DeliveryDTO.class))
                 .collect(Collectors.toList());

@@ -65,23 +65,3 @@ function customerSearchResult (data) {
         })
     }
 }
-
-const customerSearchModalInput = document.getElementById('customerSearchModalInput')
-
-customerSearchModalInput.addEventListener("keypress", function (e) {
-    let searchWord = this.value
-    if(searchWord.length > 0){
-        searchWord = "/"+searchWord
-    }
-    if(e.key === "Enter"){
-        customerSearchTable.setData("/customerManage"+searchWord)
-            .then(function(result){
-                console.log(result)
-                const rows = customerSearchTable.getRows();
-                if(rows.length > 0){
-                    rows[0].select();
-                }
-
-            })
-    }
-})
