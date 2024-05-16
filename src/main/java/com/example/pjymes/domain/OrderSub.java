@@ -29,7 +29,9 @@ public class OrderSub {
     private Item item;
 
     private Long quantity;
-    private Long warehousingQuantity;
+    @Builder.Default
+    @Column(nullable = false)
+    private Long warehousingQuantity = 0L;
     private Long unitPrice;
     private Long price;
 

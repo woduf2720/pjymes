@@ -1,6 +1,8 @@
 package com.example.pjymes.repository.customRepository;
 
+import com.example.pjymes.domain.OrderStatus;
 import com.example.pjymes.domain.QOrderSub;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -10,14 +12,19 @@ public class CustomOrderSubRepositoryImpl implements CustomOrderSubRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Long getQuantityMinusWarehousingQuantityByOrderNo(String orderNo) {
+    public OrderStatus getQuantityMinusWarehousingQuantityByOrderNo(String orderNo) {
         QOrderSub qOrderSub = QOrderSub.orderSub;
-
-        // 같은 orderNo를 가진 데이터들의 quantity 합계와 warehousingQuantity 합계의 차이를 계산
-        return jpaQueryFactory
-                .select(qOrderSub.quantity.sum().subtract(qOrderSub.warehousingQuantity.sum()))
+        String statusName = jpaQueryFactory
+                .select(
+                        Expressions
+                                .cases()
+                                .when(qOrderSub.warehousingQuantity.sum().eq(0L)).then(OrderStatus.INITIAL.name())
+                                .when(qOrderSub.warehousingQuantity.sum().lt(qOrderSub.quantity.sum())).then(OrderStatus.PARTIAL.name())
+                                .otherwise(OrderStatus.FULLY.name())
+                )
                 .from(qOrderSub)
                 .where(qOrderSub.orderMaster.orderNo.eq(orderNo))
                 .fetchOne();
+        return OrderStatus.valueOf(statusName);
     }
 }

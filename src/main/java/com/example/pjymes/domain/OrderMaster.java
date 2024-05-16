@@ -24,7 +24,7 @@ public class OrderMaster extends BaseEntity{
     private LocalDate deliveryDate;
     @Column(nullable = false)
     private Long price;
-    private Boolean active;
+    private OrderStatus orderStatus;
 
     public void change(LocalDate orderDate, LocalDate deliveryDate, Long price){
         this.orderDate = orderDate;
@@ -32,7 +32,7 @@ public class OrderMaster extends BaseEntity{
         this.price = price;
     }
 
-    public void changeActive(Boolean active){
-        this.active = active;
+    public void changeOrderStatus(OrderStatus orderStatus){
+        this.orderStatus = orderStatus;
     }
 }

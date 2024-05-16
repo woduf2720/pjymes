@@ -35,6 +35,7 @@ public class MaterialWarehousingServiceImpl implements MaterialWarehousingServic
     public String register(List<WarehousingDTO> warehousingDTOList) {
         log.info("register..." + warehousingDTOList);
         String orderNo = warehousingDTOList.get(0).getOrderNo();
+        OrderMaster orderMaster = orderMasterRepository.findById(orderNo).orElseThrow();
 
         for(WarehousingDTO warehousingDTO : warehousingDTOList) {
             log.info("register..." + warehousingDTO);
@@ -45,14 +46,7 @@ public class MaterialWarehousingServiceImpl implements MaterialWarehousingServic
             orderSub.change(warehousingDTO.getQuantity());
             orderSubRepository.save(orderSub);
             log.info("sub저장");
-            OrderMaster orderMaster = orderMasterRepository.findById(orderNo).orElseThrow();
-            //orderMaster sub입고 전부 다됬으면 완료처리
-            Long difference  = orderSubRepository.getQuantityMinusWarehousingQuantityByOrderNo(orderNo);
-            if(difference == 0){
-                orderMaster.changeActive(true);
-                orderMaster = orderMasterRepository.save(orderMaster);
-            }
-            log.info("master저장");
+
             //Lot생성 후 lotMaster 저장
             String newLotNo = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")) + orderSub.getItem().getCode();
             String getLotNo = newLotNo + lotMasterRepository.getLotNo(newLotNo);
@@ -73,6 +67,12 @@ public class MaterialWarehousingServiceImpl implements MaterialWarehousingServic
             log.info("warehouing저장");
         }
 
+        //orderMaster sub입고 전부 다됬으면 완료처리
+        OrderStatus orderStatus = orderSubRepository.getQuantityMinusWarehousingQuantityByOrderNo(orderNo);
+        orderMaster.changeOrderStatus(orderStatus);
+        orderMasterRepository.save(orderMaster);
+        log.info("master저장");
+
         return orderNo;
     }
 
@@ -80,7 +80,8 @@ public class MaterialWarehousingServiceImpl implements MaterialWarehousingServic
     public List<WarehousingDTO> list(SearchDTO searchDTO) {
 
         log.info("test list...");
-        List<Warehousing> result = materialWarehousingRepository.findAll();
+        List<Warehousing> result = materialWarehousingRepository.findByKeyword(searchDTO);
+        log.info(result.toString());
         return result.stream()
                 .map(warehousing -> modelMapper.map(warehousing, WarehousingDTO.class))
                 .collect(Collectors.toList());

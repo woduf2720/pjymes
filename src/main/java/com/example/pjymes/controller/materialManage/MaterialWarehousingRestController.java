@@ -20,7 +20,7 @@ public class MaterialWarehousingRestController {
     private final MaterialWarehousingService materialWarehousingService;
 
     @GetMapping
-    public List<WarehousingDTO> getMaterialWarehousing(@ModelAttribute SearchDTO searchDTO){
+    public List<WarehousingDTO> getMaterialWarehousing(SearchDTO searchDTO){
         log.info("getMaterialWarehousing..." + searchDTO);
         return materialWarehousingService.list(searchDTO);
     }

@@ -1,6 +1,7 @@
 package com.example.pjymes.service.materialManage;
 
 import com.example.pjymes.domain.OrderMaster;
+import com.example.pjymes.domain.OrderStatus;
 import com.example.pjymes.domain.OrderSub;
 import com.example.pjymes.dto.OrderMasterDTO;
 import com.example.pjymes.dto.OrderSubDTO;
@@ -38,7 +39,7 @@ public class MaterialOrderServiceImpl implements MaterialOrderService {
             String getOrderNo = orderMasterRepository.getOrderNo(newOrderNo);
             log.info("newOrderNo : " + newOrderNo + getOrderNo);
             orderMasterDTO.setOrderNo(newOrderNo + getOrderNo);
-            orderMasterDTO.setActive(false);
+            orderMasterDTO.setOrderStatusValue(OrderStatus.INITIAL.ordinal());
         }
 
         List<OrderSubDTO> orderSubDTOList = orderMasterDTO.getOrderSubDTOList();

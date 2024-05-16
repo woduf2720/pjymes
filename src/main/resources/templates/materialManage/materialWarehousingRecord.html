@@ -4,19 +4,19 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout.html}">
 <th:block layout:fragment="Content">
-    <div class="top-bar bg-dark-subtle d-flex align-items-center p-2">
-        <span class="page-title fw-bold bg-light p-1 fs-2 me-3">자재 입고 현황</span>
+    <div id="materialWarehousing" class="top-bar bg-dark-subtle d-flex align-items-center p-2">
+        <span class="page-title fw-bold bg-light p-1 fs-2 me-2">자재 입고 현황</span>
         <button type="button" id="searchBtn" class="btn btn-primary m-1">검색</button>
         <div class="mx-2">
             <div class="input-group">
-                <label class="input-group-text">발주일</label>
-                <input type="date" id="startDate" class="form-control todayDate" aria-label="startDate">
+                <label class="input-group-text">입고일</label>
+                <input type="date" id="startDate" class="form-control todayDate form-input" aria-label="startDate">
                 <span class="input-group-text">~</span>
-                <input type="date" id="endDate" class="form-control todayDate" aria-label="endDate">
+                <input type="date" id="endDate" class="form-control tomorrowDate form-input" aria-label="endDate">
             </div>
             <div class="input-group">
                 <span class="input-group-text">거래처</span>
-                <input type="text" id="customerSearch" class="form-control" aria-label="customerSearch">
+                <input type="text" id="keyword" class="form-control customerSearch form-input" aria-label="customerSearch">
             </div>
         </div>
     </div>
@@ -29,19 +29,23 @@
         layout:"fitData",
         columns:[
             {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
-            {title:"발주번호", field:"orderMasterOrderNo"},
-            {title:"lot번호", field:"lotMasterLotNo"},
+            {title:"발주번호", field:"orderNo"},
+            {title:"lot번호", field:"lotNo"},
+            {title:"거래처명", field:"orderMasterCustomerCode"},
+            {title:"거래처명", field:"orderMasterCustomerName"},
             {title:"품목코드", field:"itemCode"},
             {title:"품목명", field:"itemName"},
             {title:"규격", field:"itemSpecification"},
             {title:"단가", field:"unitPrice"},
             {title:"수량", field:"quantity"},
             {title:"금액", field:"price"},
+            {title:"입고일자", field:"createdAt"},
         ]
     });
-    document.getElementById("searchBtn").addEventListener("click", function () {
-        materialWarehousingTable.setData("/materialWarehousing")
-    })
 
+    document.getElementById("searchBtn").addEventListener("click", function () {
+        const data = inputToJson("#materialWarehousing .form-input")
+        materialWarehousingTable.setData("/materialWarehousing", data)
+    })
 </script>
 </html>

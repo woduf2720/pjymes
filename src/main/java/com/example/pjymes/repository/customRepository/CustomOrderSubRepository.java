@@ -1,7 +1,9 @@
 package com.example.pjymes.repository.customRepository;
 
+import com.example.pjymes.domain.OrderStatus;
+
 public interface CustomOrderSubRepository {
 
-    Long getQuantityMinusWarehousingQuantityByOrderNo(String orderNo);
+    OrderStatus getQuantityMinusWarehousingQuantityByOrderNo(String orderNo);
 
 }

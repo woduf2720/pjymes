@@ -1,5 +1,6 @@
 package com.example.pjymes.dto;
 
+import com.example.pjymes.domain.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class OrderMasterDTO {
     private LocalDate orderDate;
     private LocalDate deliveryDate;
     private Long price;
-    private Boolean active;
+    private int orderStatusValue;
 
     private List<OrderSubDTO> orderSubDTOList;
 }

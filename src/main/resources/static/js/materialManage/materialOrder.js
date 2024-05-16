@@ -52,7 +52,12 @@ const orderMasterTable = new Tabulator("#orderMasterTable", {
     height: "45rem",
     layout:"fitData",
     rowFormatter:function(row){
-        if(row.getData().active){row.getElement().style.color = "red";}
+        let orderStatus = row.getData().orderStatusValue;
+        if(orderStatus === 2){
+            row.getElement().style.color = "red";
+        }else if(orderStatus === 1){
+            row.getElement().style.color = "blue";
+        }
     },
     columns:[
         {title:"발주번호", field:"orderNo"},
@@ -60,13 +65,18 @@ const orderMasterTable = new Tabulator("#orderMasterTable", {
         {title:"거래처명", field:"customerName"},
         {title:"발주일자", field:"orderDate", editor:"input", editable:orderMasterEditCheck},
         {title:"납기일자", field:"deliveryDate", editor:"input", editable:orderMasterEditCheck},
-        {title:"합계금액", field:"price"}
+        {title:"합계금액", field:"price", hozAlign: "right"}
     ],
 });
 
 orderMasterTable.on("rowClick", function(e, row){
-    if(row.getData().active){
+    let buttons = document.querySelectorAll("#materialOrderSub button")
+    if(row.getData().orderStatusValue === 2){
         return;
+    }else if(row.getData().orderStatusValue === 1){
+        buttons.forEach(button => button.disabled = true)
+    }else{
+        buttons.forEach(button => button.disabled = false)
     }
     row.getTable().deselectRow();
     row.select();
@@ -96,7 +106,7 @@ document.getElementById("addMasterBtn").addEventListener("click", function () {
 })
 
 document.getElementById("materialOrderSearchBtn").addEventListener("click", function () {
-    const data = inputToJson("#materialOrder .form-input")
+    const data = inputToJson("#materialOrderMaster .form-input")
     orderMasterTable.setData("/materialOrder/orderMaster", data)
     orderSubTable.clearData();
 })
@@ -148,7 +158,7 @@ const orderSubEditor = function(cell, onRendered, success, cancel, editorParams)
 
 var orderSubEditCheck = function(cell){
     let data = cell.getRow().getData();
-    return data.orderNo == null;
+    return data.orderNo == null || data.warehousingQuantity === 0;
 }
 
 const orderSubTable = new Tabulator("#orderSubTable", {
@@ -161,9 +171,10 @@ const orderSubTable = new Tabulator("#orderSubTable", {
         {title:"품목코드", field:"itemCode", editor:orderSubEditor, editable:orderSubEditCheck},
         {title:"품목명", field:"itemName"},
         {title:"규격", field:"itemSpecification"},
-        {title:"단가", field:"unitPrice", editor:"input"},
-        {title:"수량", field:"quantity", editor:"input"},
-        {title:"금액", field:"price"},
+        {title:"단가", field:"unitPrice", hozAlign: "right", editor:"input", editable:orderSubEditCheck},
+        {title:"수량", field:"quantity", hozAlign: "right", editor:"input", editable:orderSubEditCheck},
+        {title:"입고수량", field:"warehousingQuantity", hozAlign: "right"},
+        {title:"금액", field:"price", hozAlign: "right"},
     ],
 });
 
