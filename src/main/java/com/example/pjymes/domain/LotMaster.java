@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class LotMaster {
+public class LotMaster extends BaseEntity{
 
     @Id
     private String lotNo;

@@ -78,7 +78,7 @@ public class MaterialWarehousingServiceImpl implements MaterialWarehousingServic
 
     @Override
     public List<WarehousingDTO> list(SearchDTO searchDTO) {
-        log.info("test list...");
+        log.info("list...");
         List<Warehousing> result = materialWarehousingRepository.findByKeyword(searchDTO);
         log.info(result.toString());
         return result.stream()

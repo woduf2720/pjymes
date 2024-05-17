@@ -32,32 +32,23 @@ public class ProductDeliveryServiceImpl implements ProductDeliveryService {
 
     @Override
     @Transactional
-    public String register(List<ProductDeliveryDTO> productDeliveryDTOList) {
+    public ProductOrderSub register(List<ProductDeliveryDTO> productDeliveryDTOList) {
         log.info("register..." + productDeliveryDTOList);
         String orderNo = productDeliveryDTOList.get(0).getOrderNo();
+        Long orderSubId = productDeliveryDTOList.get(0).getOrderSubId();
+        Long sumQuantity = 0L;
+        ProductOrderMaster productOrderMaster = productOrderMasterRepository.findById(orderNo).orElseThrow();
 
         for(ProductDeliveryDTO productDeliveryDTO : productDeliveryDTOList) {
+            sumQuantity += productDeliveryDTO.getQuantity();
             log.info("register..." + productDeliveryDTO);
             //입고 저장할때 작동해야되는 기능
-            //productOrderSub 입고수량 변경
-            ProductOrderSub productOrderSub = productOrderSubRepository.findById(productDeliveryDTO.getId()).orElseThrow();
-
-            productOrderSub.change(productDeliveryDTO.getQuantity());
-            productOrderSubRepository.save(productOrderSub);
-            log.info("sub저장 : " + orderNo);
-            ProductOrderMaster productOrderMaster = productOrderMasterRepository.findById(orderNo).orElseThrow();
-            //productOrderMaster sub입고 전부 다됬으면 완료처리
-            Long difference  = productOrderSubRepository.getQuantityMinusWarehousingQuantityByOrderNo(orderNo);
-            if(difference == 0){
-                productOrderMaster = productOrderMasterRepository.save(productOrderMaster);
-            }
             String lotNo = productDeliveryDTO.getLotNo();
-            log.info("master저장 : " + lotNo);
             //lotMaster 수량 변경
             LotMaster lotMaster = lotMasterRepository.findById(lotNo).orElseThrow();
             lotMaster.change(lotMaster.getQuantity() - productDeliveryDTO.getQuantity());
             lotMaster = lotMasterRepository.save(lotMaster);
-            log.info("lot저장");
+            log.info("lot저장 : " + lotNo);
 
             //delivery 저장
             ProductDelivery productDelivery = modelMapper.map(productDeliveryDTO, ProductDelivery.class);
@@ -66,15 +57,25 @@ public class ProductDeliveryServiceImpl implements ProductDeliveryService {
             productDeliveryRepository.save(productDelivery);
             log.info("productDelivery저장");
         }
+        //productOrderSub 출고수량 변경
+        ProductOrderSub productOrderSub = productOrderSubRepository.findById(orderSubId).orElseThrow();
 
-        return orderNo;
+        productOrderSub.change(sumQuantity);
+        ProductOrderSub saveSubData = productOrderSubRepository.save(productOrderSub);
+        log.info("sub저장 : " + saveSubData);
+
+        //productOrderMaster sub입고 전부 다됬으면 완료처리
+        OrderStatus orderStatus = productOrderSubRepository.getQuantityMinusWarehousingQuantityByOrderNo(orderNo);
+        productOrderMaster.changeOrderStatus(orderStatus);
+        productOrderMasterRepository.save(productOrderMaster);
+        log.info("master저장");
+        return saveSubData;
     }
 
     @Override
     public List<ProductDeliveryDTO> list(SearchDTO searchDTO) {
-
-        log.info("test list...");
-        List<ProductDelivery> result = productDeliveryRepository.findAll();
+        log.info("list...");
+        List<ProductDelivery> result = productDeliveryRepository.findByKeyword(searchDTO);
         return result.stream()
                 .map(productDelivery -> modelMapper.map(productDelivery, ProductDeliveryDTO.class))
                 .collect(Collectors.toList());

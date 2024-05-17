@@ -53,19 +53,25 @@ document.getElementById("wholeBtn").addEventListener("click", function () {
 const orderSubTable = new Tabulator("#orderSubTable", {
     height: "20rem",
     layout:"fitData",
+    rowFormatter:function(row){
+        let warehousing = row.getData().quantity - row.getData().warehousingQuantity
+        if(warehousing === 0){
+            row.getElement().style.color = "red";
+        }
+    },
     columns:[
         {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
         {title:"품목코드", field:"itemCode"},
         {title:"품목명", field:"itemName"},
         {title:"규격", field:"itemSpecification"},
-        {title:"단가", field:"unitPrice"},
-        {title:"수량", field:"quantity"},
-        {title:"입고수량", field:"warehousingQuantity"},
-        {title:"금액", field:"price"},
+        {title:"분류", field:"itemCategoryName"},
+        {title:"단가", field:"unitPrice", hozAlign: "right"},
+        {title:"수량", field:"quantity", hozAlign: "right"},
+        {title:"입고수량", field:"warehousingQuantity", hozAlign: "right"},
+        {title:"금액", field:"price", hozAlign: "right"},
     ],
 });
 orderSubTable.on("rowClick", function(e, row){
-    console.log(row)
     let warehousing = row.getData().quantity - row.getData().warehousingQuantity
     if(warehousing !== 0){
         row.toggleSelect();
@@ -103,8 +109,9 @@ const warehousingTable = new Tabulator("#warehousingTable", {
         {title:"품목코드", field:"itemCode"},
         {title:"품목명", field:"itemName"},
         {title:"규격", field:"itemSpecification"},
-        {title:"단가", field:"unitPrice"},
-        {title:"수량", field:"quantity"},
-        {title:"금액", field:"price"},
+        {title:"분류", field:"itemCategoryName"},
+        {title:"단가", field:"unitPrice", hozAlign: "right"},
+        {title:"수량", field:"quantity", hozAlign: "right"},
+        {title:"금액", field:"price", hozAlign: "right"},
     ]
 });

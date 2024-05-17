@@ -15,6 +15,7 @@ public class LotMasterDTO {
     private String itemCode;
     private String itemName;
     private String itemSpecification;
+    private String itemCategoryName;
     private Long itemUnitPrice;
     private Long quantity;
 }

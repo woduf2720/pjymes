@@ -1,5 +1,6 @@
 package com.example.pjymes.controller.productManage;
 
+import com.example.pjymes.domain.ProductOrderSub;
 import com.example.pjymes.dto.ProductDeliveryDTO;
 import com.example.pjymes.dto.SearchDTO;
 import com.example.pjymes.dto.WarehousingDTO;
@@ -22,18 +23,16 @@ public class ProductDeliveryRestController {
     private final ProductDeliveryService productDeliveryService;
 
     @GetMapping
-    public List<ProductDeliveryDTO> getProductDelivery(@ModelAttribute SearchDTO searchDTO){
+    public List<ProductDeliveryDTO> getProductDelivery(SearchDTO searchDTO){
         log.info("getProductDelivery..." + searchDTO);
         return productDeliveryService.list(searchDTO);
     }
 
     @PostMapping
-    public Map<String, String> postProductDelivery(@RequestBody List<ProductDeliveryDTO> productDeliveryDTOList) {
+    public ProductOrderSub postProductDelivery(@RequestBody List<ProductDeliveryDTO> productDeliveryDTOList) {
         log.info("postProductDelivery..." + productDeliveryDTOList);
-        String orderNo = productDeliveryService.register(productDeliveryDTOList);
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("orderNo", orderNo);
-        return resultMap;
+        ProductOrderSub productOrderSub = productDeliveryService.register(productDeliveryDTOList);
+        return productOrderSub;
     }
 
 }
