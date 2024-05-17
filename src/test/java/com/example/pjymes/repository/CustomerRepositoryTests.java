@@ -21,7 +21,6 @@ public class CustomerRepositoryTests {
                 .code("C0002")
                 .name("회사")
                 .address("주소")
-                .category("분류")
                 .active(true)
                 .build();
 
@@ -47,8 +46,6 @@ public class CustomerRepositoryTests {
         Optional<Customer> result = customerRepository.findById(code);
 
         Customer customer = result.orElseThrow();
-
-        customer.change("변경된 회사명", "변경된 분류", "","","","","",true);
 
         customerRepository.save(customer);
     }

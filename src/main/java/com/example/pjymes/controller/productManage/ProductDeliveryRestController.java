@@ -2,6 +2,7 @@ package com.example.pjymes.controller.productManage;
 
 import com.example.pjymes.domain.ProductOrderSub;
 import com.example.pjymes.dto.ProductDeliveryDTO;
+import com.example.pjymes.dto.ProductOrderSubDTO;
 import com.example.pjymes.dto.SearchDTO;
 import com.example.pjymes.dto.WarehousingDTO;
 import com.example.pjymes.service.materialManage.MaterialWarehousingService;
@@ -29,10 +30,9 @@ public class ProductDeliveryRestController {
     }
 
     @PostMapping
-    public ProductOrderSub postProductDelivery(@RequestBody List<ProductDeliveryDTO> productDeliveryDTOList) {
+    public ProductOrderSubDTO postProductDelivery(@RequestBody List<ProductDeliveryDTO> productDeliveryDTOList) {
         log.info("postProductDelivery..." + productDeliveryDTOList);
-        ProductOrderSub productOrderSub = productDeliveryService.register(productDeliveryDTOList);
-        return productOrderSub;
+        return productDeliveryService.register(productDeliveryDTOList);
     }
 
 }

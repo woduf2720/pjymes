@@ -17,11 +17,15 @@ public class ProductionPlanDTO {
     private String planNo;
     private Long orderSubId;
     private String orderNo;
-    private String itemCode;
-    private String itemName;
+    private String orderSubCustomerCode;
+    private String orderSubCustomerName;
+    private String orderSubItemCode;
+    private String orderSubItemName;
+    private String orderSubItemSpecification;
     private Long quantity;
     private LocalDate orderDate;
     private LocalDate dueDate;
+
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;

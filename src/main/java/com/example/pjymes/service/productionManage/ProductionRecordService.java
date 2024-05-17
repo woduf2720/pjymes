@@ -5,9 +5,7 @@ import com.example.pjymes.dto.SearchDTO;
 
 import java.util.List;
 
-public interface ProductionPlanService {
-
-    ProductionPlanDTO register(ProductionPlanDTO productionPlanDTO);
+public interface ProductionRecordService {
 
     List<ProductionPlanDTO> list(SearchDTO searchDTO);
 }

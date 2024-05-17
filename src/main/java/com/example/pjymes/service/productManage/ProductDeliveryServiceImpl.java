@@ -1,9 +1,7 @@
 package com.example.pjymes.service.productManage;
 
 import com.example.pjymes.domain.*;
-import com.example.pjymes.dto.ProductDeliveryDTO;
-import com.example.pjymes.dto.SearchDTO;
-import com.example.pjymes.dto.WarehousingDTO;
+import com.example.pjymes.dto.*;
 import com.example.pjymes.repository.LotMasterRepository;
 import com.example.pjymes.repository.ProductDeliveryRepository;
 import com.example.pjymes.repository.ProductOrderMasterRepository;
@@ -32,7 +30,7 @@ public class ProductDeliveryServiceImpl implements ProductDeliveryService {
 
     @Override
     @Transactional
-    public ProductOrderSub register(List<ProductDeliveryDTO> productDeliveryDTOList) {
+    public ProductOrderSubDTO register(List<ProductDeliveryDTO> productDeliveryDTOList) {
         log.info("register..." + productDeliveryDTOList);
         String orderNo = productDeliveryDTOList.get(0).getOrderNo();
         Long orderSubId = productDeliveryDTOList.get(0).getOrderSubId();
@@ -62,14 +60,15 @@ public class ProductDeliveryServiceImpl implements ProductDeliveryService {
 
         productOrderSub.change(sumQuantity);
         ProductOrderSub saveSubData = productOrderSubRepository.save(productOrderSub);
-        log.info("sub저장 : " + saveSubData);
+        ProductOrderSubDTO saveSubDTOData = modelMapper.map(saveSubData, ProductOrderSubDTO.class);
+        log.info("sub저장 : " + saveSubDTOData);
 
         //productOrderMaster sub입고 전부 다됬으면 완료처리
         OrderStatus orderStatus = productOrderSubRepository.getQuantityMinusWarehousingQuantityByOrderNo(orderNo);
         productOrderMaster.changeOrderStatus(orderStatus);
         productOrderMasterRepository.save(productOrderMaster);
         log.info("master저장");
-        return saveSubData;
+        return saveSubDTOData;
     }
 
     @Override

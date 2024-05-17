@@ -26,28 +26,29 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 
     @Override
     @Transactional
-    public String register(ProductionPlanDTO productionPlanDTO) {
+    public ProductionPlanDTO register(ProductionPlanDTO productionPlanDTO) {
         log.info("register..." + productionPlanDTO);
         Long orderSubId = productionPlanDTO.getOrderSubId();
 
         ProductOrderSub productOrderSub = productOrderSubRepository.findById(orderSubId).orElseThrow();
+        List<ProductionPlan> productionPlanList = productionPlanRepository.findByPlanNoContaining(productOrderSub.getProductOrderMaster().getOrderNo());
 
         ProductionPlan productionPlan = ProductionPlan.builder()
-                .planNo(productOrderSub.getProductOrderMaster().getOrderNo() + "-01")
+                .planNo(productOrderSub.getProductOrderMaster().getOrderNo() + "-" + String.format("%02d", productionPlanList.size()+1))
                 .productOrderSub(productOrderSub)
                 .quantity(productionPlanDTO.getQuantity())
                 .orderDate(productionPlanDTO.getOrderDate())
                 .dueDate(productionPlanDTO.getDueDate())
                 .build();
-
-        return productionPlanRepository.save(productionPlan).getPlanNo();
+        ProductionPlan savePlanData = productionPlanRepository.save(productionPlan);
+        return modelMapper.map(savePlanData, ProductionPlanDTO.class);
     }
 
     @Override
     public List<ProductionPlanDTO> list(SearchDTO searchDTO) {
 
         log.info("test list...");
-        List<ProductionPlan> result = productionPlanRepository.findAll();
+        List<ProductionPlan> result = productionPlanRepository.findByKeyword(searchDTO);
         return result.stream()
                 .map(productionPlan -> modelMapper.map(productionPlan, ProductionPlanDTO.class))
                 .collect(Collectors.toList());

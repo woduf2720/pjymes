@@ -165,6 +165,14 @@ const productOrderSubTable = new Tabulator("#productOrderSubTable", {
     height: "45rem",
     layout:"fitData",
     selectableRows: true,
+    rowFormatter:function(row){
+        let quantityGap = row.getData().quantity - row.getData().deliveryQuantity;
+        if(quantityGap === 0){
+            row.getElement().style.color = "red";
+        }else if(quantityGap !== row.getData().quantity){
+            row.getElement().style.color = "blue";
+        }
+    },
     columns:[
         {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
         {title:"품목코드", field:"itemCode", editor:productOrderSubEditor, editable:productOrderSubEditCheck},

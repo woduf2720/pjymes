@@ -97,6 +97,12 @@ public class ProductOrderServiceImpl implements ProductOrderService {
     }
 
     @Override
+    public List<ProductOrderSubDTO> uncompletedProductOrderSubList() {
+        return productOrderSubRepository.findUncompletedOrders()
+                .stream().map(productOrderSub -> modelMapper.map(productOrderSub, ProductOrderSubDTO.class)).toList();
+    }
+
+    @Override
     @Transactional
     public void deleteOrderSub(List<ProductOrderSubDTO> ProductOrderSubDTOList) {
         String orderNo = ProductOrderSubDTOList.get(0).getOrderNo();

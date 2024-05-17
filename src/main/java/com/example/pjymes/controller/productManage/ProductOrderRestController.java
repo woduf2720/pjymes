@@ -38,6 +38,12 @@ public class ProductOrderRestController {
         return productOrderService.productOrderSubList(orderNo);
     }
 
+    @GetMapping("/orderSub/uncompleted")
+    public List<ProductOrderSubDTO> getUncompletedProductOrderSubList() {
+        log.info("getUncompletedProductOrderSubList...");
+        return productOrderService.uncompletedProductOrderSubList();
+    }
+
     @PostMapping
     public ProductOrderMasterDTO postProductOrderMaster(@RequestBody ProductOrderMasterDTO productOrderMasterDTO) {
         log.info("postProductOrderMaster..." + productOrderMasterDTO);

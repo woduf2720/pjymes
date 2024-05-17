@@ -21,17 +21,14 @@ public class ProductionPlanRestController {
     private final ProductionPlanService productionPlanService;
 
     @GetMapping
-    public List<ProductionPlanDTO> getProductionPlan(@ModelAttribute SearchDTO searchDTO) {
+    public List<ProductionPlanDTO> getProductionPlan(SearchDTO searchDTO) {
         log.info("getProductionPlan...");
         return productionPlanService.list(searchDTO);
     }
 
     @PostMapping
-    public Map<String, String> postProductionPlan(@RequestBody ProductionPlanDTO productionPlanDTO) {
+    public ProductionPlanDTO postProductionPlan(@RequestBody ProductionPlanDTO productionPlanDTO) {
         log.info("postProductionPlan..." + productionPlanDTO);
-        String planNo = productionPlanService.register(productionPlanDTO);
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("planNo", planNo);
-        return resultMap;
+        return productionPlanService.register(productionPlanDTO);
     }
 }
