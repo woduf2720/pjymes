@@ -47,13 +47,17 @@ const productOrderMasterEditCheck = function(cell){
     return data.orderNo == null;
 }
 
-
 const productOrderMasterTable = new Tabulator("#productOrderMasterTable", {
     height: "45rem",
     ajaxURL:"/productOrder",
     layout:"fitData",
     rowFormatter:function(row){
-        if(row.getData().active){row.getElement().style.color = "red";}
+        let orderStatus = row.getData().orderStatusValue;
+        if(orderStatus === 2){
+            row.getElement().style.color = "red";
+        }else if(orderStatus === 1){
+            row.getElement().style.color = "blue";
+        }
     },
     columns:[
         {title:"발주번호", field:"orderNo"},
@@ -66,8 +70,13 @@ const productOrderMasterTable = new Tabulator("#productOrderMasterTable", {
 });
 
 productOrderMasterTable.on("rowClick", function(e, row){
-    if(row.getData().active){
+    let buttons = document.querySelectorAll("#productOrderSub button")
+    if(row.getData().orderStatusValue === 2){
         return;
+    }else if(row.getData().orderStatusValue === 1){
+        buttons.forEach(button => button.disabled = true)
+    }else{
+        buttons.forEach(button => button.disabled = false)
     }
     row.getTable().deselectRow();
     row.select();
@@ -97,12 +106,9 @@ document.getElementById("addMasterBtn").addEventListener("click", function () {
 })
 
 document.getElementById("orderSearchBtn").addEventListener("click", function () {
-    const startDate = document.getElementById("startDate").value
-    const endDate = document.getElementById("endDate").value
-    const keyword = document.getElementById("customerSearch").value
-    const queryString = "keyword=" + encodeURIComponent(keyword)
-        + "&startDate=" + encodeURIComponent(startDate) + "&endDate=" + encodeURIComponent(endDate);
-    productOrderMasterTable.setData("/productOrder/orderMaster?" + queryString);
+    const data = inputToJson("#productOrderMaster .form-input")
+    orderMasterTable.setData("/productOrder/orderMaster", data)
+    orderSubTable.clearData();
 })
 
 
@@ -152,22 +158,21 @@ const productOrderSubEditor = function(cell, onRendered, success, cancel, editor
 
 const productOrderSubEditCheck = function(cell){
     let data = cell.getRow().getData();
-    console.log(data)
-    return data.orderNo == null;
+    return data.orderNo == null || data.deliveryQuantity === 0;
 }
 
 const productOrderSubTable = new Tabulator("#productOrderSubTable", {
     height: "45rem",
     layout:"fitData",
-    tabEndNewRow: true,
     selectableRows: true,
     columns:[
         {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
         {title:"품목코드", field:"itemCode", editor:productOrderSubEditor, editable:productOrderSubEditCheck},
         {title:"품목명", field:"itemName"},
         {title:"규격", field:"itemSpecification"},
-        {title:"단가", field:"unitPrice", editor:"input"},
-        {title:"수량", field:"quantity", editor:"input"},
+        {title:"단가", field:"unitPrice", hozAlign: "right", editor:"input", editable:productOrderSubEditCheck},
+        {title:"수량", field:"quantity", hozAlign: "right", editor:"input", editable:productOrderSubEditCheck},
+        {title:"출고수량", field:"deliveryQuantity", hozAlign: "right"},
         {title:"금액", field:"price"},
     ],
 });
@@ -190,16 +195,21 @@ productOrderSubTable.on("cellEdited", function(cell){
 });
 
 document.getElementById("addSubBtn").addEventListener("click", function () {
-    let rows = productOrderSubTable.getRows();
-    for (const row of rows) {
-        if(row.getData().itemName == null) {
-            return row.getCell("itemCode").edit();
+    const masterData = productOrderMasterTable.getData("selected")
+    if(masterData.length === 0){
+        alert("행을 선택해주세요.")
+    }else {
+        let rows = productOrderSubTable.getRows();
+        for (const row of rows) {
+            if (row.getData().itemName == null) {
+                return row.getCell("itemCode").edit();
+            }
         }
+        productOrderSubTable.addRow({"deliveryQuantity" : 0})
+            .then(function (row) {
+                row.getCell("itemCode").edit();
+            });
     }
-    productOrderSubTable.addRow()
-        .then(function(row){
-            row.getCell("itemCode").edit();
-        });
 })
 
 document.getElementById("saveBtn").addEventListener("click", function () {
@@ -207,11 +217,14 @@ document.getElementById("saveBtn").addEventListener("click", function () {
     let subData = productOrderSubTable.getData()
 
     selectedMasterRow.update({"productOrderSubDTOList" : subData})
+
     axios.post("/productOrder", selectedMasterRow.getData())
         .then(function (response) {
-            productOrderMasterTable.replaceData()
             alert("저장되었습니다.")
+            productOrderMasterTable.getRows("selected")[0].update(response.data)
+            productOrderSubTable.setData(response.data.productOrderSubDTOList);
         }).catch(function (error) {
+        alert(error.response.data)
     })
 })
 
@@ -221,12 +234,14 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
 
     axios.delete("/productOrder", {data : selectedSubData})
         .then(function (response) {
+            console.log(response)
             productOrderSubTable.deleteRow(selectedSubRow)
             if(productOrderSubTable.getRows().length === 0){
-                productOrderMasterTable.replaceData()
+                productOrderMasterTable.deleteRow(productOrderMasterTable.getRows("selected"));
             }
             alert("삭제되었습니다.")
         }).catch(function (error) {
+        console.log(error)
     })
 })
 

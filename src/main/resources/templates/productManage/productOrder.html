@@ -4,7 +4,7 @@
       layout:decorate="~{layout/layout.html}">
 <th:block layout:fragment="Content">
     <div class="d-flex justify-content-between">
-        <div class="w-50 pe-2">
+        <div id="productOrderMaster" class="w-50 pe-2">
             <div class="top-bar bg-dark-subtle d-flex align-items-center p-2">
                 <span class="page-title fw-bold bg-light p-1 fs-2 me-2">수주 관리</span>
                 <button type="button" id="addMasterBtn" class="btn btn-primary m-1">수주 추가</button>
@@ -12,19 +12,19 @@
                 <div class="mx-2">
                     <div class="input-group">
                         <label class="input-group-text">수주일</label>
-                        <input type="date" id="startDate" class="form-control todayDate" aria-label="startDate">
+                        <input type="date" id="startDate" class="form-control todayDate form-input" aria-label="startDate">
                         <span class="input-group-text">~</span>
-                        <input type="date" id="endDate" class="form-control todayDate" aria-label="endDate">
+                        <input type="date" id="endDate" class="form-control tomorrowDate form-input" aria-label="endDate">
                     </div>
                     <div class="input-group">
                         <span class="input-group-text">거래처</span>
-                        <input type="text" id="customerSearch" class="form-control" aria-label="customerSearch">
+                        <input type="text" id="keyword" class="form-control customerSearch form-input" aria-label="customerSearch">
                     </div>
                 </div>
             </div>
             <div id="productOrderMasterTable"></div>
         </div>
-        <div class="w-50">
+        <div id="productOrderSub" class="w-50">
             <div class="top-bar bg-dark-subtle d-flex align-items-center p-2">
                 <button type="button" id="addSubBtn" class="btn btn-primary mx-1">품목 추가</button>
                 <button type="button" id="saveBtn" class="btn btn-primary mx-1">저장</button>

@@ -1,9 +1,6 @@
 package com.example.pjymes.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -23,9 +20,9 @@ public class ProductOrderMaster extends BaseEntity{
     private Customer customer;
     private LocalDate orderDate;
     private LocalDate deliveryDate;
+    @Column(nullable = false)
     private Long price;
-    @Builder.Default
-    private Boolean active = false;
+    private OrderStatus orderStatus;
 
     public void change(LocalDate orderDate, LocalDate deliveryDate, Long price){
         this.orderDate = orderDate;
@@ -33,7 +30,7 @@ public class ProductOrderMaster extends BaseEntity{
         this.price = price;
     }
 
-    public void changeActive(Boolean active){
-        this.active = active;
+    public void changeOrderStatus(OrderStatus orderStatus){
+        this.orderStatus = orderStatus;
     }
 }

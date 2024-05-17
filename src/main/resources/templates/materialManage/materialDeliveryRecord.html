@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout.html}">
 <th:block layout:fragment="Content">
-    <div id="materialDelivery"  class="top-bar bg-dark-subtle d-flex align-items-center p-2">
+    <div id="materialDelivery" class="top-bar bg-dark-subtle d-flex align-items-center p-2">
         <span class="page-title fw-bold bg-light p-1 fs-2 me-2">자재 출고 현황</span>
         <button type="button" id="searchBtn" class="btn btn-primary m-1">검색</button>
         <div class="mx-2">
@@ -33,7 +33,8 @@
             {title:"품목코드", field:"itemCode"},
             {title:"품목명", field:"itemName"},
             {title:"규격", field:"itemSpecification"},
-            {title:"수량", field:"quantity"},
+            {title:"분류", field:"itemCategoryName"},
+            {title:"수량", field:"quantity", hozAlign: "right"},
             {title:"출고일자", field:"createdAt"},
         ]
     });

@@ -47,7 +47,6 @@ var orderMasterEditCheck = function(cell){
     return data.orderNo == null;
 }
 
-
 const orderMasterTable = new Tabulator("#orderMasterTable", {
     height: "45rem",
     layout:"fitData",
@@ -164,7 +163,6 @@ var orderSubEditCheck = function(cell){
 const orderSubTable = new Tabulator("#orderSubTable", {
     height: "45rem",
     layout:"fitData",
-    tabEndNewRow: true,
     selectableRows: true,
     columns:[
         {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
@@ -206,7 +204,7 @@ document.getElementById("addSubBtn").addEventListener("click", function () {
                 return row.getCell("itemCode").edit();
             }
         }
-        orderSubTable.addRow()
+        orderSubTable.addRow({"warehousingQuantity" : 0})
             .then(function(row){
                 row.getCell("itemCode").edit();
             });
@@ -238,7 +236,6 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
             console.log(response)
             orderSubTable.deleteRow(selectedSubRow)
             if(orderSubTable.getRows().length === 0){
-                console.log("확인")
                 orderMasterTable.deleteRow(orderMasterTable.getRows("selected"));
             }
             alert("삭제되었습니다.")

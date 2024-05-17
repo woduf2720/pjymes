@@ -17,7 +17,7 @@ public class ProductOrderSubDTO {
     private String itemName;
     private String itemSpecification;
     private Long quantity;
-    private Long warehousingQuantity;
+    private Long deliveryQuantity;
     private Long unitPrice;
     private Long price;
 }

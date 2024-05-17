@@ -28,6 +28,7 @@ public class OrderSub {
     @JoinColumn(name = "itemCode")
     private Item item;
 
+    @Column(nullable = false)
     private Long quantity;
     @Builder.Default
     @Column(nullable = false)

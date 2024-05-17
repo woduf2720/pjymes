@@ -1,9 +1,6 @@
 package com.example.pjymes.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -24,6 +21,7 @@ public class ProductionPlan {
     @JoinColumn(name = "orderSubId")
     private ProductOrderSub productOrderSub;
 
+    @Column(nullable = false)
     private Long quantity;
     private LocalDate orderDate;
     private LocalDate dueDate;

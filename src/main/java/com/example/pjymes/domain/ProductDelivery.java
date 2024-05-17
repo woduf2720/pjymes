@@ -29,6 +29,7 @@ public class ProductDelivery extends BaseEntity{
     @JoinColumn(name = "itemCode")
     private Item item;
 
+    @Column(nullable = false)
     private Long quantity;
     private Long unitPrice;
     private Long price;

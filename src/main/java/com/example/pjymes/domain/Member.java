@@ -18,7 +18,6 @@ public class Member extends BaseEntity{
     private String mid;
     private String mpw;
     private String mname;
-
     private Boolean active;
 
     @Setter

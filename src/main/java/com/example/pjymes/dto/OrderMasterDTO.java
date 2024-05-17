@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.query.Order;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,6 +22,7 @@ public class OrderMasterDTO {
     private LocalDate orderDate;
     private LocalDate deliveryDate;
     private Long price;
+    private OrderStatus orderStatus;
     private int orderStatusValue;
 
     private List<OrderSubDTO> orderSubDTOList;

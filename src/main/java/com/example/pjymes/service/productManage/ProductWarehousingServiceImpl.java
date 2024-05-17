@@ -31,13 +31,10 @@ public class ProductWarehousingServiceImpl implements ProductWarehousingService 
 
     @Override
     @Transactional
-    public Long register(List<ProductWarehousingDTO> productWarehousingDTOList) {
-        log.info("register..." + productWarehousingDTOList);
-
+    public int register(List<ProductWarehousingDTO> productWarehousingDTOList) {
         for(ProductWarehousingDTO productWarehousingDTO : productWarehousingDTOList) {
             log.info("register..." + productWarehousingDTO);
             //입고 저장할때 작동해야되는 기능
-            System.out.println(productWarehousingDTO.getItemCode());
             Item item = itemRepository.findById(productWarehousingDTO.getItemCode()).orElseThrow();
 
             //Lot생성 후 lotMaster 저장
@@ -59,13 +56,13 @@ public class ProductWarehousingServiceImpl implements ProductWarehousingService 
             log.info("warehouing저장");
         }
 
-        return 1L;
+        return productWarehousingDTOList.size();
     }
 
     @Override
     public List<ProductWarehousingDTO> list(SearchDTO searchDTO) {
         log.info("lotMaster list...");
-        List<ProductWarehousing> result = productWarehousingRepository.findAll();
+        List<ProductWarehousing> result = productWarehousingRepository.findByKeyword(searchDTO);
 
         return result.stream()
                 .map(productWarehousing -> modelMapper.map(productWarehousing, ProductWarehousingDTO.class))

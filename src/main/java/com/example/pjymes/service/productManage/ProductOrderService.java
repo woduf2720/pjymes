@@ -5,7 +5,7 @@ import com.example.pjymes.dto.*;
 import java.util.List;
 
 public interface ProductOrderService {
-    String register(ProductOrderMasterDTO productOrderMasterDTO);
+    ProductOrderMasterDTO register(ProductOrderMasterDTO productOrderMasterDTO);
 
     ProductOrderMasterDTO readOne(String orderNo);
 

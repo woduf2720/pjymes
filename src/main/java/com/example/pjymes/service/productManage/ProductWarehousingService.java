@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProductWarehousingService {
 
-    Long register(List<ProductWarehousingDTO> productWarehousingDTOS);
+    int register(List<ProductWarehousingDTO> productWarehousingDTOS);
 
     List<ProductWarehousingDTO> list(SearchDTO searchDTO);
 

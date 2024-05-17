@@ -24,5 +24,6 @@ public class Delivery extends BaseEntity{
     @JoinColumn(name = "itemCode")
     private Item item;
 
+    @Column(nullable = false)
     private Long quantity;
 }

@@ -25,6 +25,7 @@ public class WarehousingDTO {
     private String itemCode;
     private String itemName;
     private String itemSpecification;
+    private String itemCategoryName;
     private Long quantity;
     private Long unitPrice;
     private Long price;

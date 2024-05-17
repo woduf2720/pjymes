@@ -9,7 +9,7 @@ const itemTable = new Tabulator("#itemTable", {
         {title:"품목코드", field:"code"},
         {title:"품목명", field:"name"},
         {title:"규격", field:"specification"},
-        {title:"분류", field:"category"},
+        {title:"분류", field:"categoryName"},
     ],
 });
 
@@ -20,7 +20,7 @@ itemTable.on("rowSelectionChanged", function(data, rows, selected, deselected){
             "itemCode" : d.code,
             "itemName" : d.name,
             "specification" : d.specification,
-            "category" : d.category
+            "categoryName" : d.categoryName
         })
     })
     lotTable.setData(newData)
@@ -35,8 +35,8 @@ const lotTable = new Tabulator("#lotTable", {
         {title:"품목코드", field:"itemCode"},
         {title:"품목명", field:"itemName"},
         {title:"규격", field:"specification"},
-        {title:"분류", field:"category"},
-        {title:"수량", field:"quantity", editor : "input"},
+        {title:"분류", field:"categoryName"},
+        {title:"수량", field:"quantity", hozAlign: "right", editor : "input"},
     ],
 });
 
@@ -48,5 +48,6 @@ document.getElementById("saveBtn").addEventListener("click", function () {
             lotTable.clearData();
             alert("저장되었습니다.")
         }).catch(function (error) {
+            alert(error.response.data)
     })
 })

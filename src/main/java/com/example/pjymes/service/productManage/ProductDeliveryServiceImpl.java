@@ -49,7 +49,6 @@ public class ProductDeliveryServiceImpl implements ProductDeliveryService {
             //productOrderMaster sub입고 전부 다됬으면 완료처리
             Long difference  = productOrderSubRepository.getQuantityMinusWarehousingQuantityByOrderNo(orderNo);
             if(difference == 0){
-                productOrderMaster.changeActive(true);
                 productOrderMaster = productOrderMasterRepository.save(productOrderMaster);
             }
             String lotNo = productDeliveryDTO.getLotNo();

@@ -23,18 +23,15 @@ public class ProductWarehousingRestController {
     private final ProductWarehousingService productWarehousingService;
 
     @GetMapping
-    public List<ProductWarehousingDTO> getMaterialDelivery(@ModelAttribute SearchDTO searchDTO){
+    public List<ProductWarehousingDTO> getMaterialDelivery(SearchDTO searchDTO){
         log.info("getMaterialDelivery..." + searchDTO);
         return productWarehousingService.list(searchDTO);
     }
 
     @PostMapping
-    public Map<String, Long> postMaterialDelivery(@RequestBody List<ProductWarehousingDTO> productWarehousingDTOList) {
+    public int postMaterialDelivery(@RequestBody List<ProductWarehousingDTO> productWarehousingDTOList) {
         log.info("postMaterialDelivery..." + productWarehousingDTOList);
-        Long orderNo = productWarehousingService.register(productWarehousingDTOList);
-        Map<String, Long> resultMap = new HashMap<>();
-        resultMap.put("orderNo", orderNo);
-        return resultMap;
+        return productWarehousingService.register(productWarehousingDTOList);
     }
 
 }

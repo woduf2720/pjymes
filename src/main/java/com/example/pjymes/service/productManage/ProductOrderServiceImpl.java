@@ -1,9 +1,6 @@
 package com.example.pjymes.service.productManage;
 
-import com.example.pjymes.domain.OrderMaster;
-import com.example.pjymes.domain.OrderSub;
-import com.example.pjymes.domain.ProductOrderMaster;
-import com.example.pjymes.domain.ProductOrderSub;
+import com.example.pjymes.domain.*;
 import com.example.pjymes.dto.*;
 import com.example.pjymes.repository.ProductOrderMasterRepository;
 import com.example.pjymes.repository.ProductOrderSubRepository;
@@ -30,12 +27,13 @@ public class ProductOrderServiceImpl implements ProductOrderService {
 
     @Override
     @Transactional
-    public String register(ProductOrderMasterDTO productOrderMasterDTO) {
+    public ProductOrderMasterDTO register(ProductOrderMasterDTO productOrderMasterDTO) {
         if(productOrderMasterDTO.getOrderNo() == null){
             //수주번호 생성
             String newOrderNo = productOrderMasterDTO.getOrderDate().format(DateTimeFormatter.ofPattern("yyMMdd"))
                     +"-"+productOrderMasterDTO.getCustomerCode()+"-";
             String getOrderNo = productOrderMasterRepository.getOrderNo(newOrderNo);
+            log.info("newOrderNo : " + newOrderNo + getOrderNo);
             productOrderMasterDTO.setOrderNo(newOrderNo + getOrderNo);
         }
 
@@ -44,7 +42,10 @@ public class ProductOrderServiceImpl implements ProductOrderService {
         //productOrderMaster 저장
         log.info("materialOrder register...");
         ProductOrderMaster productOrderMaster = modelMapper.map(productOrderMasterDTO, ProductOrderMaster.class);
-        productOrderMasterRepository.save(productOrderMaster);
+        productOrderMaster.changeOrderStatus(OrderStatus.INITIAL);
+        log.info("productOrderMaster : " + productOrderMaster);
+        ProductOrderMaster saveMasterData = productOrderMasterRepository.save(productOrderMaster);
+        log.info("productOrderMaster : " + productOrderMaster);
         log.info("orderMaster complete...");
 
         //productOrderSub 저장
@@ -56,10 +57,13 @@ public class ProductOrderServiceImpl implements ProductOrderService {
             productOrderSubList.add(productOrderSub);
         });
 
-        productOrderSubRepository.saveAll(productOrderSubList);
+        List<ProductOrderSub> saveSubData = productOrderSubRepository.saveAll(productOrderSubList);
+        log.info("saveSubData : " + saveSubData);
         log.info("orderSub complete...");
-
-        return productOrderMasterDTO.getOrderNo();
+        ProductOrderMasterDTO saveMasterDTOData = modelMapper.map(saveMasterData, ProductOrderMasterDTO.class);
+        List<ProductOrderSubDTO> saveSubDTOData = saveSubData.stream().map(productOrderSub -> modelMapper.map(productOrderSub, ProductOrderSubDTO.class)).toList();
+        saveMasterDTOData.setProductOrderSubDTOList(saveSubDTOData);
+        return saveMasterDTOData;
     }
 
     @Override

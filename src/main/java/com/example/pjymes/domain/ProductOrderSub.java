@@ -28,7 +28,9 @@ public class ProductOrderSub {
     @JoinColumn(name = "itemCode")
     private Item item;
 
+    @Column(nullable = false)
     private Long quantity;
+    @Column(nullable = false)
     private Long deliveryQuantity;
     private Long unitPrice;
     private Long price;

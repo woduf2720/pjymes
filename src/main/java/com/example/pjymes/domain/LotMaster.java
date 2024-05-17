@@ -18,6 +18,7 @@ public class LotMaster {
     @JoinColumn(name = "itemCode")
     private Item item;
 
+    @Column(nullable = false)
     private Long quantity;
 
 
