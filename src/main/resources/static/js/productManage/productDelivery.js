@@ -37,6 +37,10 @@ productOrderMasterTable.on("rowClick", function(e, row){
 
 productOrderMasterTable.on("rowSelected", function(row){
     productOrderSubTable.setData("/productOrder/orderSub/"+row.getData().orderNo)
+        .then(function(){
+            lotTable.clearData();
+            deliveryTable.clearData();
+        })
 });
 
 const productOrderSubTable = new Tabulator("#productOrderSubTable", {
@@ -72,9 +76,11 @@ productOrderSubTable.on("rowSelected", function(row){
 });
 
 document.getElementById("wholeBtn").addEventListener("click", function () {
+    lotTable.deselectRow();
     let rows = lotTable.getRows();
     let newRows = [];
-    let subQuantity = productOrderSubTable.getData("selected")[0].quantity
+    const subData = productOrderSubTable.getSelectedData()[0];
+    let subQuantity = subData.quantity - subData.deliveryQuantity;
     for(row of rows){
         let rowQuantity = row.getData().quantity
         if(subQuantity > 0){
@@ -121,20 +127,25 @@ lotTable.on("rowClick", function(e, row){
 });
 
 lotTable.on("rowSelectionChanged", function(data, rows, selected, deselected){
-    const subData = productOrderSubTable.getSelectedData()[0];
-    let subQuantity = subData.quantity;
-    for(d of data){
-        d.orderSubId = subData.orderSubId;
-        d.orderNo = subData.orderNo;
+    const subDatas = productOrderSubTable.getSelectedData();
+    if(subDatas.length>0){
+        subData = subDatas[0]
+        let subQuantity = subData.quantity - subData.deliveryQuantity;
+        let newData = []
+        for(row of rows){
+            d = JSON.parse(JSON.stringify(row.getData()));
+            d.orderSubId = subData.orderSubId;
+            d.orderNo = subData.orderNo;
 
-        if(subQuantity>d.quantity){
-            d.price = d.itemUnitPrice * d.quantity;
-            subQuantity - d.quantity
-        }else {
-            d.quantity = subQuantity;
+            if(subQuantity>d.quantity){
+                subQuantity = subQuantity - d.quantity
+            }else {
+                d.quantity = subQuantity;
+            }
+            newData.push(d)
         }
+        deliveryTable.setData(newData)
     }
-    deliveryTable.setData(data)
 });
 
 document.getElementById("saveBtn").addEventListener("click", function () {
@@ -143,7 +154,8 @@ document.getElementById("saveBtn").addEventListener("click", function () {
         .then(function (response) {
             alert("저장되었습니다.")
             console.log(response)
-            productOrderSubTable.getRows("selected")[0].update(response.data)
+            productOrderMasterTable.getRows("selected")[0].update(response.data)
+            productOrderSubTable.getRows("selected")[0].update(response.data.productOrderSubDTOList[0])
             lotTable.clearData();
             deliveryTable.clearData();
         }).catch(function (error) {

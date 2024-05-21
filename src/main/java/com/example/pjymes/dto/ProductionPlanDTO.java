@@ -22,11 +22,14 @@ public class ProductionPlanDTO {
     private String orderSubItemCode;
     private String orderSubItemName;
     private String orderSubItemSpecification;
-    private Long quantity;
+    private String orderSubItemCategoryName;
+    private Long orderQuantity;
+    private Long productionQuantity;
     private LocalDate orderDate;
     private LocalDate dueDate;
 
-
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+
+    private int status;
 }

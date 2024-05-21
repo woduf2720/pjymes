@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDTO> list() {
         log.info("item list...");
-        List<Item> result = itemRepository.findAll();
+        List<Item> result = itemRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
         log.info(result);
         return result.stream()
                 .map(item -> modelMapper.map(item, ItemDTO.class)).collect(Collectors.toList());

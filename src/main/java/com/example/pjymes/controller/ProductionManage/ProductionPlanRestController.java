@@ -26,9 +26,21 @@ public class ProductionPlanRestController {
         return productionPlanService.list(searchDTO);
     }
 
+    @GetMapping("/status/{status}")
+    public List<ProductionPlanDTO> getPlanByStatus(@PathVariable int status) {
+        log.info("getPlanByStatus...");
+        return productionPlanService.listByStatus(status);
+    }
+
     @PostMapping
     public ProductionPlanDTO postProductionPlan(@RequestBody ProductionPlanDTO productionPlanDTO) {
         log.info("postProductionPlan..." + productionPlanDTO);
         return productionPlanService.register(productionPlanDTO);
+    }
+
+    @PutMapping
+    public ProductionPlanDTO putProductionPlan(@RequestBody ProductionPlanDTO productionPlanDTO) {
+        log.info("putProductionPlan..." + productionPlanDTO);
+        return productionPlanService.modify(productionPlanDTO);
     }
 }

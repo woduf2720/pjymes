@@ -1,6 +1,5 @@
 const categoryId = document.getElementById("categoryId");
 function handleSelectChange() {
-    //itemTable.setData(this.value === "" ? "/itemManage" : "/itemManage/" + this.value)
     itemTable.setData("/itemManage", {"categoryId": this.value})
 }
 categoryId.addEventListener("change",handleSelectChange)
@@ -69,10 +68,23 @@ document.getElementById("addBomModalBtn").addEventListener("click", function () 
         document.getElementById('parentId').value = row.getData().id;
         document.getElementById('parentItemCode').value = row.getData().itemCode;
         document.getElementById('parentItemName').value = row.getData().itemName;
+        document.getElementById('quantity').value = 1;
         new bootstrap.Modal(addBomModal).show()
     }else{
         alert("행을 선택해주세요.")
     }
+})
+
+addBomModal.addEventListener('shown.bs.modal', event => {
+    event.target.querySelector('.tabulator-tableholder').focus();
+
+    bomChildTable.setData("/itemManage")
+        .then(function(result){
+            const rows = bomChildTable.getRows();
+            if(rows.length > 0){
+                rows[0].select();
+            }
+        })
 })
 
 addBomModal.addEventListener('hidden.bs.modal', event => {
@@ -94,14 +106,17 @@ document.getElementById("addBomBtn").addEventListener("click", function () {
 
 var bomChildTable = new Tabulator("#bomChildTable", {
     height: "20rem",
-    ajaxURL:"/itemManage",
     layout:"fitData",
+    keybindings:{
+        "selectedRowPrev": "38",
+        "selectedRowNext": "40"
+    },
     columns:[
         {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
         {title:"품목코드", field:"code"},
         {title:"품목명", field:"name"},
         {title:"규격", field:"specification"},
-        {title:"분류", field:"category"},
+        {title:"분류", field:"categoryName"},
     ],
 });
 

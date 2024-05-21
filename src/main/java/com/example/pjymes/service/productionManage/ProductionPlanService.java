@@ -9,5 +9,9 @@ public interface ProductionPlanService {
 
     ProductionPlanDTO register(ProductionPlanDTO productionPlanDTO);
 
+    ProductionPlanDTO modify(ProductionPlanDTO productionPlanDTO);
+
     List<ProductionPlanDTO> list(SearchDTO searchDTO);
+
+    List<ProductionPlanDTO> listByStatus(int status);
 }

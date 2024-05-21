@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class ProductDeliveryServiceImpl implements ProductDeliveryService {
 
     @Override
     @Transactional
-    public ProductOrderSubDTO register(List<ProductDeliveryDTO> productDeliveryDTOList) {
+    public ProductOrderMasterDTO register(List<ProductDeliveryDTO> productDeliveryDTOList) {
         log.info("register..." + productDeliveryDTOList);
         String orderNo = productDeliveryDTOList.get(0).getOrderNo();
         Long orderSubId = productDeliveryDTOList.get(0).getOrderSubId();
@@ -61,14 +62,18 @@ public class ProductDeliveryServiceImpl implements ProductDeliveryService {
         productOrderSub.change(sumQuantity);
         ProductOrderSub saveSubData = productOrderSubRepository.save(productOrderSub);
         ProductOrderSubDTO saveSubDTOData = modelMapper.map(saveSubData, ProductOrderSubDTO.class);
+        List<ProductOrderSubDTO> saveSubDTODataList = new ArrayList<>();
+        saveSubDTODataList.add(saveSubDTOData);
         log.info("sub저장 : " + saveSubDTOData);
 
         //productOrderMaster sub입고 전부 다됬으면 완료처리
         OrderStatus orderStatus = productOrderSubRepository.getQuantityMinusWarehousingQuantityByOrderNo(orderNo);
         productOrderMaster.changeOrderStatus(orderStatus);
-        productOrderMasterRepository.save(productOrderMaster);
+        ProductOrderMaster saveMasterData = productOrderMasterRepository.save(productOrderMaster);
+        ProductOrderMasterDTO saveMasterDTOData = modelMapper.map(saveMasterData, ProductOrderMasterDTO.class);
+        saveMasterDTOData.setProductOrderSubDTOList(saveSubDTODataList);
         log.info("master저장");
-        return saveSubDTOData;
+        return saveMasterDTOData;
     }
 
     @Override

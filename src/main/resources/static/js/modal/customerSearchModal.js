@@ -37,6 +37,7 @@ var customerSearchTable = new Tabulator("#customerSearchTable", {
         "selectedRowNext": "40"
     },
     columns:[
+        {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
         {title:"거래처코드", field:"code", headerFilter:"input"},
         {title:"거래처명", field:"name", headerFilter:"input"},
         {title:"분류", field:"categoryName", headerFilter:"input"}

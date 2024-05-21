@@ -22,17 +22,33 @@ public class ProductionPlan {
     private ProductOrderSub productOrderSub;
 
     @Column(nullable = false)
-    private Long quantity;
+    private Long orderQuantity;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private Long productionQuantity = 0L;
     private LocalDate orderDate;
     private LocalDate dueDate;
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    public void change(Long quantity,LocalDateTime startDate, LocalDateTime endDate){
-        this.quantity = quantity;
+    private int status;
+
+    public void changeProductionQuantity(Long productionQuantity){
+        this.productionQuantity = productionQuantity;
+    }
+
+    public void changeStartDate(LocalDateTime startDate){
         this.startDate = startDate;
+    }
+
+    public void changeEndDate(LocalDateTime endDate){
         this.endDate = endDate;
+    }
+
+    public void changeStatus(int status){
+        this.status = status;
     }
 
 }

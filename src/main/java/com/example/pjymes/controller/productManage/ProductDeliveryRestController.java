@@ -1,10 +1,7 @@
 package com.example.pjymes.controller.productManage;
 
 import com.example.pjymes.domain.ProductOrderSub;
-import com.example.pjymes.dto.ProductDeliveryDTO;
-import com.example.pjymes.dto.ProductOrderSubDTO;
-import com.example.pjymes.dto.SearchDTO;
-import com.example.pjymes.dto.WarehousingDTO;
+import com.example.pjymes.dto.*;
 import com.example.pjymes.service.materialManage.MaterialWarehousingService;
 import com.example.pjymes.service.productManage.ProductDeliveryService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +27,7 @@ public class ProductDeliveryRestController {
     }
 
     @PostMapping
-    public ProductOrderSubDTO postProductDelivery(@RequestBody List<ProductDeliveryDTO> productDeliveryDTOList) {
+    public ProductOrderMasterDTO postProductDelivery(@RequestBody List<ProductDeliveryDTO> productDeliveryDTOList) {
         log.info("postProductDelivery..." + productDeliveryDTOList);
         return productDeliveryService.register(productDeliveryDTOList);
     }

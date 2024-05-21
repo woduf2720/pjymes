@@ -37,6 +37,7 @@ var itemSearchTable = new Tabulator("#itemSearchTable", {
         "selectedRowNext": "40"
     },
     columns:[
+        {title:"순번", field:"rownum", hozAlign: "center", formatter: "rownum"},
         {title:"품목코드", field:"code", headerFilter:"input"},
         {title:"품목명", field:"name", headerFilter:"input"},
         {title:"규격", field:"specification", headerFilter:"input"},

@@ -21,9 +21,8 @@ public class ProductDeliveryDTO {
     private String itemName;
     private String itemSpecification;
     private String itemCategoryName;
+    private Long itemUnitPrice;
     private Long quantity;
-    private Long unitPrice;
-    private Long price;
 
     private Long orderSubId;
     private String orderNo;

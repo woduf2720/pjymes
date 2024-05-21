@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface ProductionActivityService {
 
-    void modify(ProductionPlanDTO productionPlanDTO);
+    //생산중인경우 생산량만 올라감
+    ProductionPlanDTO production(ProductionPlanDTO productionPlanDTO);
 
     List<ProductionPlanDTO> list(SearchDTO searchDTO);
+
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,7 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerDTO> list() {
         log.info("customer list...");
-        List<Customer> result = customerRepository.findAll();
+        List<Customer> result = customerRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
         return result.stream()
                 .map(customer -> modelMapper.map(customer, CustomerDTO.class)).collect(Collectors.toList());
     }

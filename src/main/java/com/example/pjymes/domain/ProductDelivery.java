@@ -31,6 +31,4 @@ public class ProductDelivery extends BaseEntity{
 
     @Column(nullable = false)
     private Long quantity;
-    private Long unitPrice;
-    private Long price;
 }

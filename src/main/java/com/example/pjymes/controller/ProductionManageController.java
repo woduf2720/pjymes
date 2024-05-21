@@ -24,4 +24,10 @@ public class ProductionManageController {
     public void productionRecord(){
         log.info("productionRecord.....");
     }
+
+
+    @GetMapping("/productionActivityTest")
+    public void productionActivityTest(){
+        log.info("productionActivityTest.....");
+    }
 }

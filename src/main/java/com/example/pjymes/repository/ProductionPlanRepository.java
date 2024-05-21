@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface ProductionPlanRepository extends JpaRepository<ProductionPlan, String>, CustomProductionPlanRepository {
     List<ProductionPlan> findByPlanNoContaining(String productOrderNo);
+
+    List<ProductionPlan> findByStatus(int status);
 }
