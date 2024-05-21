@@ -4,8 +4,8 @@ const newProductionPlanSearchModal = new bootstrap.Modal(productionPlanSearchMod
 productionPlanSearchModal.addEventListener('shown.bs.modal', event => {
     event.target.querySelector('.tabulator-tableholder').focus();
 
-    productionPlanSearchTable.setData("/productionActivity")
-        .then(function(result){
+    productionPlanSearchTable.setData("/productionPlan/status/0")
+        .then(function(){
             const rows = productionPlanSearchTable.getRows();
             if(rows.length > 0){
                 rows[0].select();

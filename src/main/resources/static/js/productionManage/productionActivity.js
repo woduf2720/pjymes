@@ -35,6 +35,7 @@ workCompleteBtn.addEventListener("click",function(){
         .then(function (response) {
             alert("작업이 완료되었습니다.")
             inputToNull("#productionActivity .form-input")
+            productionActivityTable.replaceData();
         }).catch(function (error) {
         alert(error.response.data);
     })
