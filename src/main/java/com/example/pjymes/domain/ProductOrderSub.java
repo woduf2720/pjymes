@@ -31,7 +31,7 @@ public class ProductOrderSub {
     @Column(nullable = false)
     private Long quantity;
     @Column(nullable = false)
-    private Long deliveryQuantity;
+    private Long deliveryQuantity = 0L;
     private Long unitPrice;
     private Long price;
 
