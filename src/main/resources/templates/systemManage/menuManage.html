@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<th:block layout:fragment="Content">
+    <div class="top-bar bg-dark-subtle d-flex align-items-center p-2">
+        <span class="page-title fw-bold bg-light p-1 fs-2 me-3">메뉴 관리</span>
+        <button type="button" class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#addMenuModal">추가</button>
+        <button type="button" id="deleteMenuBtn" class="btn btn-primary mx-1">삭제</button>
+    </div>
+    <div id="menuTable"></div>
+
+    <div class="modal fade" id="addMenuModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">메뉴 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 row">
+                        <label for="name" class="col-sm-3 col-form-label">메뉴명</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-input" id="name">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="url" class="col-sm-3 col-form-label">url</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-input" id="url">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="parentId" class="col-sm-3 col-form-label">상위메뉴 id</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-input" id="parentId">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="roleId" class="col-sm-3 col-form-label">권한</label>
+                        <div class="col-sm-9">
+                            <select id="roleId" class="form-select form-input">
+                                <option id="roleName" th:each="roleDTO : ${roleDTOList}" th:value="${roleDTO.id}"
+                                        th:text="${roleDTO.name}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" id="addMenuBtn" class="btn btn-primary">추가</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+<script layout:fragment="script" th:src="@{/js/systemManage/menuManage.js}"></script>
+</html>
