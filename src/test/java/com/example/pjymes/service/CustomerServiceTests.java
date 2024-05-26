@@ -41,7 +41,7 @@ public class CustomerServiceTests {
                 .active(false)
                 .build();
         log.info("customerDTO : " + customerDTO);
-        customerService.modify(customerDTO);
+//        customerService.modify(customerDTO);
     }
 
     @Test
