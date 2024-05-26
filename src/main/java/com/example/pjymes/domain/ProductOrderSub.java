@@ -30,6 +30,8 @@ public class ProductOrderSub {
 
     @Column(nullable = false)
     private Long quantity;
+
+    @Builder.Default
     @Column(nullable = false)
     private Long deliveryQuantity = 0L;
     private Long unitPrice;
