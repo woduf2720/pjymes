@@ -23,7 +23,6 @@ public class CustomerServiceTests {
         CustomerDTO customerDTO = CustomerDTO.builder()
                 .code("C0002")
                 .name("회사2")
-                .category("분류2")
                 .address("주소2")
                 .active(true)
                 .build();
