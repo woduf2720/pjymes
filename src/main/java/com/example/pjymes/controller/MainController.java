@@ -22,8 +22,9 @@ public class MainController {
         log.info("logout: " + logout);
     }
 
-    @GetMapping("/health)")
+    @GetMapping("/health")
     public ResponseEntity<Object> healthCheckPath() {
+        log.info("health check");
         return ResponseEntity.ok().build();
     }
 }

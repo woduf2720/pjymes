@@ -1,31 +1,22 @@
 package com.example.pjymes.config;
 
 import com.example.pjymes.security.CustomUserDetailsService;
-import com.example.pjymes.security.filter.LoginFilter;
-import com.example.pjymes.security.filter.RefreshTokenFilter;
 import com.example.pjymes.security.filter.TokenCheckFilter;
 import com.example.pjymes.security.handler.Custom403Handler;
-import com.example.pjymes.security.handler.LoginSuccessHandler;
 import com.example.pjymes.util.JWTUtil;
-import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -90,7 +81,7 @@ public class CustomSecurityConfig {
 //                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //세션 사용 안함
                 .authorizeHttpRequests((request) ->
                         request
-                                .requestMatchers("/login").permitAll()
+                                .requestMatchers("/login","/health").permitAll()
                                 .requestMatchers("/adminMenu/**").hasRole("ADMIN")
                                 .requestMatchers("/systemManage/**").hasRole("ADMIN")
                                 .anyRequest().authenticated())
