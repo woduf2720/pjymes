@@ -1,5 +1,7 @@
 # pjymes
 
+개인프로젝트
+
 개발 기간 : 2024년 4월 8일 ~ 작업 중
 
 웹 사이트 : [pjymes.site](http://pjymes.site/login)
