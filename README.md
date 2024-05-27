@@ -20,8 +20,8 @@ SpringBoot와 Spring Data JPA를 사용해 기본적인 REST API를 구현하였
 백엔드
 
 주요 프레임워크 / 라이브러리
- - Java 17 openjdk
- - SpringBoot 2.5.6
+ - Java 17
+ - SpringBoot 3.2.4
  - SpringBoot Security
  - Spring Data JPA
  - Querydsl
@@ -31,7 +31,7 @@ Build tool
  - Gradle
 
 Database
- - MariaDB
+ - MariaDB 10.11.6
 
 Infra
  - AWS EC2
@@ -41,9 +41,9 @@ Infra
 프론트엔드
  - Javascript
  - HTML/CSS
- - Yhymeleaf
+ - Thymeleaf
  - Bootstrap 5
- - Tabulator
+ - Tabulator 6
  - Axios
 
 Tools
