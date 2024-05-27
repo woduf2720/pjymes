@@ -30,14 +30,21 @@
                     <span class="input-group-text">패스워드</span>
                     <input type="password" class="form-control" name="password" placeholder="PASSWORD">
                 </div>
-                <div class="my-4">
-                    <div class="float-end">
-                        <button type="submit" class="btn btn-primary submitBtn">LOGIN</button>
-                    </div>
+                <div class="my-2">
+                    <button type="submit" id="guestBtn" class="btn btn-primary">guest로 접속</button>
+                    <button type="submit" class="btn btn-primary">LOGIN</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+    document.getElementById("guestBtn").addEventListener("click", function () {
+        const username = document.getElementsByName('username')[0];
+        const password = document.getElementsByName('password')[0];
+        username.value = "guest"
+        password.value = "1111"
+    })
+</script>
 </body>
 </html>
